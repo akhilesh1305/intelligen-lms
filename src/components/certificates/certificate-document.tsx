@@ -82,8 +82,14 @@ export function CertificateDocument({
           </div>
 
           <div className="hidden text-center sm:block">
-            <div className="mx-auto mb-1 flex h-10 w-10 items-center justify-center rounded-full border-2 border-brand-500 text-brand-600">
-              <Award className="h-5 w-5" />
+            <div className="mx-auto mb-1 flex h-10 w-10 items-center justify-center">
+              <Image
+                src="/logo-icon.png"
+                alt="Verified"
+                width={40}
+                height={40}
+                className="object-contain"
+              />
             </div>
             <p className="text-[10px] font-bold uppercase tracking-wider text-brand-600">
               Verified
