@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #e8f1fc;
+  --color-brand-100: #d0e3f9;
+  --color-brand-200: #a1c7f3;
+  --color-brand-300: #6ba8eb;
+  --color-brand-400: #2d87e0;
+  --color-brand-500: #0056d2;
+  --color-brand-600: #004bb8;
+  --color-brand-700: #003d96;
+  --color-brand-800: #002f73;
+  --color-brand-900: #001f4d;
+  --color-surface: #f5f7fa;
+  --color-ink: #1c1d1f;
+  --color-muted: #6a6f73;
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-card-hover: 0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-elevated: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface text-ink antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    @apply tracking-tight text-ink;
+  }
+}
+
+@layer utilities {
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-card-hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .certificate-sheet {
+    aspect-ratio: 1.414 / 1;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

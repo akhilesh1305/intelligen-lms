@@ -1,0 +1,8 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm install && npx prisma generate && npm run build"
+
+[deploy]
+startCommand = "bash -c 'npx prisma db push && exec npx next start -H 0.0.0.0 -p ${PORT:-8080}'"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
