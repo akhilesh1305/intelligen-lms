@@ -43,6 +43,10 @@ next-env.d.ts
 /prisma/*.db
 /prisma/*.db-journal
 
-# uploaded avatars
+# uploaded media
 /public/uploads/avatars/*
 !/public/uploads/avatars/.gitkeep
+/public/uploads/thumbnails/*
+!/public/uploads/thumbnails/.gitkeep
+/public/uploads/videos/*
+!/public/uploads/videos/.gitkeep

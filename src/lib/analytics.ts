@@ -1,3 +1,9 @@
+import { getChallengeWindow } from "@/lib/challenge-window";
+import {
+  getCurrentWeekSlug,
+  getWeekLabel,
+  getWeeklyLeaderboard,
+} from "@/lib/weekly-leaderboard";
 import { db } from "./db";
 
 export async function getPlatformAnalytics() {
@@ -113,5 +119,81 @@ export async function getInstructorAnalytics(instructorId: string) {
             )
           : 0,
     })),
+  };
+}
+
+export async function getLeaderboardAnalytics() {
+  const weekSlug = getCurrentWeekSlug();
+  const { startsAt, endsAt } = getChallengeWindow("WEEKLY");
+
+  const [
+    topLearners,
+    participants,
+    weekAttempts,
+    aggregate,
+    dailyQuizCount,
+    weeklyQuizCount,
+  ] = await Promise.all([
+    getWeeklyLeaderboard(10),
+    db.weeklyLeaderboardEntry.count({ where: { weekSlug } }),
+    db.challengeAttempt.findMany({
+      where: { completedAt: { gte: startsAt, lte: endsAt } },
+      select: { completedAt: true, pointsEarned: true },
+    }),
+    db.weeklyLeaderboardEntry.aggregate({
+      where: { weekSlug },
+      _sum: { points: true, quizzesCompleted: true },
+    }),
+    db.challenge.count({
+      where: {
+        period: "DAILY",
+        startsAt: { gte: startsAt, lte: endsAt },
+      },
+    }),
+    db.challenge.count({
+      where: {
+        period: "WEEKLY",
+        startsAt: { gte: startsAt, lte: endsAt },
+      },
+    }),
+  ]);
+
+  const activityByDay = new Map<string, { attempts: number; points: number }>();
+  for (const attempt of weekAttempts) {
+    const day = attempt.completedAt.toISOString().slice(0, 10);
+    const current = activityByDay.get(day) ?? { attempts: 0, points: 0 };
+    current.attempts += 1;
+    current.points += attempt.pointsEarned;
+    activityByDay.set(day, current);
+  }
+
+  const quizActivity = Array.from(activityByDay.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([day, stats]) => ({
+      day: new Date(day + "T12:00:00Z").toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        timeZone: "UTC",
+      }),
+      attempts: stats.attempts,
+      points: stats.points,
+    }));
+
+  return {
+    weekSlug,
+    weekLabel: getWeekLabel(),
+    participants,
+    totalAttempts: weekAttempts.length,
+    totalPoints: aggregate._sum.points ?? 0,
+    totalQuizzesCompleted: aggregate._sum.quizzesCompleted ?? 0,
+    dailyQuizCount,
+    weeklyQuizCount,
+    topLearners: topLearners.map((l) => ({
+      name: l.name,
+      points: l.points,
+      quizzes: l.quizzesCompleted,
+    })),
+    quizActivity,
   };
 }

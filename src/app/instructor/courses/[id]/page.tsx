@@ -5,16 +5,20 @@ import {
   BookOpen,
   ClipboardList,
   Layers,
+  PlayCircle,
   Plus,
 } from "lucide-react";
 import { requireAuth } from "@/lib/auth";
+import { requireApprovedInstructorPage } from "@/lib/instructor";
 import { getCourseWithContent } from "@/lib/courses";
+import { db } from "@/lib/db";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CourseForm } from "../course-form";
 import { ModuleForm } from "./module-form";
 import { LessonForm } from "./lesson-form";
 import { AiQuizGenerator } from "@/components/instructor/ai-quiz-generator";
+import { AiCourseGenerator } from "@/components/instructor/ai-course-generator";
 
 export default async function ManageCoursePage({
   params,
@@ -22,6 +26,7 @@ export default async function ManageCoursePage({
   params: Promise<{ id: string }>;
 }) {
   const session = await requireAuth(["INSTRUCTOR", "ADMIN"]);
+  await requireApprovedInstructorPage(session);
   const { id } = await params;
   const course = await getCourseWithContent(id);
 
@@ -39,6 +44,16 @@ export default async function ManageCoursePage({
           : "info";
 
   const totalLessons = course.modules.reduce((s, m) => s + m.lessons.length, 0);
+
+  const prerequisiteOptions = await db.course.findMany({
+    where: {
+      published: true,
+      status: "APPROVED",
+      id: { not: course.id },
+    },
+    select: { id: true, title: true },
+    orderBy: { title: "asc" },
+  });
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
@@ -140,7 +155,13 @@ export default async function ManageCoursePage({
                             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-muted">
                               {li + 1}
                             </span>
-                            <span className="text-ink">{lesson.title}</span>
+                            <span className="flex-1 text-ink">{lesson.title}</span>
+                            {lesson.videoUrl ? (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-700">
+                                <PlayCircle className="h-3 w-3" />
+                                Video
+                              </span>
+                            ) : null}
                           </li>
                         ))}
                       </ul>
@@ -164,8 +185,17 @@ export default async function ManageCoursePage({
         )}
       </section>
 
-      {/* ── AI Quiz Generator ── */}
+      {/* ── AI Course Generator ── */}
       <section className="mt-12">
+        <AiCourseGenerator
+          courseId={course.id}
+          courseTitle={course.title}
+          courseDescription={course.description}
+        />
+      </section>
+
+      {/* ── AI Quiz Generator ── */}
+      <section className="mt-8">
         <AiQuizGenerator
           courseId={course.id}
           modules={course.modules.map((m) => ({
@@ -215,7 +245,12 @@ export default async function ManageCoursePage({
                 title: course.title,
                 description: course.description,
                 published: course.published,
+                pricePaise: course.pricePaise,
+                thumbnail: course.thumbnail,
+                skillLevel: course.skillLevel,
+                prerequisiteCourseId: course.prerequisiteCourseId,
               }}
+              prerequisiteOptions={prerequisiteOptions}
             />
           </CardContent>
         </Card>

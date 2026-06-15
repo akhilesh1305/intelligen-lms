@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
+import { isFreeCourse } from "@/lib/currency";
 import { db } from "@/lib/db";
 import { sendEnrollmentEmail } from "@/lib/email";
 import { createNotification } from "@/lib/notifications";
+import { canUserViewCourse } from "@/lib/organizations";
+import { assertPrerequisitesMet } from "@/lib/prerequisites";
 
 export async function POST(request: Request) {
   const session = await getSession();
@@ -20,12 +23,32 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Course not found" }, { status: 404 });
   }
 
+  const mayView = await canUserViewCourse(
+    { id: session.id, role: session.role },
+    course
+  );
+  if (!mayView) {
+    return NextResponse.json({ error: "Course not found" }, { status: 404 });
+  }
+
+  if (!isFreeCourse(course.pricePaise)) {
+    return NextResponse.json(
+      { error: "This course requires payment. Use Buy this course." },
+      { status: 402 }
+    );
+  }
+
   const existing = await db.enrollment.findUnique({
     where: { userId_courseId: { userId: session.id, courseId } },
   });
 
   if (existing) {
     return NextResponse.json({ error: "Already enrolled" }, { status: 409 });
+  }
+
+  const prereqError = await assertPrerequisitesMet(session.id, courseId);
+  if (prereqError) {
+    return NextResponse.json({ error: prereqError }, { status: 403 });
   }
 
   await db.enrollment.create({

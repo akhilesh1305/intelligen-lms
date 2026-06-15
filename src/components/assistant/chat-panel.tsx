@@ -93,14 +93,14 @@ export function ChatPanel({
   return (
     <div
       className={cn(
-        "flex flex-col bg-white",
+        "flex flex-col bg-panel",
         fullPage
           ? "min-h-[calc(100vh-8rem)]"
-          : "fixed z-50 flex flex-col border border-slate-200 shadow-elevated max-sm:inset-0 max-sm:h-full max-sm:w-full max-sm:rounded-none sm:bottom-4 sm:right-4 sm:h-[min(600px,calc(100vh-6rem))] sm:w-[min(400px,calc(100vw-2rem))] sm:rounded-lg safe-bottom"
+          : "fixed z-50 flex flex-col border border-slate-200 shadow-elevated dark:border-slate-700 max-sm:inset-0 max-sm:h-full max-sm:w-full max-sm:rounded-none sm:bottom-4 sm:right-4 sm:h-[min(600px,calc(100vh-6rem))] sm:w-[min(400px,calc(100vw-2rem))] sm:rounded-lg safe-bottom"
       )}
     >
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-slate-100 bg-gradient-to-r from-brand-600 to-brand-700 px-4 py-3 text-white">
+      <div className="flex items-center gap-3 border-b border-border bg-gradient-to-r from-brand-600 to-brand-700 px-4 py-3 text-white">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
           <Sparkles className="h-5 w-5" />
         </div>
@@ -131,10 +131,10 @@ export function ChatPanel({
         ))}
         {loading && (
           <div className="flex gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface dark:bg-slate-800">
               <Bot className="h-4 w-4 text-brand-600" />
             </div>
-            <div className="flex items-center gap-1 rounded-lg bg-white px-4 py-3 shadow-sm">
+            <div className="flex items-center gap-1 rounded-lg border border-border bg-panel px-4 py-3 shadow-sm">
               <span className="h-2 w-2 animate-bounce rounded-full bg-brand-400 [animation-delay:0ms]" />
               <span className="h-2 w-2 animate-bounce rounded-full bg-brand-400 [animation-delay:150ms]" />
               <span className="h-2 w-2 animate-bounce rounded-full bg-brand-400 [animation-delay:300ms]" />
@@ -146,12 +146,12 @@ export function ChatPanel({
 
       {/* Suggestions */}
       {messages.length <= 1 && (
-        <div className="flex flex-wrap gap-2 border-t border-slate-100 bg-white px-4 py-2">
+        <div className="flex flex-wrap gap-2 border-t border-border bg-panel px-4 py-2">
           {SUGGESTIONS.map((s) => (
             <button
               key={s}
               onClick={() => sendMessage(s)}
-              className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-muted transition-colors hover:border-brand-300 hover:text-brand-600"
+              className="rounded-full border border-border bg-surface px-3 py-1 text-xs text-ink transition-colors hover:border-brand-300 hover:text-brand-600 dark:text-muted dark:hover:text-brand-300"
             >
               {s}
             </button>
@@ -165,13 +165,13 @@ export function ChatPanel({
           e.preventDefault();
           sendMessage(input);
         }}
-        className="flex gap-2 border-t border-slate-100 bg-white p-4"
+        className="flex gap-2 border-t border-border bg-panel p-4"
       >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about courses or request a roadmap..."
-          className="flex-1 rounded-sm border border-slate-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+          className="flex-1 rounded-lg border border-border bg-panel px-3 py-2 text-sm text-ink placeholder:text-muted focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
           disabled={loading}
         />
         <button

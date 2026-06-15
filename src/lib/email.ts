@@ -58,6 +58,14 @@ export async function sendCertificateEmail(
   });
 }
 
+export async function sendTwoFactorCodeEmail(to: string, code: string) {
+  return sendEmail({
+    to,
+    subject: "Your IntelliGen LMS verification code",
+    html: `<p>Your verification code is <strong>${code}</strong>.</p><p>This code expires in 10 minutes.</p>`,
+  });
+}
+
 export async function sendCourseApprovalEmail(
   to: string,
   name: string,

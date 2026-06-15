@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireAuth } from "@/lib/auth";
 import { getPendingCourses } from "@/lib/courses";
 import { SectionHeader } from "@/components/ui/section-header";
@@ -14,6 +15,13 @@ export default async function ApprovalsPage() {
         description="Review and approve instructor-submitted courses"
       />
 
+      <p className="mt-4 text-sm text-muted">
+        New instructor sign-ups?{" "}
+        <Link href="/admin/instructors" className="font-medium text-brand-600 hover:underline">
+          Instructor verification
+        </Link>
+      </p>
+
       {courses.length === 0 ? (
         <p className="mt-12 text-center text-muted">No courses pending approval.</p>
       ) : (
@@ -21,7 +29,7 @@ export default async function ApprovalsPage() {
           {courses.map((course) => (
             <div
               key={course.id}
-              className="rounded-sm border border-slate-200 bg-white p-6 shadow-card"
+              className="rounded-lg border border-border bg-panel p-6 shadow-card"
             >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
@@ -30,7 +38,7 @@ export default async function ApprovalsPage() {
                     By {course.instructor.name} ·{" "}
                     {course.modules.reduce((s, m) => s + m._count.lessons, 0)} lessons
                   </p>
-                  <p className="mt-3 text-sm text-ink/80 line-clamp-3">
+                  <p className="mt-3 line-clamp-3 text-sm text-muted">
                     {course.description}
                   </p>
                 </div>

@@ -1,0 +1,40 @@
+---
+description: Keep FEATURES.md updated whenever product features are added or changed
+alwaysApply: true
+---
+
+# Feature table maintenance
+
+IntelliGen LMS maintains a product inventory in **`FEATURES.md`** at the repo root.
+
+## When to update
+
+Update `FEATURES.md` in the **same change** whenever you:
+
+- Add a new user-facing feature, page, game, API capability, or admin tool
+- Materially change behavior (e.g. new game mode, new org capability, new auth method)
+- Remove or deprecate a feature (mark row or remove with changelog note)
+
+Do **not** skip this for “small” features — the table is the source of truth for what exists.
+
+## How to update
+
+1. Open `FEATURES.md`.
+2. Add or edit a row in the **Feature table** with: `#`, Feature name, Area, Status (✅ / 🧪 / 🔒), Where (route or file), Description.
+3. Bump **Last updated** date at the top.
+4. Add a bullet to **Changelog (recent)** for meaningful releases.
+5. Adjust **Summary** counts if needed.
+
+## Status values
+
+- **✅ Live** — works in production without extra env setup
+- **🧪 Partial** — needs API keys, SMTP, Razorpay, OpenAI, SSO config, etc.
+- **🔒 Role-gated** — requires Instructor, Admin, or Org Admin
+
+## Areas
+
+Use existing areas when possible: Learning, AI, Games, Gamification, Organizations, Commerce, Security, Social, Admin, Platform.
+
+## README
+
+Keep `README.md` **Features** section as a short highlight list with a link to `FEATURES.md` for the full inventory — do not duplicate the full table in README.

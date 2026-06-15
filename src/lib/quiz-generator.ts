@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { ChallengeQuizCategory } from "@/lib/challenge-quiz-topics";
 
 export type GeneratedQuestion = {
   question: string;
@@ -146,6 +147,231 @@ export function generateQuestionsLocally(
   }
 
   return questions.slice(0, count);
+}
+
+const CHALLENGE_LOCAL_BANK: Record<
+  ChallengeQuizCategory,
+  { question: string; options: string[]; correctIndex: number }[]
+> = {
+  GK: [
+    {
+      question: "Which planet is known as the Red Planet?",
+      options: ["Venus", "Mars", "Jupiter", "Saturn"],
+      correctIndex: 1,
+    },
+    {
+      question: "What is the capital of Japan?",
+      options: ["Seoul", "Beijing", "Tokyo", "Bangkok"],
+      correctIndex: 2,
+    },
+    {
+      question: "Who wrote the play Romeo and Juliet?",
+      options: [
+        "Charles Dickens",
+        "William Shakespeare",
+        "Jane Austen",
+        "Mark Twain",
+      ],
+      correctIndex: 1,
+    },
+    {
+      question: "Which gas do plants absorb from the atmosphere during photosynthesis?",
+      options: ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"],
+      correctIndex: 2,
+    },
+    {
+      question: "The Great Wall is located in which country?",
+      options: ["India", "China", "Egypt", "Peru"],
+      correctIndex: 1,
+    },
+  ],
+  APTITUDE: [
+    {
+      question: "What is 25% of 200?",
+      options: ["25", "40", "50", "75"],
+      correctIndex: 2,
+    },
+    {
+      question: "If 3 pencils cost 12 rupees, what is the cost of 5 pencils?",
+      options: ["15", "18", "20", "24"],
+      correctIndex: 2,
+    },
+    {
+      question: "Complete the series: 2, 4, 8, 16, ?",
+      options: ["20", "24", "32", "36"],
+      correctIndex: 2,
+    },
+    {
+      question: "BOOK is to READ as FOOD is to ?",
+      options: ["Cook", "Eat", "Buy", "Serve"],
+      correctIndex: 1,
+    },
+    {
+      question:
+        "A train travels 60 km in 1 hour. How far will it travel in 2.5 hours at the same speed?",
+      options: ["120 km", "130 km", "150 km", "180 km"],
+      correctIndex: 2,
+    },
+  ],
+  TECHNICAL: [
+    {
+      question: "Which data structure uses FIFO (First In, First Out) order?",
+      options: ["Stack", "Queue", "Tree", "Graph"],
+      correctIndex: 1,
+    },
+    {
+      question: "What does HTTP stand for?",
+      options: [
+        "HyperText Transfer Protocol",
+        "High Transfer Text Protocol",
+        "Hyperlink Text Transmission Process",
+        "Host Transfer Terminal Program",
+      ],
+      correctIndex: 0,
+    },
+    {
+      question: "Which SQL clause is used to filter rows before grouping?",
+      options: ["ORDER BY", "HAVING", "WHERE", "GROUP BY"],
+      correctIndex: 2,
+    },
+    {
+      question: "In programming, what is a bug?",
+      options: [
+        "A hardware failure",
+        "An error or defect in code",
+        "A type of virus",
+        "A backup file",
+      ],
+      correctIndex: 1,
+    },
+    {
+      question: "Which layer of the OSI model handles routing between networks?",
+      options: ["Data Link", "Transport", "Network", "Session"],
+      correctIndex: 2,
+    },
+  ],
+};
+
+function generateChallengeQuestionsLocally(
+  category: ChallengeQuizCategory,
+  topic: string,
+  count: number
+): GeneratedQuestion[] {
+  const bank = shuffle([...CHALLENGE_LOCAL_BANK[category]]);
+  const questions: GeneratedQuestion[] = [];
+  const used = new Set<string>();
+
+  for (const item of bank) {
+    if (questions.length >= count) break;
+    if (used.has(item.question)) continue;
+    used.add(item.question);
+    questions.push({
+      question: item.question,
+      options: [...item.options],
+      correctIndex: item.correctIndex,
+    });
+  }
+
+  while (questions.length < count) {
+    const template = bank[questions.length % bank.length];
+    questions.push({
+      question: template.question,
+      options: [...template.options],
+      correctIndex: template.correctIndex,
+    });
+  }
+
+  return questions.slice(0, count);
+}
+
+async function generateChallengeWithOpenAI(
+  category: ChallengeQuizCategory,
+  topic: string,
+  content: string,
+  count: number
+): Promise<GeneratedQuestion[] | null> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return null;
+
+  const categoryGuide: Record<ChallengeQuizCategory, string> = {
+    GK: "General Knowledge — factual questions about the world, history, science, geography, and current affairs.",
+    APTITUDE:
+      "Aptitude — reasoning, percentages, ratios, puzzles, patterns, and verbal ability with solvable multiple-choice answers.",
+    TECHNICAL:
+      "Technical — programming, databases, networking, OS, web development, and core IT concepts.",
+  };
+
+  try {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: `You generate multiple-choice quiz questions for a learning platform challenge game. Return ONLY valid JSON with this shape:
+{"questions":[{"question":"string","options":["A","B","C","D"],"correctIndex":0}]}
+Rules: exactly 4 options per question, correctIndex 0-3, questions must be self-contained, factual, and appropriate for the category. No trick questions.`,
+          },
+          {
+            role: "user",
+            content: `Category: ${category} (${categoryGuide[category]})\nTopic: ${topic}\n\nGenerate ${count} quiz questions:\n\n${content}`,
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 2000,
+        response_format: { type: "json_object" },
+      }),
+    });
+
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    const raw = data.choices?.[0]?.message?.content;
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    const validated = responseSchema.safeParse(parsed);
+    if (!validated.success) return null;
+
+    return validated.data.questions.map((q) => ({
+      question: q.question,
+      options: q.options.slice(0, 4),
+      correctIndex: Math.min(q.correctIndex, q.options.length - 1),
+    }));
+  } catch {
+    return null;
+  }
+}
+
+export async function generateChallengeQuizQuestions(
+  category: ChallengeQuizCategory,
+  topic: string,
+  content: string,
+  questionCount: number
+): Promise<QuizGenerationResult> {
+  const count = Math.min(Math.max(questionCount, 1), 10);
+
+  const aiQuestions = await generateChallengeWithOpenAI(
+    category,
+    topic,
+    content,
+    count
+  );
+  if (aiQuestions && aiQuestions.length > 0) {
+    return { questions: aiQuestions.slice(0, count), source: "openai" };
+  }
+
+  const localQuestions = generateChallengeQuestionsLocally(
+    category,
+    topic,
+    count
+  );
+  return { questions: localQuestions, source: "local" };
 }
 
 async function generateWithOpenAI(

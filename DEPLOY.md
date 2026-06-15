@@ -74,6 +74,15 @@ Optional (email & AI):
 | `SMTP_FROM` | `IntelliGen LMS <noreply@yourdomain.com>` |
 | `OPENAI_API_KEY` | For AI assistant & quiz generator |
 
+Razorpay (course purchases & subscriptions — India):
+
+| Variable | Value |
+|----------|--------|
+| `RAZORPAY_KEY_ID` | From [Razorpay Dashboard](https://dashboard.razorpay.com/app/keys) (`rzp_test_` or `rzp_live_`) |
+| `RAZORPAY_KEY_SECRET` | Secret key (server only — never expose in client) |
+| `RAZORPAY_WEBHOOK_SECRET` | From Webhooks → add `https://your-domain/api/webhooks/razorpay` |
+| `NEXT_PUBLIC_APP_URL` | `https://learn.intelligenlms.com` (or your Railway URL) |
+
 **Link `DATABASE_URL`:** In the web service Variables, click **+ New Variable** → **Add Reference** → select PostgreSQL → `DATABASE_URL`.
 
 ## Step 5 — Deploy
@@ -94,11 +103,55 @@ Railway auto-deploys on push. The first deploy will:
 
 Share that link — your site is now public.
 
-## Step 7 — Custom domain (optional)
+## Step 7 — Custom domain: `learn.intelligenlms.com`
 
-1. In **Networking**, click **Custom Domain**.
-2. Add your domain (e.g. `learn.yourdomain.com`).
-3. Add the CNAME record at your DNS provider as Railway instructs.
+### A. Buy the domain
+
+Register **intelligenlms.com** at a registrar (Namecheap, Cloudflare, etc.) if you have not already.
+
+### B. Add domain in Railway
+
+1. Open [Railway](https://railway.app/dashboard) → project **intelligen-lms** → service **intelligen-web**.
+2. **Settings** → **Networking** → **+ Custom Domain**.
+3. Enter: `learn.intelligenlms.com`
+4. Railway shows the DNS record(s) to add — keep that page open.
+
+Or via CLI (after `railway login`):
+
+```powershell
+railway service link intelligen-web
+railway domain learn.intelligenlms.com
+```
+
+### C. DNS at your registrar
+
+Add this record where you manage **intelligenlms.com** DNS:
+
+| Type | Host / Name | Value / Target |
+|------|-------------|----------------|
+| **CNAME** | `learn` | `intelligen-web-production.up.railway.app` |
+
+Use the exact target Railway shows if it differs. TTL: automatic or 300 seconds.
+
+**Cloudflare:** use **DNS only** (grey cloud) until the domain is active, then you can enable the proxy.
+
+### D. Railway environment variable
+
+In **intelligen-web** → **Variables**, add:
+
+| Variable | Value |
+|----------|--------|
+| `NEXT_PUBLIC_APP_URL` | `https://learn.intelligenlms.com` |
+
+Redeploy after adding (or push a new deploy). This fixes Open Graph / share preview URLs.
+
+### E. Verify
+
+- Wait 5–30 minutes for DNS (up to 48h in rare cases).
+- Railway **Networking** should show `learn.intelligenlms.com` as **Active** with HTTPS.
+- Open https://learn.intelligenlms.com — your LMS should load.
+
+The old Railway URL (`intelligen-web-production.up.railway.app`) will still work as a backup.
 
 ## Demo accounts (after first seed)
 

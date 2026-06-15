@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { createAchievementPost } from "./feed";
 import { createNotification } from "./notifications";
 
 const BADGE_DEFINITIONS = [
@@ -44,8 +45,10 @@ export async function awardBadge(userId: string, slug: string) {
     type: "BADGE_EARNED",
     title: `Badge earned: ${badge.name}`,
     message: badge.description,
-    link: "/leaderboard",
+    link: "/feed",
   });
+
+  await createAchievementPost(userId, badge);
 
   return badge;
 }
@@ -79,6 +82,9 @@ export async function getLeaderboard(limit = 20) {
       id: true,
       name: true,
       points: true,
+      achievementLevel: true,
+      challengePoints: true,
+      challengesPassed: true,
       userBadges: { include: { badge: true }, take: 3 },
       _count: { select: { certificates: true } },
     },

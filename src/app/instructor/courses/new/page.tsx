@@ -1,9 +1,11 @@
 import { requireAuth } from "@/lib/auth";
+import { requireApprovedInstructorPage } from "@/lib/instructor";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CourseForm } from "../course-form";
 
 export default async function NewCoursePage() {
-  await requireAuth(["INSTRUCTOR", "ADMIN"]);
+  const session = await requireAuth(["INSTRUCTOR", "ADMIN"]);
+  await requireApprovedInstructorPage(session);
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 lg:px-8">

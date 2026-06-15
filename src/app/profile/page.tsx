@@ -1,24 +1,32 @@
 import Link from "next/link";
-import { ArrowLeft, User } from "lucide-react";
+import { ArrowLeft, Shield, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getUserOrganizationMemberships } from "@/lib/organizations";
 import { ProfileForm } from "@/components/profile/profile-form";
 
 export default async function ProfilePage() {
   const session = await requireAuth();
 
-  const user = await db.user.findUnique({
-    where: { id: session.id },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      avatarUrl: true,
-      role: true,
-      points: true,
-      createdAt: true,
-    },
-  });
+  const [user, orgMemberships] = await Promise.all([
+    db.user.findUnique({
+      where: { id: session.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
+        phoneNumber: true,
+        dateOfBirth: true,
+        maritalStatus: true,
+        role: true,
+        points: true,
+        createdAt: true,
+      },
+    }),
+    getUserOrganizationMemberships(session.id),
+  ]);
 
   if (!user) {
     return null;
@@ -40,8 +48,14 @@ export default async function ProfilePage() {
           Profile settings
         </h1>
         <p className="mt-1 text-sm text-muted">
-          Manage your profile picture and account details
+          Manage your profile picture, personal details, and account settings
         </p>
+        <Link href="/settings/security" className="mt-4 inline-block">
+          <Button variant="outline" size="sm">
+            <Shield className="h-4 w-4" />
+            Security & privacy
+          </Button>
+        </Link>
       </div>
 
       <div className="mt-8">
@@ -49,7 +63,15 @@ export default async function ProfilePage() {
           user={{
             ...user,
             createdAt: user.createdAt.toISOString(),
+            dateOfBirth: user.dateOfBirth
+              ? user.dateOfBirth.toISOString().slice(0, 10)
+              : null,
           }}
+          orgMemberships={orgMemberships.map((m) => ({
+            organizationName: m.organization.name,
+            employeeId: m.employeeId,
+            role: m.role,
+          }))}
         />
       </div>
     </div>

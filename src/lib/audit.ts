@@ -9,6 +9,17 @@ export const AUDIT_ACTION_LABELS: Record<AuditAction, string> = {
   COURSE_CREATED: "Course created",
   COURSE_UPDATED: "Course updated",
   USER_UPDATED: "User updated",
+  SSO_LOGIN: "SSO login",
+  TWO_FACTOR_ENABLED: "2FA enabled",
+  TWO_FACTOR_DISABLED: "2FA disabled",
+  TWO_FACTOR_VERIFIED: "2FA verified",
+  DEVICE_REVOKED: "Device revoked",
+  IP_BLOCKED: "IP blocked",
+  GDPR_EXPORT: "GDPR export",
+  GDPR_DELETION: "GDPR deletion",
+  SECURITY_SETTINGS_UPDATED: "Security settings updated",
+  INSTRUCTOR_APPROVED: "Instructor approved",
+  INSTRUCTOR_REJECTED: "Instructor rejected",
 };
 
 type LogAuditInput = {
@@ -102,6 +113,10 @@ export function formatAuditMetadata(metadata: string | null): string {
     if (data.changes) parts.push(`Changes: ${(data.changes as string[]).join(", ")}`);
     if (data.status) parts.push(`Status: ${data.status}`);
     if (data.updateType) parts.push(`Type: ${data.updateType}`);
+    if (data.provider) parts.push(`Provider: ${data.provider}`);
+    if (data.reason) parts.push(`Reason: ${data.reason}`);
+    if (data.device) parts.push(`Device: ${data.device}`);
+    if (data.ipAddress) parts.push(`IP: ${data.ipAddress}`);
 
     return parts.length > 0 ? parts.join(" · ") : metadata;
   } catch {

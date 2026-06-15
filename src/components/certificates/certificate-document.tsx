@@ -1,4 +1,5 @@
-import Image from "next/image";
+import { Logo } from "@/components/brand/logo";
+import { LogoWatermark } from "@/components/brand/logo-watermark";
 import { formatDate } from "@/lib/utils";
 
 type CertificateDocumentProps = {
@@ -19,30 +20,38 @@ export function CertificateDocument({
   return (
     <div
       id="certificate"
-      className="certificate-sheet relative mx-auto aspect-[1.414/1] w-full max-w-4xl bg-white shadow-elevated"
+      className="certificate-sheet relative mx-auto aspect-[1.414/1] w-full max-w-4xl overflow-hidden bg-white shadow-elevated"
     >
+      <LogoWatermark
+        size={360}
+        opacity={0.085}
+        tone="light"
+        position="center"
+        className="print:opacity-[0.1]"
+      />
+
       {/* Outer frame */}
-      <div className="absolute inset-0 border-[3px] border-brand-700" />
-      <div className="absolute inset-2 border border-brand-300" />
-      <div className="absolute inset-4 border border-slate-200" />
+      <div className="absolute inset-0 z-[1] border-[3px] border-brand-700" />
+      <div className="absolute inset-2 z-[1] border border-brand-300" />
+      <div className="absolute inset-4 z-[1] border border-slate-200" />
 
       {/* Corner accents */}
-      <div className="absolute left-6 top-6 h-8 w-8 border-l-2 border-t-2 border-brand-500" />
-      <div className="absolute right-6 top-6 h-8 w-8 border-r-2 border-t-2 border-brand-500" />
-      <div className="absolute bottom-6 left-6 h-8 w-8 border-b-2 border-l-2 border-brand-500" />
-      <div className="absolute bottom-6 right-6 h-8 w-8 border-b-2 border-r-2 border-brand-500" />
+      <div className="absolute left-6 top-6 z-[1] h-8 w-8 border-l-2 border-t-2 border-brand-500" />
+      <div className="absolute right-6 top-6 z-[1] h-8 w-8 border-r-2 border-t-2 border-brand-500" />
+      <div className="absolute bottom-6 left-6 z-[1] h-8 w-8 border-b-2 border-l-2 border-brand-500" />
+      <div className="absolute bottom-6 right-6 z-[1] h-8 w-8 border-b-2 border-r-2 border-brand-500" />
 
       {/* Content */}
-      <div className="relative flex h-full flex-col items-center justify-between px-10 py-8 text-center sm:px-16 sm:py-10">
-        {/* Header */}
+      <div className="relative z-10 flex h-full flex-col items-center justify-between px-10 py-8 text-center sm:px-16 sm:py-10">
+        {/* Header — official site logo */}
         <div className="w-full">
-          <div className="flex items-center justify-center">
-            <Image
-              src="/logo.png"
-              alt="IntelliGen LMS"
-              width={200}
-              height={64}
-              className="h-12 w-auto object-contain sm:h-14"
+          <div className="flex justify-center">
+            <Logo
+              href=""
+              variant="icon"
+              size="lg"
+              animated={false}
+              className="h-16 w-auto sm:h-[4.5rem]"
             />
           </div>
           <div className="mx-auto mt-4 h-px w-32 bg-gradient-to-r from-transparent via-brand-400 to-transparent sm:w-48" />
@@ -82,16 +91,14 @@ export function CertificateDocument({
           </div>
 
           <div className="hidden text-center sm:block">
-            <div className="mx-auto mb-1 flex h-10 w-10 items-center justify-center">
-              <Image
-                src="/logo-icon.png"
-                alt="Verified"
-                width={40}
-                height={40}
-                className="object-contain"
-              />
-            </div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-brand-600">
+            <Logo
+              href=""
+              variant="icon"
+              size="sm"
+              animated={false}
+              className="mx-auto h-10 w-auto opacity-90"
+            />
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-brand-600">
               Verified
             </p>
           </div>

@@ -1,3 +1,6 @@
+import type { SkillLevel } from "@prisma/client";
+import { formatSkillLevel } from "./skills";
+
 const categories = [
   "Development",
   "Data Science",
@@ -56,7 +59,8 @@ export function getCourseDuration(lessonCount: number) {
   return `${hours}h total`;
 }
 
-export function getCourseLevel(title: string) {
+export function getCourseLevel(title: string, skillLevel?: SkillLevel) {
+  if (skillLevel) return formatSkillLevel(skillLevel);
   const lower = title.toLowerCase();
   if (lower.includes("advanced") || lower.includes("machine learning")) return "Advanced";
   if (lower.includes("introduction") || lower.includes("basics") || lower.includes("fundamentals"))

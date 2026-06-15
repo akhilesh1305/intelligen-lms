@@ -10,12 +10,12 @@ export function ProgressBar({
   return (
     <div
       className={cn(
-        "h-1.5 w-full overflow-hidden rounded-full bg-slate-200",
+        "h-1.5 w-full overflow-hidden rounded-full bg-surface dark:bg-slate-700",
         className
       )}
     >
       <div
-        className="h-full rounded-full bg-brand-500 transition-all duration-500 ease-out"
+        className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400 transition-all duration-500 ease-out"
         style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
       />
     </div>

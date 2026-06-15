@@ -1,6 +1,7 @@
 import { Bot, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LearningRoadmap } from "@/lib/assistant/roadmap";
+import { VoiceNarrationControls } from "@/components/ai/voice-narration-controls";
 import { RoadmapCard } from "./roadmap-card";
 
 function renderMarkdown(text: string) {
@@ -26,7 +27,9 @@ export function ChatMessageBubble({
       <div
         className={cn(
           "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
-          isUser ? "bg-brand-600 text-white" : "bg-slate-100 text-brand-600"
+          isUser
+            ? "bg-brand-600 text-white"
+            : "bg-surface text-brand-600 dark:bg-slate-800 dark:text-brand-300"
         )}
       >
         {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
@@ -37,18 +40,24 @@ export function ChatMessageBubble({
             "inline-block rounded-lg px-4 py-2.5 text-sm leading-relaxed",
             isUser
               ? "bg-brand-600 text-white"
-              : "bg-white text-ink shadow-sm border border-slate-100"
+              : "border border-border bg-panel text-ink shadow-sm dark:bg-slate-800"
           )}
         >
           {isUser ? (
             content
           ) : (
             <div
-              className="prose prose-sm max-w-none text-left [&_a]:font-medium"
+              className="prose prose-sm max-w-none text-left text-ink dark:prose-invert [&_a]:font-medium [&_a]:text-brand-600 dark:[&_a]:text-brand-300"
               dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
             />
           )}
         </div>
+        {!isUser ? (
+          <div className="mt-1.5 flex items-center gap-2">
+            <VoiceNarrationControls text={content} compact />
+            <span className="text-xs text-muted">AI voice</span>
+          </div>
+        ) : null}
         {roadmap && !isUser && <RoadmapCard roadmap={roadmap} />}
       </div>
     </div>

@@ -4,6 +4,8 @@ import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { CourseCard } from "@/components/courses/course-card";
 import { getCourseCategory } from "@/lib/course-visuals";
+import { getReviewStatsForCourses } from "@/lib/reviews";
+import { LogoWatermark } from "@/components/brand/logo-watermark";
 import { cn } from "@/lib/utils";
 
 const filterCategories = [
@@ -22,7 +24,9 @@ export default async function CoursesPage({
 }) {
   const session = await getSession();
   const { q, category } = await searchParams;
-  const courses = await getPublishedCourses();
+  const courses = await getPublishedCourses(
+    session ? { id: session.id, role: session.role } : null
+  );
 
   let enrolledIds = new Set<string>();
   const progressMap = new Map<string, number>();
@@ -58,11 +62,27 @@ export default async function CoursesPage({
     return matchesQuery && matchesCategory;
   });
 
+  const reviewStats = await getReviewStatsForCourses(filtered.map((c) => c.id));
+
   return (
     <div>
       {/* Page header */}
-      <section className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden border-b border-border">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-20 dark:opacity-10"
+          style={{
+            backgroundImage: "url(/images/hero-learners.jpg)",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-50 via-panel/95 to-accent-violet-light/80 dark:from-brand-500/10 dark:via-panel/95 dark:to-accent-violet-light/40" />
+        <LogoWatermark
+          tone="auto"
+          size={220}
+          opacity={0.06}
+          position="bottom-right"
+          className="hidden md:block"
+        />
+        <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
           <h1 className="text-3xl font-bold text-ink sm:text-4xl">
             {query ? `Results for "${q}"` : "Explore courses"}
           </h1>
@@ -88,7 +108,7 @@ export default async function CoursesPage({
                   "shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-colors",
                   activeCategory === cat
                     ? "bg-brand-600 text-white"
-                    : "bg-white text-muted ring-1 ring-slate-200"
+                    : "bg-panel text-muted ring-1 ring-border"
                 )}
               >
                 {cat}
@@ -100,7 +120,7 @@ export default async function CoursesPage({
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Sidebar filters */}
           <aside className="hidden shrink-0 lg:block lg:w-56">
-            <div className="sticky top-36 rounded-sm border border-slate-200 bg-white p-5 shadow-card">
+            <div className="sticky top-36 rounded-xl border border-border bg-panel p-5 shadow-card">
               <h2 className="text-sm font-bold uppercase tracking-wider text-ink">
                 Categories
               </h2>
@@ -117,7 +137,7 @@ export default async function CoursesPage({
                         "block rounded-sm px-3 py-2 text-sm font-medium transition-colors",
                         activeCategory === cat
                           ? "bg-brand-50 text-brand-700"
-                          : "text-muted hover:bg-slate-50 hover:text-ink"
+                          : "text-muted hover:bg-surface hover:text-ink"
                       )}
                     >
                       {cat}
@@ -140,18 +160,26 @@ export default async function CoursesPage({
               </div>
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                {filtered.map((course) => (
-                  <CourseCard
-                    key={course.id}
-                    id={course.id}
-                    title={course.title}
-                    description={course.description}
-                    instructorName={course.instructor.name}
-                    lessonCount={countLessons(course.modules)}
-                    enrolled={enrolledIds.has(course.id)}
-                    progress={progressMap.get(course.id)}
-                  />
-                ))}
+                {filtered.map((course) => {
+                  const stats = reviewStats.get(course.id);
+                  return (
+                    <CourseCard
+                      key={course.id}
+                      id={course.id}
+                      title={course.title}
+                      description={course.description}
+                      instructorName={course.instructor.name}
+                      lessonCount={countLessons(course.modules)}
+                      enrolled={enrolledIds.has(course.id)}
+                      progress={progressMap.get(course.id)}
+                      pricePaise={course.pricePaise}
+                      thumbnail={course.thumbnail}
+                      skillLevel={course.skillLevel}
+                      rating={stats?.rating ?? null}
+                      reviewCount={stats?.count ?? 0}
+                    />
+                  );
+                })}
               </div>
             )}
           </div>

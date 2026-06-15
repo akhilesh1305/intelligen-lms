@@ -7,7 +7,12 @@ export function AssistantShell() {
   const pathname = usePathname();
 
   // Full-page assistant has its own panel; hide floating widget there and in learn mode
-  if (pathname.startsWith("/assistant") || pathname.startsWith("/learn")) {
+  if (
+    pathname.startsWith("/assistant") ||
+    pathname.startsWith("/learn") ||
+    pathname.startsWith("/login") ||
+    pathname === "/register"
+  ) {
     return null;
   }
 

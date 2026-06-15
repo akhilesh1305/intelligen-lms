@@ -22,11 +22,22 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="border-t border-slate-200 bg-ink text-slate-300">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+    <footer className="relative overflow-hidden border-t border-border bg-gradient-to-br from-slate-900 via-brand-900 to-slate-900 text-slate-300">
+      <div className="pointer-events-none absolute -right-20 top-0 h-64 w-64 rounded-full bg-brand-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-accent-violet/10 blur-3xl" />
+      <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <Logo variant="full" size="md" className="brightness-0 invert" />
+            <Logo
+              href="/"
+              variant="full"
+              size="lg"
+              inverted
+              iconOnlyMark
+              showText
+              animated={false}
+              className="[&_svg]:h-14 [&_svg]:w-auto sm:[&_svg]:h-16"
+            />
             <p className="mt-4 text-sm leading-relaxed text-slate-400">
               World-class learning for everyone. Build skills with courses from
               top instructors and advance your career.
@@ -43,7 +54,7 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-400 transition-colors hover:text-white"
+                      className="text-sm text-slate-400 transition-colors hover:text-brand-300"
                     >
                       {link.label}
                     </Link>
@@ -54,14 +65,20 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-700 pt-8 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-700/60 pt-8 sm:flex-row">
           <p className="text-sm text-slate-500">
             © {new Date().getFullYear()} IntelliGen LMS. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-slate-500">
-            <span>Privacy Policy</span>
-            <span>Terms of Service</span>
-            <span>Cookie Settings</span>
+            <span className="cursor-pointer transition-colors hover:text-slate-300">
+              Privacy Policy
+            </span>
+            <span className="cursor-pointer transition-colors hover:text-slate-300">
+              Terms of Service
+            </span>
+            <span className="cursor-pointer transition-colors hover:text-slate-300">
+              Cookie Settings
+            </span>
           </div>
         </div>
       </div>

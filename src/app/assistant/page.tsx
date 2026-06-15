@@ -10,7 +10,11 @@ export default function AssistantPage() {
         </div>
         <h1 className="mt-4 text-2xl font-bold text-ink">AI Learning Assistant</h1>
         <p className="mt-2 text-muted">
-          Get course answers, personalized roadmaps, and smart recommendations
+          Get course answers, personalized roadmaps, and smart recommendations.
+          For career-focused coaching, try the{" "}
+          <a href="/coach" className="font-semibold text-brand-600 hover:underline">Corporate Coach</a>
+          {" "}or explore the{" "}
+          <a href="/ai" className="font-semibold text-brand-600 hover:underline">AI learning suite</a>.
         </p>
       </div>
 

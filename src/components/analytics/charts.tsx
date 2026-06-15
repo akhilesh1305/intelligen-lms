@@ -1,5 +1,6 @@
 "use client";
 
+import { formatRole } from "@/lib/roles";
 import {
   Bar,
   BarChart,
@@ -70,11 +71,16 @@ export function RoleDistributionChart({
 }: {
   data: { role: string; count: number }[];
 }) {
+  const chartData = data.map((d) => ({
+    count: d.count,
+    role: formatRole(d.role),
+  }));
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <PieChart>
         <Pie
-          data={data}
+          data={chartData}
           dataKey="count"
           nameKey="role"
           cx="50%"
@@ -82,13 +88,75 @@ export function RoleDistributionChart({
           outerRadius={80}
           label={({ role, count }) => `${role}: ${count}`}
         >
-          {data.map((_, i) => (
+          {chartData.map((_, i) => (
             <Cell key={i} fill={COLORS[i % COLORS.length]} />
           ))}
         </Pie>
         <Tooltip />
         <Legend />
       </PieChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function WeeklyLeaderboardChart({
+  data,
+}: {
+  data: { name: string; points: number }[];
+}) {
+  const short = data.map((d) => ({
+    ...d,
+    shortName: d.name.length > 14 ? d.name.slice(0, 14) + "…" : d.name,
+  }));
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={short} layout="vertical">
+        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+        <XAxis type="number" tick={{ fontSize: 12 }} />
+        <YAxis
+          dataKey="shortName"
+          type="category"
+          width={90}
+          tick={{ fontSize: 10 }}
+        />
+        <Tooltip />
+        <Bar dataKey="points" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function QuizActivityChart({
+  data,
+}: {
+  data: { day: string; attempts: number; points: number }[];
+}) {
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+        <XAxis dataKey="day" tick={{ fontSize: 11 }} />
+        <YAxis tick={{ fontSize: 12 }} />
+        <Tooltip />
+        <Legend />
+        <Line
+          type="monotone"
+          dataKey="attempts"
+          name="Quiz attempts"
+          stroke="#0056d2"
+          strokeWidth={2}
+          dot={{ fill: "#0056d2" }}
+        />
+        <Line
+          type="monotone"
+          dataKey="points"
+          name="Points earned"
+          stroke="#8b5cf6"
+          strokeWidth={2}
+          dot={{ fill: "#8b5cf6" }}
+        />
+      </LineChart>
     </ResponsiveContainer>
   );
 }
@@ -110,6 +178,62 @@ export function CourseStatusChart({
             <Cell key={i} fill={COLORS[i % COLORS.length]} />
           ))}
         </Bar>
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function NamedDistributionChart({
+  data,
+}: {
+  data: { name: string; count: number }[];
+}) {
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          data={data}
+          dataKey="count"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          outerRadius={80}
+          label={({ name, count }) => `${name}: ${count}`}
+        >
+          {data.map((_, i) => (
+            <Cell key={i} fill={COLORS[i % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </PieChart>
+    </ResponsiveContainer>
+  );
+}
+
+export function LearnerProgressChart({
+  data,
+}: {
+  data: { name: string; progress: number }[];
+}) {
+  const short = data.map((d) => ({
+    ...d,
+    shortName: d.name.length > 14 ? d.name.slice(0, 14) + "…" : d.name,
+  }));
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart data={short} layout="vertical">
+        <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+        <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 12 }} />
+        <YAxis
+          dataKey="shortName"
+          type="category"
+          width={90}
+          tick={{ fontSize: 10 }}
+        />
+        <Tooltip />
+        <Bar dataKey="progress" name="Avg progress %" fill="#10b981" radius={[0, 4, 4, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

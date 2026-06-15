@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
+import { instructorApiGuard } from "@/lib/instructor";
 import { db } from "@/lib/db";
 import {
   buildCourseContentText,
@@ -18,10 +19,8 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getSession();
-  if (!session || !["INSTRUCTOR", "ADMIN"].includes(session.role)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const session = await instructorApiGuard(await getSession());
+  if (session instanceof NextResponse) return session;
 
   const { id: courseId } = await params;
   const course = await db.course.findUnique({

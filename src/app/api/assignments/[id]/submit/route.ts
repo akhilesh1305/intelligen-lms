@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { evaluateAssignment } from "@/lib/ai/assignment-evaluator";
 import { addPoints } from "@/lib/gamification";
 import { syncEnrollmentProgress } from "@/lib/progress";
 import { createNotification } from "@/lib/notifications";
@@ -36,12 +37,36 @@ export async function POST(
     return NextResponse.json({ error: "Not enrolled" }, { status: 403 });
   }
 
-  await db.assignmentSubmission.upsert({
+  const submission = await db.assignmentSubmission.upsert({
     where: {
       assignmentId_userId: { assignmentId, userId: session.id },
     },
     create: { assignmentId, userId: session.id, content },
     update: { content, submittedAt: new Date() },
+  });
+
+  const evaluation = await evaluateAssignment(
+    assignment.title,
+    assignment.description,
+    content
+  );
+  const feedback = `${evaluation.feedback}\n\n**Strengths:** ${evaluation.strengths.join("; ")}\n**Improvements:** ${evaluation.improvements.join("; ")}`;
+
+  await db.assignmentSubmission.update({
+    where: { id: submission.id },
+    data: {
+      grade: evaluation.grade,
+      feedback,
+      gradedAt: new Date(),
+    },
+  });
+
+  await createNotification({
+    userId: session.id,
+    type: "ASSIGNMENT_GRADED",
+    title: `AI graded your assignment: ${evaluation.grade}%`,
+    message: assignment.title,
+    link: `/learn/${assignment.courseId}?tab=assignments`,
   });
 
   await addPoints(session.id, 25);
@@ -53,10 +78,15 @@ export async function POST(
       userId: course.instructorId,
       type: "ASSIGNMENT_GRADED",
       title: "New assignment submission",
-      message: `A student submitted ${assignment.title}`,
+      message: `A learner submitted ${assignment.title}`,
       link: `/instructor/courses/${course.id}`,
     });
   }
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({
+    success: true,
+    grade: evaluation.grade,
+    feedback,
+    source: evaluation.source,
+  });
 }

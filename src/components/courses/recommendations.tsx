@@ -9,6 +9,9 @@ type RecommendedCourse = {
   description: string;
   instructor: { name: string };
   modules: { lessons: unknown[] }[];
+  pricePaise?: number;
+  thumbnail?: string | null;
+  skillLevel?: "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
   matchReason: string;
   confidence: number;
 };
@@ -41,6 +44,9 @@ export function Recommendations({ courses }: { courses: RecommendedCourse[] }) {
               description={course.description}
               instructorName={course.instructor.name}
               lessonCount={countLessons(course.modules)}
+              pricePaise={course.pricePaise ?? 0}
+              thumbnail={course.thumbnail}
+              skillLevel={course.skillLevel}
             />
           </div>
         ))}

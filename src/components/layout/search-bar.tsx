@@ -23,7 +23,7 @@ export function SearchBar({ className }: { className?: string }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="What do you want to learn?"
-          className="h-11 w-full rounded-sm border border-slate-300 bg-white pl-10 pr-4 text-sm text-ink placeholder:text-muted focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
+          className="h-11 w-full rounded-lg border border-border bg-panel pl-10 pr-4 text-sm text-ink placeholder:text-muted focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20"
         />
       </div>
     </form>

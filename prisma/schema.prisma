@@ -13,11 +13,48 @@ enum Role {
   ADMIN
 }
 
+enum CourseVisibility {
+  PUBLIC
+  ORGANIZATION
+}
+
+enum OrganizationRole {
+  ORG_ADMIN
+  ORG_INSTRUCTOR
+  ORG_LEARNER
+}
+
+enum InstructorStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum CourseStatus {
   DRAFT
   PENDING_APPROVAL
   APPROVED
   REJECTED
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  DIVORCED
+  WIDOWED
+  SEPARATED
+  PREFER_NOT_TO_SAY
+}
+
+enum TwoFactorChannel {
+  EMAIL
+  SMS
 }
 
 enum NotificationType {
@@ -29,6 +66,30 @@ enum NotificationType {
   ASSIGNMENT_GRADED
   FORUM_REPLY
   BADGE_EARNED
+  PAYMENT_RECEIVED
+  SUBSCRIPTION_ACTIVE
+  WEBINAR_SCHEDULED
+  WEBINAR_REGISTERED
+  CHALLENGE_PASSED
+  LEVEL_UP
+  INSTRUCTOR_SUBMITTED
+  INSTRUCTOR_APPROVED
+  INSTRUCTOR_REJECTED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+enum SubscriptionStatus {
+  CREATED
+  ACTIVE
+  HALTED
+  CANCELLED
+  COMPLETED
+  EXPIRED
 }
 
 enum AuditAction {
@@ -39,6 +100,90 @@ enum AuditAction {
   COURSE_CREATED
   COURSE_UPDATED
   USER_UPDATED
+  SSO_LOGIN
+  TWO_FACTOR_ENABLED
+  TWO_FACTOR_DISABLED
+  TWO_FACTOR_VERIFIED
+  DEVICE_REVOKED
+  IP_BLOCKED
+  GDPR_EXPORT
+  GDPR_DELETION
+  SECURITY_SETTINGS_UPDATED
+  INSTRUCTOR_APPROVED
+  INSTRUCTOR_REJECTED
+}
+
+enum SsoProvider {
+  GOOGLE
+  MICROSOFT
+  OKTA
+}
+
+enum GdprRequestType {
+  EXPORT
+  DELETION
+}
+
+enum GdprRequestStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum FeedPostType {
+  ACHIEVEMENT
+  CERTIFICATION
+  ANNOUNCEMENT
+}
+
+enum WebinarStatus {
+  SCHEDULED
+  LIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum ChallengePeriod {
+  DAILY
+  WEEKLY
+}
+
+enum CorporateGameType {
+  CYBERSECURITY_ESCAPE
+  COMPLIANCE_DETECTIVE
+  CUSTOMER_SERVICE
+  SALES_NEGOTIATION
+  LEADERSHIP_CHALLENGE
+  PROJECT_MANAGEMENT
+}
+
+enum KnowledgeGameType {
+  FLASHCARD_CHALLENGE
+  MATCH_THE_PAIR
+  MEMORY_GAME
+  WORD_SCRAMBLE
+  CROSSWORD_PUZZLE
+}
+
+enum AchievementLevel {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+enum CoachExperienceLevel {
+  JUNIOR
+  MID
+  SENIOR
+  LEAD
+}
+
+enum CoachInsightType {
+  DAILY_TIP
+  WEEKLY_FOCUS
+  SKILL_GAP
+  ACTION_PLAN
 }
 
 model User {
@@ -47,10 +192,16 @@ model User {
   passwordHash String
   name         String
   avatarUrl    String?
-  role         Role     @default(STUDENT)
-  points       Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  phoneNumber       String?          @unique
+  dateOfBirth       DateTime?      @db.Date
+  maritalStatus     MaritalStatus?
+  role              Role             @default(STUDENT)
+  points            Int              @default(0)
+  achievementLevel  AchievementLevel @default(BRONZE)
+  challengePoints   Int              @default(0)
+  challengesPassed  Int              @default(0)
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 
   coursesTaught          Course[]                @relation("InstructorCourses")
   coursesApproved        Course[]                @relation("ApprovedBy")
@@ -64,6 +215,80 @@ model User {
   userBadges             UserBadge[]
   notifications          Notification[]
   auditLogs              AuditLog[]
+  payments               Payment[]
+  subscriptions          UserSubscription[]
+  skillAssessments       UserSkillAssessment[]
+  pathProgress           UserPathProgress[]
+  feedPosts              FeedPost[]
+  feedLikes              FeedLike[]
+  webinarsHosted         Webinar[]               @relation("WebinarHost")
+  webinarRegistrations   WebinarRegistration[]
+  webinarAttendance      WebinarAttendance[]
+  pushSubscriptions      PushSubscription[]
+  challengeAttempts      ChallengeAttempt[]
+  challengeQuizSessions  ChallengeQuizSession[]
+  corporateGameAttempts              CorporateGameAttempt[]
+  corporateGamesDailyLeaderboard     CorporateGamesDailyLeaderboardEntry[]
+  corporateGamesLeaderboard          CorporateGamesLeaderboardEntry[]
+  knowledgeGameAttempts              KnowledgeGameAttempt[]
+  flashcardReviewStates              FlashcardReviewState[]
+  weeklyLeaderboard               WeeklyLeaderboardEntry[]
+  devices                UserDevice[]
+  twoFactorOtps          TwoFactorOtp[]
+  gdprRequests           GdprRequest[]
+  coachProfile           CoachProfile?
+  coachInsights          CoachInsight[]
+  courseReviews          CourseReview[]
+  organizationMembers    OrganizationMember[]
+  ssoProvider            SsoProvider?
+  ssoSubjectId           String?
+  twoFactorEnabled           Boolean      @default(false)
+  twoFactorSecret            String?
+  twoFactorAltEmail          String?
+  twoFactorAltEmailVerified  Boolean      @default(false)
+  twoFactorAltPhone          String?
+  twoFactorAltPhoneVerified  Boolean      @default(false)
+  twoFactorEmailEnabled      Boolean      @default(false)
+  twoFactorSmsEnabled        Boolean      @default(false)
+  instructorStatus           InstructorStatus?
+  instructorRejectionReason  String?
+  instructorReviewedAt       DateTime?
+  privacyConsentAt       DateTime?
+  marketingConsent       Boolean      @default(false)
+
+  @@unique([ssoProvider, ssoSubjectId])
+}
+
+model Organization {
+  id                 String   @id @default(cuid())
+  name               String
+  slug               String   @unique
+  logoUrl            String?
+  allowedDomains     String[] @default([])
+  allowPublicCourses Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  members OrganizationMember[]
+  courses Course[]
+}
+
+model OrganizationMember {
+  id             String           @id @default(cuid())
+  organizationId String
+  userId         String
+  employeeId     String?
+  department     String?
+  location       String?
+  role           OrganizationRole @default(ORG_LEARNER)
+  joinedAt       DateTime         @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@unique([organizationId, employeeId])
+  @@index([userId])
 }
 
 model Course {
@@ -76,18 +301,53 @@ model Course {
   rejectionReason String?
   approvedAt      DateTime?
   approvedById    String?
-  instructorId    String
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  instructorId           String
+  pricePaise             Int          @default(0)
+  skillLevel             SkillLevel   @default(BEGINNER)
+  prerequisiteCourseId   String?
+  visibility             CourseVisibility @default(PUBLIC)
+  organizationId         String?
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
 
-  instructor   User         @relation("InstructorCourses", fields: [instructorId], references: [id], onDelete: Cascade)
-  approvedBy   User?        @relation("ApprovedBy", fields: [approvedById], references: [id])
-  modules      Module[]
-  enrollments  Enrollment[]
-  quizzes      Quiz[]
-  assignments  Assignment[]
-  forumThreads ForumThread[]
-  certificates Certificate[]
+  organization       Organization?        @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  instructor         User                 @relation("InstructorCourses", fields: [instructorId], references: [id], onDelete: Cascade)
+  approvedBy         User?                @relation("ApprovedBy", fields: [approvedById], references: [id])
+  prerequisiteCourse Course?              @relation("CoursePrerequisite", fields: [prerequisiteCourseId], references: [id], onDelete: SetNull)
+  unlocksCourses     Course[]             @relation("CoursePrerequisite")
+  modules            Module[]
+  enrollments        Enrollment[]
+  quizzes            Quiz[]
+  assignments        Assignment[]
+  forumThreads       ForumThread[]
+  certificates       Certificate[]
+  payments           Payment[]
+  pathCourses        LearningPathCourse[]
+  courseSkills       CourseSkill[]
+  webinars           Webinar[]
+  reviews            CourseReview[]
+
+  @@index([organizationId])
+  @@index([visibility])
+}
+
+model CourseReview {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  rating    Int
+  comment   String?
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([courseId])
+  @@index([rating])
+  @@index([createdAt])
 }
 
 model Module {
@@ -306,4 +566,469 @@ model AuditLog {
   @@index([action])
   @@index([userId])
   @@index([createdAt])
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  userId            String
+  courseId          String
+  amountPaise       Int
+  currency          String        @default("INR")
+  status            PaymentStatus @default(PENDING)
+  razorpayOrderId   String?       @unique
+  razorpayPaymentId String?       @unique
+  createdAt         DateTime      @default(now())
+  paidAt            DateTime?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([courseId])
+}
+
+model SubscriptionPlan {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  description    String
+  amountPaise    Int
+  period         String
+  interval       Int      @default(1)
+  razorpayPlanId String?  @unique
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  subscriptions UserSubscription[]
+}
+
+model UserSubscription {
+  id                     String             @id @default(cuid())
+  userId                 String
+  planId                 String
+  status                 SubscriptionStatus @default(CREATED)
+  razorpaySubscriptionId String?            @unique
+  currentPeriodEnd       DateTime?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+
+  user User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Skill {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  category    String
+  createdAt   DateTime @default(now())
+
+  courseSkills CourseSkill[]
+  assessments  UserSkillAssessment[]
+}
+
+model CourseSkill {
+  id          String     @id @default(cuid())
+  courseId    String
+  skillId     String
+  targetLevel SkillLevel
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  skill  Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, skillId])
+}
+
+model LearningPath {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  icon        String   @default("🎯")
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  pathCourses LearningPathCourse[]
+  progress    UserPathProgress[]
+}
+
+model LearningPathCourse {
+  id       String @id @default(cuid())
+  pathId   String
+  courseId String
+  order    Int
+
+  path   LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  course Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([pathId, courseId])
+  @@unique([pathId, order])
+}
+
+model UserSkillAssessment {
+  id         String     @id @default(cuid())
+  userId     String
+  skillId    String
+  level      SkillLevel
+  assessedAt DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId])
+}
+
+model UserPathProgress {
+  id        String   @id @default(cuid())
+  userId    String
+  pathId    String
+  startedAt DateTime @default(now())
+
+  user User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  path LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, pathId])
+}
+
+model FeedPost {
+  id        String       @id @default(cuid())
+  type      FeedPostType
+  authorId  String
+  title     String
+  content   String
+  metadata  String?
+  createdAt DateTime     @default(now())
+
+  author User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes  FeedLike[]
+
+  @@index([createdAt])
+  @@index([type])
+}
+
+model FeedLike {
+  id        String   @id @default(cuid())
+  postId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  post FeedPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+}
+
+model Webinar {
+  id              String        @id @default(cuid())
+  title           String
+  description     String
+  scheduledAt     DateTime
+  durationMinutes Int           @default(60)
+  meetingUrl      String?
+  hostId          String
+  courseId        String?
+  status          WebinarStatus @default(SCHEDULED)
+  maxAttendees    Int?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  host          User                  @relation("WebinarHost", fields: [hostId], references: [id], onDelete: Cascade)
+  course        Course?               @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  registrations WebinarRegistration[]
+  attendance    WebinarAttendance[]
+
+  @@index([scheduledAt])
+  @@index([status])
+}
+
+model WebinarRegistration {
+  id           String   @id @default(cuid())
+  webinarId    String
+  userId       String
+  registeredAt DateTime @default(now())
+
+  webinar Webinar @relation(fields: [webinarId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([webinarId, userId])
+}
+
+model CoachProfile {
+  id              String               @id @default(cuid())
+  userId          String               @unique
+  targetRole      String?
+  careerGoal      String?
+  department      String?
+  experienceLevel CoachExperienceLevel @default(JUNIOR)
+  focusAreas      String?
+  updatedAt       DateTime             @updatedAt
+  createdAt       DateTime             @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CoachInsight {
+  id        String           @id @default(cuid())
+  userId    String
+  type      CoachInsightType
+  title     String
+  content   String
+  metadata  String?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, type])
+}
+
+model TwoFactorOtp {
+  id        String           @id @default(cuid())
+  userId    String
+  channel   TwoFactorChannel
+  codeHash  String
+  expiresAt DateTime
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, channel])
+  @@index([expiresAt])
+}
+
+model SecuritySettings {
+  id                   String   @id @default("default")
+  ipRestrictionEnabled Boolean  @default(false)
+  allowedIps           String?
+  requireAdmin2fa      Boolean  @default(false)
+  googleSsoEnabled     Boolean  @default(true)
+  microsoftSsoEnabled  Boolean  @default(true)
+  oktaSsoEnabled       Boolean  @default(true)
+  updatedAt            DateTime @updatedAt
+}
+
+model UserDevice {
+  id         String    @id @default(cuid())
+  userId     String
+  deviceHash String
+  deviceName String
+  userAgent  String
+  ipAddress  String?
+  lastSeenAt DateTime  @default(now())
+  trusted    Boolean   @default(true)
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, deviceHash])
+  @@index([userId])
+}
+
+model GdprRequest {
+  id          String            @id @default(cuid())
+  userId      String
+  type        GdprRequestType
+  status      GdprRequestStatus @default(PENDING)
+  createdAt   DateTime          @default(now())
+  completedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Challenge {
+  id           String          @id @default(cuid())
+  slug         String          @unique
+  period       ChallengePeriod
+  title        String
+  topic        String
+  quizIndex    Int?
+  startsAt     DateTime
+  endsAt       DateTime
+  passingScore Int             @default(70)
+  pointsReward Int             @default(5)
+  source       String          @default("local")
+  createdAt    DateTime        @default(now())
+
+  questions    ChallengeQuestion[]
+  attempts     ChallengeAttempt[]
+  quizSessions ChallengeQuizSession[]
+
+  @@index([period, startsAt])
+}
+
+model ChallengeQuizSession {
+  id                 String   @id @default(cuid())
+  challengeId        String
+  userId             String
+  startedAt          DateTime @default(now())
+  expiresAt          DateTime
+  secondsPerQuestion String
+  questionOrder      String
+  answers            String   @default("[]")
+  currentIndex       Int      @default(0)
+  questionStartedAt  DateTime @default(now())
+  tabViolations      Int      @default(0)
+  status             String   @default("ACTIVE")
+
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([challengeId, userId, status])
+}
+
+model WeeklyLeaderboardEntry {
+  id               String   @id @default(cuid())
+  userId           String
+  weekSlug         String
+  points           Int      @default(0)
+  quizzesCompleted Int      @default(0)
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekSlug])
+  @@index([weekSlug, points])
+}
+
+model ChallengeQuestion {
+  id           String @id @default(cuid())
+  challengeId  String
+  question     String
+  options      String
+  correctIndex Int
+  order        Int
+
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+}
+
+model ChallengeAttempt {
+  id           String   @id @default(cuid())
+  challengeId  String
+  userId       String
+  score        Int
+  passed       Boolean
+  pointsEarned Int      @default(0)
+  answers      String
+  completedAt  DateTime @default(now())
+
+  challenge Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([challengeId, userId])
+  @@index([challengeId, score])
+}
+
+model CorporateGameAttempt {
+  id           String            @id @default(cuid())
+  userId       String
+  gameType     CorporateGameType
+  daySlug      String            @default("legacy")
+  weekSlug     String
+  scenarioSet  Int               @default(0)
+  score        Int
+  pointsEarned Int               @default(0)
+  answers      String
+  completedAt  DateTime          @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameType, daySlug])
+  @@index([gameType, daySlug, score])
+  @@index([weekSlug])
+}
+
+model CorporateGamesDailyLeaderboardEntry {
+  id             String   @id @default(cuid())
+  userId         String
+  daySlug        String
+  points         Int      @default(0)
+  gamesCompleted Int      @default(0)
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, daySlug])
+  @@index([daySlug, points])
+}
+
+model CorporateGamesLeaderboardEntry {
+  id             String   @id @default(cuid())
+  userId         String
+  weekSlug       String
+  points         Int      @default(0)
+  gamesCompleted Int      @default(0)
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, weekSlug])
+  @@index([weekSlug, points])
+}
+
+model KnowledgeGameAttempt {
+  id           String            @id @default(cuid())
+  userId       String
+  gameType     KnowledgeGameType
+  daySlug      String
+  score        Int
+  pointsEarned Int               @default(0)
+  payload      String?
+  completedAt  DateTime          @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameType, daySlug])
+  @@index([gameType, daySlug, score])
+}
+
+model FlashcardReviewState {
+  id           String   @id @default(cuid())
+  userId       String
+  cardId       String
+  easeFactor   Float    @default(2.5)
+  intervalDays Int      @default(0)
+  repetitions  Int      @default(0)
+  nextReviewAt DateTime @default(now())
+  lastReviewAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cardId])
+  @@index([userId, nextReviewAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model WebinarAttendance {
+  id              String    @id @default(cuid())
+  webinarId       String
+  userId          String
+  joinedAt        DateTime  @default(now())
+  leftAt          DateTime?
+  durationMinutes Int       @default(0)
+  present         Boolean   @default(false)
+
+  webinar Webinar @relation(fields: [webinarId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([webinarId, userId])
 }

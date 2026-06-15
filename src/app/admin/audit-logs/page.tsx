@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
+import { TableScroll } from "@/components/ui/table-scroll";
 import {
   AuditLogFilters,
   isAuditAction,
@@ -26,6 +27,15 @@ const ACTION_VARIANTS: Partial<
   COURSE_UPDATED: "info",
   USER_UPDATED: "warning",
   LOGIN_FAILED: "default",
+  SSO_LOGIN: "success",
+  TWO_FACTOR_ENABLED: "brand",
+  TWO_FACTOR_DISABLED: "warning",
+  TWO_FACTOR_VERIFIED: "success",
+  DEVICE_REVOKED: "warning",
+  IP_BLOCKED: "default",
+  GDPR_EXPORT: "info",
+  GDPR_DELETION: "warning",
+  SECURITY_SETTINGS_UPDATED: "info",
 };
 
 export default async function AuditLogsPage({
@@ -79,8 +89,9 @@ export default async function AuditLogsPage({
         </Card>
       ) : (
         <Card className="mt-6 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[800px] text-left text-sm">
+          <CardContent className="p-4 sm:p-6">
+          <TableScroll>
+            <table className="w-full min-w-[640px] text-left text-sm md:min-w-[800px]">
               <thead className="border-b border-slate-200 bg-slate-50 text-xs font-bold uppercase tracking-wider text-muted">
                 <tr>
                   <th className="px-4 py-3">Time</th>
@@ -140,7 +151,8 @@ export default async function AuditLogsPage({
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
+          </CardContent>
         </Card>
       )}
     </div>

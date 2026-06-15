@@ -4,16 +4,16 @@ A modern learning management platform built with Next.js, Prisma, and Tailwind C
 
 ## Features
 
-- **Course progress tracking** — Lessons, quizzes, and assignments tracked with overall % completion
-- **Quiz & assignment module** — Multiple-choice quizzes and text assignments per course
-- **Certificate generation** — Auto-issued on course completion with printable certificate page
-- **Role-based access control** — Student, Instructor, and Admin roles with protected routes
-- **Analytics dashboard** — Charts for enrollments, users, course status, and top courses
-- **Course approval workflow** — Instructors submit courses; admins approve or reject
-- **Email notifications** — Enrollment, certificates, approvals (console log without SMTP)
-- **AI course recommendations** — Personalized suggestions based on learning history
-- **Discussion forum** — Per-course threads and replies with notifications
-- **Leaderboard & badges** — Points, achievements, and ranked learner leaderboard
+See **[FEATURES.md](./FEATURES.md)** for the full feature inventory table (updated with every release).
+
+Highlights:
+
+- **Learning** — Courses, quizzes, assignments, certificates, paths, skills, offline downloads
+- **AI suite** — Assistant, coach, quiz generator, narration, career tools (OpenAI optional)
+- **Games** — Corporate simulations (daily scenarios), quiz challenges, general knowledge games
+- **Organizations** — Multi-tenant workspaces, org admin, CSV member import
+- **Security** — 2FA, SSO, devices, GDPR, audit logs
+- **Commerce** — Pricing, Razorpay payments & subscriptions
 
 ## Quick start (local)
 

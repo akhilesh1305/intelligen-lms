@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft, CheckCircle, Circle, MessageSquare, PlayCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle, Circle, MessageSquare } from "lucide-react";
+import { ensureEnrollment, getCourseAccess } from "@/lib/access";
 import { requireAuth } from "@/lib/auth";
 import { getCourseWithContent } from "@/lib/courses";
+import { canUserViewCourse } from "@/lib/organizations";
 import { db } from "@/lib/db";
 import { cn } from "@/lib/utils";
 import { getCourseProgressDetails } from "@/lib/progress";
@@ -10,7 +12,11 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { ProgressTracker } from "@/components/courses/progress-tracker";
 import { QuizTaker } from "@/components/courses/quiz-taker";
 import { AssignmentForm } from "@/components/courses/assignment-form";
+import { LessonVideo } from "@/components/courses/lesson-video";
 import { CompleteLessonButton } from "./complete-button";
+import { LessonAiTools } from "@/components/ai/lesson-ai-tools";
+import { LearnLessonSidebar } from "@/components/learn/learn-lesson-sidebar";
+import { OfflineLessonActions } from "@/components/mobile/offline-lesson-actions";
 
 export default async function LearnPage({
   params,
@@ -23,16 +29,25 @@ export default async function LearnPage({
   const { courseId } = await params;
   const { lesson: lessonId, tab } = await searchParams;
 
-  const enrollment = await db.enrollment.findUnique({
-    where: { userId_courseId: { userId: session.id, courseId } },
-  });
+  const course = await getCourseWithContent(courseId);
+  if (!course) notFound();
 
-  if (!enrollment && session.role === "STUDENT") {
+  const mayView = await canUserViewCourse(
+    { id: session.id, role: session.role },
+    course
+  );
+  if (!mayView && session.role !== "ADMIN" && course.instructorId !== session.id) {
+    notFound();
+  }
+
+  const access = await getCourseAccess(session.id, courseId, session.role);
+  if (!access.canLearn && session.role === "STUDENT") {
     redirect(`/courses/${courseId}`);
   }
 
-  const course = await getCourseWithContent(courseId);
-  if (!course) notFound();
+  if (!access.enrolled && access.canLearn) {
+    await ensureEnrollment(session.id, courseId);
+  }
 
   const progressDetails = await getCourseProgressDetails(session.id, courseId);
   if (!progressDetails) notFound();
@@ -56,13 +71,19 @@ export default async function LearnPage({
       assignmentId: { in: course.assignments.map((a) => a.id) },
     },
   });
-  const submissionSet = new Set(submissions.map((s) => s.assignmentId));
+  const submissionMap = new Map(submissions.map((s) => [s.assignmentId, s]));
 
   const certificate = await db.certificate.findUnique({
     where: { userId_courseId: { userId: session.id, courseId } },
   });
 
   const activeLesson = allLessons.find((l) => l.id === lessonId) ?? allLessons[0];
+  const activeModule = activeLesson
+    ? course.modules.find((m) => m.lessons.some((l) => l.id === activeLesson.id))
+    : undefined;
+  const activeLessonOrder = activeModule
+    ? activeModule.lessons.findIndex((l) => l.id === activeLesson?.id)
+    : 0;
   const activeTab = tab ?? "lessons";
 
   return (
@@ -127,7 +148,8 @@ export default async function LearnPage({
             </nav>
 
             {activeTab === "lessons" && (
-              <nav className="mt-4 max-h-[50vh] space-y-4 overflow-y-auto lg:max-h-[70vh]">
+              <LearnLessonSidebar lessonCount={allLessons.length}>
+              <nav className="mt-4 max-h-[50vh] space-y-4 overflow-y-auto lg:mt-4 lg:max-h-[70vh]">
                 {course.modules.map((mod) => (
                   <div key={mod.id}>
                     <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted">
@@ -142,7 +164,7 @@ export default async function LearnPage({
                             <Link
                               href={`/learn/${courseId}?lesson=${lesson.id}&tab=lessons`}
                               className={cn(
-                                "flex items-center gap-2 rounded-sm px-3 py-2 text-sm",
+                                "flex min-h-11 items-center gap-2 rounded-sm px-3 py-2.5 text-sm",
                                 active
                                   ? "bg-brand-50 font-semibold text-brand-700"
                                   : "text-muted hover:bg-slate-50"
@@ -162,6 +184,7 @@ export default async function LearnPage({
                   </div>
                 ))}
               </nav>
+              </LearnLessonSidebar>
             )}
           </div>
         </aside>
@@ -169,29 +192,43 @@ export default async function LearnPage({
         <div className="min-w-0 flex-1 p-4 sm:p-6 lg:p-10">
           {activeTab === "lessons" && activeLesson && (
             <article className="mx-auto max-w-3xl">
-              <h1 className="text-2xl font-bold text-ink">{activeLesson.title}</h1>
+              <h1 className="text-xl font-bold text-ink sm:text-2xl">{activeLesson.title}</h1>
               {activeLesson.videoUrl ? (
                 <div className="mt-6 aspect-video overflow-hidden rounded-sm bg-ink shadow-elevated">
-                  <iframe
-                    src={activeLesson.videoUrl}
-                    className="h-full w-full"
-                    allowFullScreen
+                  <LessonVideo
+                    videoUrl={activeLesson.videoUrl}
                     title={activeLesson.title}
                   />
                 </div>
-              ) : (
-                <div className="mt-6 flex aspect-video items-center justify-center rounded-sm bg-gradient-to-br from-brand-600 to-brand-800">
-                  <PlayCircle className="h-16 w-16 text-white/60" />
-                </div>
-              )}
-              <div className="mt-8 rounded-sm border border-slate-200 bg-white p-6 shadow-card">
+              ) : null}
+              <div
+                className={`rounded-sm border border-slate-200 bg-white p-6 shadow-card ${activeLesson.videoUrl ? "mt-8" : "mt-6"}`}
+              >
                 <div className="whitespace-pre-wrap leading-relaxed text-ink/90">
                   {activeLesson.content}
                 </div>
               </div>
+              <OfflineLessonActions
+                lesson={{
+                  id: activeLesson.id,
+                  title: activeLesson.title,
+                  content: activeLesson.content,
+                  videoUrl: activeLesson.videoUrl,
+                }}
+                courseId={courseId}
+                courseTitle={course.title}
+                moduleTitle={activeModule?.title ?? "Module"}
+                lessonOrder={activeLessonOrder}
+              />
+              <LessonAiTools
+                lessonId={activeLesson.id}
+                lessonTitle={activeLesson.title}
+                content={activeLesson.content}
+              />
               <div className="mt-6">
                 <CompleteLessonButton
                   lessonId={activeLesson.id}
+                  courseId={courseId}
                   completed={completedSet.has(activeLesson.id)}
                 />
               </div>
@@ -229,15 +266,20 @@ export default async function LearnPage({
               {course.assignments.length === 0 ? (
                 <p className="text-muted">No assignments for this course.</p>
               ) : (
-                course.assignments.map((a) => (
-                  <AssignmentForm
-                    key={a.id}
-                    assignmentId={a.id}
-                    title={a.title}
-                    description={a.description}
-                    submitted={submissionSet.has(a.id)}
-                  />
-                ))
+                course.assignments.map((a) => {
+                  const sub = submissionMap.get(a.id);
+                  return (
+                    <AssignmentForm
+                      key={a.id}
+                      assignmentId={a.id}
+                      title={a.title}
+                      description={a.description}
+                      submitted={Boolean(sub)}
+                      grade={sub?.grade}
+                      feedback={sub?.feedback}
+                    />
+                  );
+                })
               )}
             </div>
           )}

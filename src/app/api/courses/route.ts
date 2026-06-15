@@ -1,15 +1,20 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
+import { instructorApiGuard } from "@/lib/instructor";
 import { logAudit } from "@/lib/audit";
+import { rupeesToPaise } from "@/lib/currency";
 import { courseSchema } from "@/lib/validations";
 import { db } from "@/lib/db";
 import { createNotification } from "@/lib/notifications";
+import {
+  canManageOrganizationCourses,
+  getOrgCourseCreatorContext,
+  resolveCourseVisibilityForCreate,
+} from "@/lib/organizations";
 
 export async function POST(request: Request) {
-  const session = await getSession();
-  if (!session || !["INSTRUCTOR", "ADMIN"].includes(session.role)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const session = await instructorApiGuard(await getSession());
+  if (session instanceof NextResponse) return session;
 
   const body = await request.json();
   const parsed = courseSchema.safeParse(body);
@@ -23,11 +28,36 @@ export async function POST(request: Request) {
 
   const wantsPublish = parsed.data.published;
   const isAdmin = session.role === "ADMIN";
+  const creatorContext = await getOrgCourseCreatorContext(session.id, session.role);
+
+  let organizationId = parsed.data.organizationId ?? null;
+  if (!isAdmin && !organizationId && creatorContext.defaultOrganizationId) {
+    organizationId = creatorContext.defaultOrganizationId;
+  }
+
+  if (organizationId) {
+    const canCreate = await canManageOrganizationCourses(
+      session.id,
+      organizationId,
+      session.role
+    );
+    if (!canCreate) {
+      return NextResponse.json(
+        { error: "You cannot create courses for this organization" },
+        { status: 403 }
+      );
+    }
+  }
+
+  const visibilityFields = resolveCourseVisibilityForCreate(organizationId);
 
   const course = await db.course.create({
     data: {
       title: parsed.data.title,
       description: parsed.data.description,
+      pricePaise: rupeesToPaise(parsed.data.priceInRupees ?? 0),
+      skillLevel: parsed.data.skillLevel ?? "BEGINNER",
+      prerequisiteCourseId: parsed.data.prerequisiteCourseId || null,
       published: isAdmin && wantsPublish,
       status: wantsPublish
         ? isAdmin
@@ -35,6 +65,7 @@ export async function POST(request: Request) {
           : "PENDING_APPROVAL"
         : "DRAFT",
       instructorId: session.id,
+      ...visibilityFields,
     },
   });
 

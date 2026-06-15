@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
-import { createSession, getUserByEmail, hashPassword } from "@/lib/auth";
+import { createSession, getUserByEmail, getUserByPhone, hashPassword } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { normalizePhoneNumber } from "@/lib/phone";
 import { registerSchema } from "@/lib/validations";
 import { db } from "@/lib/db";
+import { joinOrganizationsByEmailDomain } from "@/lib/organizations";
 
 export async function POST(request: Request) {
   try {
@@ -16,11 +18,21 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, email, password, role } = parsed.data;
+    const { name, email, phoneNumber, password, marketingConsent } = parsed.data;
+    const role = "STUDENT" as const;
+    const normalizedPhone = normalizePhoneNumber(phoneNumber)!;
+    const normalizedEmail = email.toLowerCase();
 
-    if (await getUserByEmail(email)) {
+    if (await getUserByEmail(normalizedEmail)) {
       return NextResponse.json(
         { error: "An account with this email already exists" },
+        { status: 409 }
+      );
+    }
+
+    if (await getUserByPhone(normalizedPhone)) {
+      return NextResponse.json(
+        { error: "An account with this mobile number already exists" },
         { status: 409 }
       );
     }
@@ -29,11 +41,16 @@ export async function POST(request: Request) {
     const user = await db.user.create({
       data: {
         name,
-        email: email.toLowerCase(),
+        email: normalizedEmail,
+        phoneNumber: normalizedPhone,
         passwordHash,
         role,
+        privacyConsentAt: new Date(),
+        marketingConsent: marketingConsent ?? false,
       },
     });
+
+    await joinOrganizationsByEmailDomain(user.id, normalizedEmail);
 
     await createSession({
       id: user.id,
@@ -49,7 +66,7 @@ export async function POST(request: Request) {
       userName: user.name,
       targetType: "User",
       targetId: user.id,
-      metadata: { role: user.role },
+      metadata: { role: user.role, privacyConsent: true },
       request,
     });
 

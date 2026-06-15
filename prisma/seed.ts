@@ -21,6 +21,7 @@ type CourseSeed = {
   description: string;
   published: boolean;
   instructorEmail: string;
+  pricePaise?: number;
   modules: ModuleSeed[];
   enrollStudent?: boolean;
   completedLessonCount?: number;
@@ -448,6 +449,7 @@ async function seedCourse(
       title: courseData.title,
       description: courseData.description,
       published: courseData.published,
+      pricePaise: courseData.pricePaise ?? 0,
       status: courseData.published ? "APPROVED" : "DRAFT",
       instructorId,
       modules: {
@@ -511,34 +513,37 @@ async function main() {
 
   const instructor = await db.user.upsert({
     where: { email: "instructor@intelligen.lms" },
-    update: {},
+    update: { instructorStatus: "APPROVED" },
     create: {
       email: "instructor@intelligen.lms",
       name: "Dr. Sarah Chen",
       passwordHash,
       role: "INSTRUCTOR",
+      instructorStatus: "APPROVED",
     },
   });
 
   const marcus = await db.user.upsert({
     where: { email: "marcus@intelligen.lms" },
-    update: {},
+    update: { instructorStatus: "APPROVED" },
     create: {
       email: "marcus@intelligen.lms",
       name: "Marcus Rivera",
       passwordHash,
       role: "INSTRUCTOR",
+      instructorStatus: "APPROVED",
     },
   });
 
   const emma = await db.user.upsert({
     where: { email: "emma@intelligen.lms" },
-    update: {},
+    update: { instructorStatus: "APPROVED" },
     create: {
       email: "emma@intelligen.lms",
       name: "Emma Thompson",
       passwordHash,
       role: "INSTRUCTOR",
+      instructorStatus: "APPROVED",
     },
   });
 
@@ -570,6 +575,272 @@ async function main() {
     data: { status: "APPROVED" },
   });
 
+  const coursePrices: Record<string, number> = {
+    "Introduction to Web Development": 0,
+    "Project Management Basics": 0,
+    "Python for Data Science": 99900,
+    "UI/UX Design Fundamentals": 79900,
+    "Introduction to Machine Learning": 149900,
+    "Digital Marketing Essentials": 59900,
+    "Advanced React Patterns": 129900,
+  };
+  for (const [title, pricePaise] of Object.entries(coursePrices)) {
+    await db.course.updateMany({ where: { title }, data: { pricePaise } });
+  }
+
+  const subscriptionPlans = [
+    {
+      slug: "monthly-all-access",
+      name: "Monthly All Access",
+      description: "Unlimited access to all paid courses. Billed every month.",
+      amountPaise: 49900,
+      period: "monthly",
+      interval: 1,
+    },
+    {
+      slug: "yearly-all-access",
+      name: "Yearly All Access",
+      description: "Unlimited access to all paid courses. Best value — billed yearly.",
+      amountPaise: 399900,
+      period: "yearly",
+      interval: 1,
+    },
+  ];
+  for (const plan of subscriptionPlans) {
+    await db.subscriptionPlan.upsert({
+      where: { slug: plan.slug },
+      create: plan,
+      update: plan,
+    });
+  }
+  console.log("  + Course prices & subscription plans");
+
+  // Skill levels & prerequisites
+  const courseSkillLevels: Record<string, "BEGINNER" | "INTERMEDIATE" | "ADVANCED"> = {
+    "Introduction to Web Development": "BEGINNER",
+    "Python for Data Science": "INTERMEDIATE",
+    "UI/UX Design Fundamentals": "BEGINNER",
+    "Introduction to Machine Learning": "ADVANCED",
+    "Digital Marketing Essentials": "BEGINNER",
+    "Project Management Basics": "BEGINNER",
+    "Advanced React Patterns": "ADVANCED",
+  };
+  for (const [title, skillLevel] of Object.entries(courseSkillLevels)) {
+    await db.course.updateMany({ where: { title }, data: { skillLevel } });
+  }
+
+  const webDev = await db.course.findFirst({
+    where: { title: "Introduction to Web Development" },
+  });
+  const advancedReact = await db.course.findFirst({
+    where: { title: "Advanced React Patterns" },
+  });
+  if (webDev && advancedReact) {
+    await db.course.update({
+      where: { id: advancedReact.id },
+      data: { prerequisiteCourseId: webDev.id },
+    });
+  }
+  console.log("  + Skill levels & prerequisites");
+
+  // Skills & course-skill mappings
+  const skills = [
+    {
+      slug: "html-css",
+      name: "HTML & CSS",
+      description: "Structure and style web pages",
+      category: "Frontend",
+    },
+    {
+      slug: "javascript",
+      name: "JavaScript",
+      description: "Interactive web programming",
+      category: "Frontend",
+    },
+    {
+      slug: "react",
+      name: "React",
+      description: "Component-based UI development",
+      category: "Frontend",
+    },
+    {
+      slug: "python",
+      name: "Python",
+      description: "General-purpose programming for data and automation",
+      category: "Data Science",
+    },
+    {
+      slug: "data-analysis",
+      name: "Data Analysis",
+      description: "Clean, explore, and visualize datasets",
+      category: "Data Science",
+    },
+    {
+      slug: "machine-learning",
+      name: "Machine Learning",
+      description: "Build predictive models from data",
+      category: "Data Science",
+    },
+    {
+      slug: "ux-design",
+      name: "UX Design",
+      description: "User-centered product design",
+      category: "Design",
+    },
+    {
+      slug: "project-management",
+      name: "Project Management",
+      description: "Plan and deliver projects on time",
+      category: "Business",
+    },
+    {
+      slug: "leadership",
+      name: "Leadership",
+      description: "Guide teams and drive outcomes",
+      category: "Business",
+    },
+    {
+      slug: "communication",
+      name: "Communication",
+      description: "Clear stakeholder and team communication",
+      category: "Business",
+    },
+  ];
+  for (const skill of skills) {
+    await db.skill.upsert({
+      where: { slug: skill.slug },
+      create: skill,
+      update: skill,
+    });
+  }
+
+  const courseSkillMap: Record<
+    string,
+    { skillSlug: string; targetLevel: "BEGINNER" | "INTERMEDIATE" | "ADVANCED" }[]
+  > = {
+    "Introduction to Web Development": [
+      { skillSlug: "html-css", targetLevel: "INTERMEDIATE" },
+      { skillSlug: "javascript", targetLevel: "BEGINNER" },
+    ],
+    "Advanced React Patterns": [
+      { skillSlug: "javascript", targetLevel: "ADVANCED" },
+      { skillSlug: "react", targetLevel: "ADVANCED" },
+    ],
+    "Python for Data Science": [
+      { skillSlug: "python", targetLevel: "INTERMEDIATE" },
+      { skillSlug: "data-analysis", targetLevel: "INTERMEDIATE" },
+    ],
+    "Introduction to Machine Learning": [
+      { skillSlug: "python", targetLevel: "ADVANCED" },
+      { skillSlug: "machine-learning", targetLevel: "INTERMEDIATE" },
+    ],
+    "UI/UX Design Fundamentals": [
+      { skillSlug: "ux-design", targetLevel: "INTERMEDIATE" },
+    ],
+    "Project Management Basics": [
+      { skillSlug: "project-management", targetLevel: "INTERMEDIATE" },
+      { skillSlug: "leadership", targetLevel: "BEGINNER" },
+    ],
+    "Digital Marketing Essentials": [
+      { skillSlug: "communication", targetLevel: "INTERMEDIATE" },
+    ],
+  };
+
+  for (const [courseTitle, mappings] of Object.entries(courseSkillMap)) {
+    const course = await db.course.findFirst({ where: { title: courseTitle } });
+    if (!course) continue;
+    for (const { skillSlug, targetLevel } of mappings) {
+      const skill = await db.skill.findUnique({ where: { slug: skillSlug } });
+      if (!skill) continue;
+      await db.courseSkill.upsert({
+        where: {
+          courseId_skillId: { courseId: course.id, skillId: skill.id },
+        },
+        create: { courseId: course.id, skillId: skill.id, targetLevel },
+        update: { targetLevel },
+      });
+    }
+  }
+  console.log("  + Skills & course-skill mappings");
+
+  // Learning paths
+  const paths = [
+    {
+      slug: "frontend-developer",
+      name: "Frontend Developer Path",
+      description:
+        "From HTML basics to advanced React patterns. Build production-ready interfaces step by step.",
+      icon: "💻",
+      courseTitles: [
+        "Introduction to Web Development",
+        "UI/UX Design Fundamentals",
+        "Advanced React Patterns",
+      ],
+    },
+    {
+      slug: "hr-training",
+      name: "HR Training Path",
+      description:
+        "Onboard HR professionals with project coordination, communication, and workplace fundamentals.",
+      icon: "👥",
+      courseTitles: [
+        "Project Management Basics",
+        "Digital Marketing Essentials",
+        "UI/UX Design Fundamentals",
+      ],
+    },
+    {
+      slug: "leadership",
+      name: "Leadership Path",
+      description:
+        "Develop leadership skills through project delivery, team communication, and strategic thinking.",
+      icon: "🎯",
+      courseTitles: [
+        "Project Management Basics",
+        "Digital Marketing Essentials",
+        "Introduction to Machine Learning",
+      ],
+    },
+  ];
+
+  for (const path of paths) {
+    const learningPath = await db.learningPath.upsert({
+      where: { slug: path.slug },
+      create: {
+        slug: path.slug,
+        name: path.name,
+        description: path.description,
+        icon: path.icon,
+        published: true,
+      },
+      update: {
+        name: path.name,
+        description: path.description,
+        icon: path.icon,
+        published: true,
+      },
+    });
+
+    for (let i = 0; i < path.courseTitles.length; i++) {
+      const course = await db.course.findFirst({
+        where: { title: path.courseTitles[i] },
+      });
+      if (!course) continue;
+      await db.learningPathCourse.upsert({
+        where: {
+          pathId_courseId: { pathId: learningPath.id, courseId: course.id },
+        },
+        create: {
+          pathId: learningPath.id,
+          courseId: course.id,
+          order: i + 1,
+        },
+        update: { order: i + 1 },
+      });
+    }
+  }
+  console.log("  + Learning paths");
+
   // Seed badges
   const badges = [
     { slug: "first-lesson", name: "First Steps", description: "Complete your first lesson", icon: "🎯", points: 10 },
@@ -578,6 +849,21 @@ async function main() {
     { slug: "forum-contributor", name: "Community Voice", description: "Post in a discussion forum", icon: "💬", points: 15 },
     { slug: "streak-5", name: "Dedicated Learner", description: "Earn 250 points", icon: "🔥", points: 50 },
     { slug: "quiz-master", name: "Quiz Master", description: "Pass 3 quizzes", icon: "🏆", points: 75 },
+    { slug: "corporate-player", name: "Corporate Player", description: "Complete your first corporate game", icon: "🎮", points: 0 },
+    { slug: "corporate-tier-good", name: "Rising Professional", description: "Score 50% or higher on a corporate game", icon: "📈", points: 0 },
+    { slug: "corporate-tier-excellent", name: "Sharp Operator", description: "Score 75% or higher on a corporate game", icon: "⭐", points: 0 },
+    { slug: "corporate-tier-perfect", name: "Flawless Executive", description: "Score 100% on a corporate game", icon: "🏅", points: 0 },
+    { slug: "corporate-mastery-bronze", name: "Bronze Mastery", description: "Earn 50 total corporate game points", icon: "🥉", points: 0 },
+    { slug: "corporate-mastery-silver", name: "Silver Mastery", description: "Earn 150 total corporate game points", icon: "🥈", points: 0 },
+    { slug: "corporate-mastery-gold", name: "Gold Mastery", description: "Earn 400 total corporate game points", icon: "🥇", points: 0 },
+    { slug: "corporate-mastery-platinum", name: "Platinum Mastery", description: "Earn 800 total corporate game points", icon: "🏆", points: 0 },
+    { slug: "corporate-mastery-diamond", name: "Diamond Mastery", description: "Earn 1,500 total corporate game points", icon: "💎", points: 0 },
+    { slug: "corporate-perfect-cybersecurity", name: "Security Sentinel", description: "Perfect score on Cybersecurity Escape Room", icon: "🔐", points: 0 },
+    { slug: "corporate-perfect-compliance", name: "Compliance Ace", description: "Perfect score on Compliance Detective", icon: "🔍", points: 0 },
+    { slug: "corporate-perfect-customer-service", name: "Service Champion", description: "Perfect score on Customer Service Simulator", icon: "🤝", points: 0 },
+    { slug: "corporate-perfect-sales", name: "Deal Closer", description: "Perfect score on Sales Negotiation Simulator", icon: "💼", points: 0 },
+    { slug: "corporate-perfect-leadership", name: "Visionary Leader", description: "Perfect score on Leadership Challenge", icon: "👔", points: 0 },
+    { slug: "corporate-perfect-project-management", name: "Project Maestro", description: "Perfect score on Project Management Game", icon: "📊", points: 0 },
   ];
   for (const badge of badges) {
     await db.badge.upsert({ where: { slug: badge.slug }, update: {}, create: badge });
@@ -671,6 +957,268 @@ async function main() {
     where: { id: student.id },
     data: { points: 20 },
   });
+
+  // Social feed — backfill achievements/certs and seed announcements
+  const feedCount = await db.feedPost.count();
+  if (feedCount === 0) {
+    const userBadges = await db.userBadge.findMany({
+      include: { badge: true, user: { select: { id: true } } },
+      orderBy: { earnedAt: "asc" },
+    });
+    for (const ub of userBadges) {
+      await db.feedPost.create({
+        data: {
+          authorId: ub.user.id,
+          type: "ACHIEVEMENT",
+          title: `Earned the ${ub.badge.name} badge`,
+          content: ub.badge.description,
+          metadata: JSON.stringify({
+            badgeId: ub.badge.id,
+            badgeName: ub.badge.name,
+            badgeIcon: ub.badge.icon,
+            link: "/leaderboard",
+          }),
+        },
+      });
+    }
+
+    const certificates = await db.certificate.findMany({
+      include: {
+        course: { select: { id: true, title: true } },
+        user: { select: { id: true } },
+      },
+      orderBy: { issuedAt: "asc" },
+    });
+    for (const cert of certificates) {
+      await db.feedPost.create({
+        data: {
+          authorId: cert.user.id,
+          type: "CERTIFICATION",
+          title: `Completed ${cert.course.title}`,
+          content: `Earned certificate ${cert.certificateNo}`,
+          metadata: JSON.stringify({
+            certificateId: cert.id,
+            certificateNo: cert.certificateNo,
+            courseId: cert.course.id,
+            courseTitle: cert.course.title,
+            link: `/certificates/${cert.id}`,
+          }),
+        },
+      });
+    }
+
+    const admin = await db.user.findUnique({
+      where: { email: "admin@intelligen.lms" },
+    });
+
+    const announcements = [
+      {
+        authorId: instructor.id,
+        title: "New learning paths are live",
+        content:
+          "Explore structured Frontend Developer, HR Training, and Leadership paths. Start a path from the Learning Paths page and track your progress course by course.",
+      },
+      {
+        authorId: admin?.id ?? instructor.id,
+        title: "Welcome to the IntelliGen community feed",
+        content:
+          "This is your LinkedIn-style hub inside the LMS. Celebrate peer achievements, see new certifications, and stay updated on platform announcements.",
+      },
+      {
+        authorId: instructor.id,
+        title: "Complete Web Development to unlock Advanced React",
+        content:
+          "Advanced React Patterns now requires completing Introduction to Web Development first. Finish the prerequisite to enroll and level up your frontend skills.",
+      },
+    ];
+
+    for (const item of announcements) {
+      await db.feedPost.create({
+        data: {
+          authorId: item.authorId,
+          type: "ANNOUNCEMENT",
+          title: item.title,
+          content: item.content,
+        },
+      });
+    }
+
+    // Demo achievement for the student
+    await db.feedPost.create({
+      data: {
+        authorId: student.id,
+        type: "ACHIEVEMENT",
+        title: "Earned the First Steps badge",
+        content: "Complete your first lesson",
+        metadata: JSON.stringify({
+          badgeName: "First Steps",
+          badgeIcon: "🎯",
+          link: "/leaderboard",
+        }),
+      },
+    });
+
+    console.log("  + Social feed posts");
+  }
+
+  // Webinars
+  const webinarCount = await db.webinar.count();
+  if (webinarCount === 0) {
+    const webCourse = await db.course.findFirst({
+      where: { title: "Introduction to Web Development" },
+    });
+
+    const upcoming = new Date();
+    upcoming.setDate(upcoming.getDate() + 3);
+    upcoming.setHours(14, 0, 0, 0);
+
+    const webinar1 = await db.webinar.create({
+      data: {
+        title: "Live Q&A: Web Development Fundamentals",
+        description:
+          "Join Dr. Sarah Chen for a live walkthrough of HTML/CSS concepts, career tips, and open Q&A. Bring your questions!",
+        scheduledAt: upcoming,
+        durationMinutes: 60,
+        meetingUrl: "https://meet.google.com/demo-intelligen-webinar",
+        hostId: instructor.id,
+        courseId: webCourse?.id ?? null,
+        maxAttendees: 100,
+      },
+    });
+
+    const upcoming2 = new Date();
+    upcoming2.setDate(upcoming2.getDate() + 7);
+    upcoming2.setHours(11, 0, 0, 0);
+
+    await db.webinar.create({
+      data: {
+        title: "Career Path Workshop: Breaking into Tech",
+        description:
+          "Learn how to build a portfolio, prepare for interviews, and choose the right learning path on IntelliGen LMS.",
+        scheduledAt: upcoming2,
+        durationMinutes: 90,
+        meetingUrl: "https://meet.google.com/demo-intelligen-career",
+        hostId: instructor.id,
+        maxAttendees: 150,
+      },
+    });
+
+    await db.webinarRegistration.create({
+      data: { webinarId: webinar1.id, userId: student.id },
+    });
+
+    console.log("  + Webinars");
+  }
+
+  console.log("Seeding course reviews...");
+  const reviewerSeed = [
+    {
+      email: "priya@intelligen.lms",
+      name: "Priya Sharma",
+      avatarUrl:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&q=80",
+      courseTitle: "Advanced React Patterns",
+      rating: 5,
+      comment:
+        "IntelliGen helped me switch into frontend development in 4 months. The structured paths and progress tracking kept me motivated.",
+    },
+    {
+      email: "james@intelligen.lms",
+      name: "James Okonkwo",
+      avatarUrl:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&q=80",
+      courseTitle: "Project Management Basics",
+      rating: 5,
+      comment:
+        "Our team uses the corporate coach and skill assessments — it's the most polished LMS we've rolled out company-wide.",
+    },
+    {
+      email: "elena@intelligen.lms",
+      name: "Elena Vasquez",
+      avatarUrl:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&q=80",
+      courseTitle: "UI/UX Design Fundamentals",
+      rating: 5,
+      comment:
+        "Beautiful interface, dark mode at night, and certificates I was proud to share on LinkedIn. Highly recommend.",
+    },
+    {
+      email: "student@intelligen.lms",
+      name: "Alex Johnson",
+      avatarUrl: null,
+      courseTitle: "Python for Data Science",
+      rating: 4,
+      comment:
+        "Clear explanations and practical exercises. The progress tracker made it easy to stay on schedule.",
+    },
+  ] as const;
+
+  for (const entry of reviewerSeed) {
+    const reviewer = await db.user.upsert({
+      where: { email: entry.email },
+      update: { name: entry.name, avatarUrl: entry.avatarUrl ?? undefined },
+      create: {
+        email: entry.email,
+        name: entry.name,
+        passwordHash,
+        role: "STUDENT",
+        avatarUrl: entry.avatarUrl,
+      },
+    });
+
+    const course = await db.course.findFirst({
+      where: { title: entry.courseTitle },
+    });
+    if (!course) continue;
+
+    await db.enrollment.upsert({
+      where: { userId_courseId: { userId: reviewer.id, courseId: course.id } },
+      create: {
+        userId: reviewer.id,
+        courseId: course.id,
+        progressPercent: 100,
+        completedAt: new Date(),
+      },
+      update: { progressPercent: 100, completedAt: new Date() },
+    });
+
+    await db.courseReview.upsert({
+      where: {
+        userId_courseId: { userId: reviewer.id, courseId: course.id },
+      },
+      create: {
+        userId: reviewer.id,
+        courseId: course.id,
+        rating: entry.rating,
+        comment: entry.comment,
+      },
+      update: {
+        rating: entry.rating,
+        comment: entry.comment,
+      },
+    });
+  }
+  console.log("  + Course reviews from verified learners");
+
+  await db.securitySettings.upsert({
+    where: { id: "default" },
+    create: { id: "default", requireAdmin2fa: false },
+    update: { requireAdmin2fa: false },
+  });
+  console.log("  + Security settings (admin 2FA optional)");
+
+  const { seedDemoOrganization } = await import("./seed-demo-org");
+  console.log("\nSeeding demo organization...");
+  await seedDemoOrganization();
+
+  // AI daily & weekly challenges
+  const challengeCount = await db.challenge.count();
+  if (challengeCount === 0) {
+    const { getOrCreatePeriodQuizzes } = await import("../src/lib/challenges");
+    await getOrCreatePeriodQuizzes("DAILY");
+    await getOrCreatePeriodQuizzes("WEEKLY");
+    console.log("  + Daily & weekly AI challenges");
+  }
 
   console.log("\nSeed completed:");
   console.log(`  Admin:      admin@intelligen.lms / password123`);

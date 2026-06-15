@@ -5,10 +5,10 @@ import { Badge } from "@/components/ui/badge";
 
 export function RoadmapCard({ roadmap }: { roadmap: LearningRoadmap }) {
   return (
-    <div className="mt-3 rounded-sm border border-brand-200 bg-brand-50/50 p-4">
+    <div className="mt-3 rounded-lg border border-brand-200 bg-brand-50/50 p-4 dark:border-brand-500/30 dark:bg-brand-500/10">
       <div className="flex items-center gap-2">
         <Map className="h-4 w-4 text-brand-600" />
-        <span className="text-sm font-bold text-brand-700">
+        <span className="text-sm font-bold text-brand-700 dark:text-brand-300">
           {roadmap.goal} Roadmap
         </span>
         <Badge variant="brand" className="ml-auto">
@@ -36,7 +36,7 @@ export function RoadmapCard({ roadmap }: { roadmap: LearningRoadmap }) {
                   <li key={course.id}>
                     <Link
                       href={`/courses/${course.id}`}
-                      className="group flex items-center gap-2 rounded-sm bg-white px-3 py-2 text-sm shadow-sm transition-colors hover:bg-brand-100"
+                      className="group flex items-center gap-2 rounded-sm border border-border bg-panel px-3 py-2 text-sm shadow-sm transition-colors hover:bg-brand-50 dark:hover:bg-brand-500/10"
                     >
                       <span className="flex-1 font-medium text-ink group-hover:text-brand-700">
                         {course.title}

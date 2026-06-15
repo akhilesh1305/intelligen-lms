@@ -33,13 +33,13 @@ if (-not $loggedIn) {
   railway login
 }
 
-# 3. Git (optional but recommended)
+# 3. Git (optional — skip if git user identity is not configured)
 if (-not (Test-Path .git)) {
   Write-Host "Initializing git repository..."
   git init
   git branch -M main
   git add -A
-  git commit -m "Initial commit - IntelliGen LMS production"
+  git -c user.email="deploy@intelligen.lms" -c user.name="IntelliGen Deploy" commit -m "Initial commit - IntelliGen LMS production" 2>$null
 }
 
 # 4. Link or create project

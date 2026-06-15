@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { createCertificationPost } from "./feed";
 import { sendCertificateEmail } from "./email";
 import { createNotification } from "./notifications";
 
@@ -32,8 +33,10 @@ export async function issueCertificate(userId: string, courseId: string) {
     type: "CERTIFICATE_EARNED",
     title: "Certificate earned!",
     message: `You've completed ${course.title}`,
-    link: `/certificates/${certificate.id}`,
+    link: `/feed`,
   });
+
+  await createCertificationPost(userId, certificate, course);
 
   await sendCertificateEmail(
     user.email,

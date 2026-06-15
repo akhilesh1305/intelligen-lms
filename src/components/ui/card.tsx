@@ -8,7 +8,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-sm border border-slate-200/80 bg-white shadow-card",
+        "rounded-lg border border-border bg-panel shadow-card transition-all duration-300 ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-card-hover",
         className
       )}
       {...props}

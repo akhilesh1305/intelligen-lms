@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
+import { instructorApiGuard } from "@/lib/instructor";
 import { logAudit } from "@/lib/audit";
+import { rupeesToPaise } from "@/lib/currency";
 import { courseSchema } from "@/lib/validations";
 import { db } from "@/lib/db";
 import { createNotification } from "@/lib/notifications";
@@ -8,10 +10,8 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getSession();
-  if (!session || !["INSTRUCTOR", "ADMIN"].includes(session.role)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const session = await instructorApiGuard(await getSession());
+  if (session instanceof NextResponse) return session;
 
   const { id } = await params;
   const course = await db.course.findUnique({
@@ -68,6 +68,9 @@ export async function PATCH(
     data: {
       title: parsed.data.title,
       description: parsed.data.description,
+      pricePaise: rupeesToPaise(parsed.data.priceInRupees ?? 0),
+      skillLevel: parsed.data.skillLevel ?? course.skillLevel,
+      prerequisiteCourseId: parsed.data.prerequisiteCourseId ?? null,
       status,
       published,
     },

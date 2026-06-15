@@ -6,6 +6,7 @@ import { BookOpen, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { FileUploadField } from "@/components/ui/file-upload-field";
 
 export function LessonForm({
   moduleId,
@@ -29,12 +30,7 @@ export function LessonForm({
     const formData = new FormData(e.currentTarget);
     const res = await fetch(`/api/modules/${moduleId}/lessons`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        title: formData.get("title"),
-        content: formData.get("content"),
-        videoUrl: formData.get("videoUrl") || undefined,
-      }),
+      body: formData,
     });
 
     setLoading(false);
@@ -90,14 +86,16 @@ export function LessonForm({
         required
         rows={6}
       />
-      <Input
-        name="videoUrl"
-        label="Video URL (optional)"
-        placeholder="https://www.youtube.com/embed/..."
+      <FileUploadField
+        name="video"
+        label="Lesson video (optional)"
+        accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
+        hint="MP4, WebM, or MOV · max 50MB"
+        previewType="video"
       />
       <div className="flex gap-2">
         <Button type="submit" size="sm" disabled={loading}>
-          {loading ? "Saving..." : "Save lesson"}
+          {loading ? "Uploading..." : "Save lesson"}
         </Button>
         {lessonCount > 0 && (
           <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>

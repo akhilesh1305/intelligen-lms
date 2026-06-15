@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { destroySession, getSession } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { publicRedirect } from "@/lib/request-url";
 
 export async function POST(request: Request) {
   const session = await getSession();
@@ -18,6 +19,5 @@ export async function POST(request: Request) {
   }
 
   await destroySession();
-  const origin = new URL(request.url).origin;
-  return NextResponse.redirect(new URL("/", origin));
+  return NextResponse.redirect(publicRedirect("/", request));
 }

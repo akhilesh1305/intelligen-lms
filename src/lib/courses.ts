@@ -1,21 +1,44 @@
+import type { Role } from "@prisma/client";
+
+import {
+  getAccessibleCoursesWhereForUser,
+  type SessionLike,
+} from "@/lib/organizations";
+
 import { db } from "./db";
 
-export async function getPublishedCourses() {
+const courseListInclude = {
+  instructor: { select: { name: true } },
+  modules: { include: { lessons: true } },
+  organization: { select: { id: true, name: true, slug: true } },
+  _count: { select: { enrollments: true } },
+} as const;
+
+export async function getPublishedCourses(
+  session: SessionLike = null
+) {
+  const where = await getAccessibleCoursesWhereForUser(session);
+
   return db.course.findMany({
-    where: { published: true, status: "APPROVED" },
-    include: {
-      instructor: { select: { name: true } },
-      modules: { include: { lessons: true } },
-      _count: { select: { enrollments: true } },
-    },
+    where,
+    include: courseListInclude,
     orderBy: { createdAt: "desc" },
   });
+}
+
+export async function getPublishedCoursesForUser(
+  userId: string,
+  role: Role
+) {
+  return getPublishedCourses({ id: userId, role });
 }
 
 export async function getCourseWithContent(courseId: string) {
   return db.course.findUnique({
     where: { id: courseId },
     include: {
+      organization: { select: { id: true, name: true, slug: true } },
+      prerequisiteCourse: { select: { id: true, title: true } },
       instructor: { select: { id: true, name: true, email: true } },
       modules: {
         orderBy: { order: "asc" },

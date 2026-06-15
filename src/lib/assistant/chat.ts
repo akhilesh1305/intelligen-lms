@@ -61,7 +61,7 @@ export async function handleAssistantChat(
   userId?: string
 ): Promise<AssistantResponse> {
   const [catalog, userContext] = await Promise.all([
-    getCourseCatalog(),
+    getCourseCatalog(userId),
     userId ? getUserLearningContext(userId) : undefined,
   ]);
 
@@ -95,7 +95,7 @@ export async function handleAssistantChat(
 
   // OpenAI fallback
   const { catalogText, userText } = buildSystemContext(catalog, userContext);
-  const systemPrompt = `You are IntelliGen LMS Learning Assistant. Help students with course questions, learning advice, and career guidance.
+  const systemPrompt = `You are IntelliGen LMS Learning Assistant. Help learners with course questions, learning advice, and career guidance.
 
 AVAILABLE COURSES (use exact titles and link as /courses/{id}):
 ${catalogText}

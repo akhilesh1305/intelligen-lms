@@ -43,7 +43,7 @@ export function NotificationsBell() {
           setOpen(!open);
           if (!open && unread > 0) markRead();
         }}
-        className="touch-target relative flex items-center justify-center rounded-sm p-2 text-muted hover:bg-slate-100 hover:text-ink"
+        className="touch-target relative flex items-center justify-center rounded-lg p-2 text-muted hover:bg-surface hover:text-ink"
         aria-label="Notifications"
       >
         <Bell className="h-5 w-5" />
@@ -57,8 +57,8 @@ export function NotificationsBell() {
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="fixed right-4 top-16 z-50 w-[min(20rem,calc(100vw-2rem))] rounded-sm border border-slate-200 bg-white shadow-elevated sm:absolute sm:right-0 sm:top-auto sm:mt-2">
-            <div className="border-b border-slate-100 px-4 py-3">
+          <div className="fixed right-4 top-16 z-50 w-[min(20rem,calc(100vw-2rem))] rounded-xl border border-border bg-panel shadow-elevated sm:absolute sm:right-0 sm:top-auto sm:mt-2">
+            <div className="border-b border-border px-4 py-3">
               <p className="font-semibold text-ink">Notifications</p>
             </div>
             <div className="max-h-80 overflow-y-auto">
@@ -71,8 +71,8 @@ export function NotificationsBell() {
                   <div
                     key={n.id}
                     className={cn(
-                      "border-b border-slate-50 px-4 py-3 last:border-0",
-                      !n.read && "bg-brand-50/50"
+                      "border-b border-border px-4 py-3 last:border-0",
+                      !n.read && "bg-brand-50/50 dark:bg-brand-500/10"
                     )}
                   >
                     {n.link ? (

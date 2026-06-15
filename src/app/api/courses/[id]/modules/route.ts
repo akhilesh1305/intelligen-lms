@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
+import { instructorApiGuard } from "@/lib/instructor";
 import { moduleSchema } from "@/lib/validations";
 import { db } from "@/lib/db";
 
@@ -7,10 +8,8 @@ export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getSession();
-  if (!session || !["INSTRUCTOR", "ADMIN"].includes(session.role)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const session = await instructorApiGuard(await getSession());
+  if (session instanceof NextResponse) return session;
 
   const { id: courseId } = await params;
   const course = await db.course.findUnique({ where: { id: courseId } });

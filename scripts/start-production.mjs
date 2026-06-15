@@ -3,7 +3,16 @@ import { execSync } from "node:child_process";
 const port = process.env.PORT || "3001";
 
 console.log("Applying database schema...");
-execSync("npx prisma db push", { stdio: "inherit" });
+execSync("npx prisma db push --accept-data-loss", { stdio: "inherit" });
+
+console.log("Backfilling corporate game day slugs...");
+execSync("node scripts/backfill-corporate-day-slug.mjs", { stdio: "inherit" });
+
+console.log("Applying security settings...");
+execSync("node scripts/ensure-security-settings.mjs", { stdio: "inherit" });
+
+console.log("Ensuring demo organization accounts...");
+execSync("npx tsx prisma/seed-demo-org.ts", { stdio: "inherit" });
 
 if (process.env.RUN_SEED === "true") {
   console.log("RUN_SEED=true — seeding database...");

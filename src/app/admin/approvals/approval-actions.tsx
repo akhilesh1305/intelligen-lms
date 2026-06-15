@@ -37,7 +37,7 @@ export function ApprovalActions({ courseId }: { courseId: string }) {
       </Button>
       <Button
         size="sm"
-        variant="outline"
+        variant="secondary"
         onClick={() => handleAction(false)}
         disabled={!!loading}
       >

@@ -1,4 +1,7 @@
+import type { Role } from "@prisma/client";
+
 import { getCourseCategory, getCourseLevel } from "@/lib/course-visuals";
+import { getAccessibleCoursesWhereForUser } from "@/lib/organizations";
 import { db } from "@/lib/db";
 import { countLessons } from "@/lib/courses";
 
@@ -13,9 +16,20 @@ export type CourseSummary = {
   enrollments: number;
 };
 
-export async function getCourseCatalog(): Promise<CourseSummary[]> {
+export async function getCourseCatalog(userId?: string): Promise<CourseSummary[]> {
+  let session: { id: string; role: Role } | null = null;
+  if (userId) {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    });
+    if (user) session = { id: userId, role: user.role };
+  }
+
+  const where = await getAccessibleCoursesWhereForUser(session);
+
   const courses = await db.course.findMany({
-    where: { status: "APPROVED", published: true },
+    where,
     include: {
       instructor: { select: { name: true } },
       modules: { include: { lessons: true } },
@@ -80,7 +94,7 @@ export function buildSystemContext(
     .join("\n");
 
   const userText = userContext
-    ? `Student: ${userContext.name}
+    ? `Learner: ${userContext.name}
 Points: ${userContext.points}
 Enrolled: ${userContext.enrollments.map((e) => `${e.title} (${e.progress}%)`).join(", ") || "none"}
 Certificates: ${userContext.certificates.join(", ") || "none"}`

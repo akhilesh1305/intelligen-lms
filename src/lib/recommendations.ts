@@ -1,7 +1,15 @@
+import type { Role } from "@prisma/client";
+
+import { getAccessibleCoursesWhereForUser } from "@/lib/organizations";
+
 import { getCourseCategory } from "./course-visuals";
 import { db } from "./db";
 
-export async function getRecommendedCourses(userId: string, limit = 4) {
+export async function getRecommendedCourses(
+  userId: string,
+  role: Role = "STUDENT",
+  limit = 4
+) {
   const enrollments = await db.enrollment.findMany({
     where: { userId },
     include: { course: true },
@@ -12,8 +20,13 @@ export async function getRecommendedCourses(userId: string, limit = 4) {
     getCourseCategory(e.course.title)
   );
 
+  const accessibleWhere = await getAccessibleCoursesWhereForUser({
+    id: userId,
+    role,
+  });
+
   const allCourses = await db.course.findMany({
-    where: { status: "APPROVED", published: true },
+    where: accessibleWhere,
     include: {
       instructor: { select: { name: true } },
       modules: { include: { lessons: true } },

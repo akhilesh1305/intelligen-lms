@@ -3,11 +3,14 @@ import {
   createSession,
   getSession,
   getUserByEmail,
+  getUserByPhone,
   hashPassword,
   verifyPassword,
 } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { logAudit } from "@/lib/audit";
+import { normalizePhoneNumber } from "@/lib/phone";
+import { getUserOrganizationMemberships } from "@/lib/organizations";
 import { profileSchema } from "@/lib/validations";
 
 export async function GET() {
@@ -16,24 +19,38 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await db.user.findUnique({
-    where: { id: session.id },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      avatarUrl: true,
-      role: true,
-      points: true,
-      createdAt: true,
-    },
-  });
+  const [user, orgMemberships] = await Promise.all([
+    db.user.findUnique({
+      where: { id: session.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatarUrl: true,
+        phoneNumber: true,
+        dateOfBirth: true,
+        maritalStatus: true,
+        role: true,
+        points: true,
+        createdAt: true,
+      },
+    }),
+    getUserOrganizationMemberships(session.id),
+  ]);
 
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  return NextResponse.json({ user });
+  return NextResponse.json({
+    user,
+    orgMemberships: orgMemberships.map((m) => ({
+      organizationId: m.organizationId,
+      organizationName: m.organization.name,
+      employeeId: m.employeeId,
+      role: m.role,
+    })),
+  });
 }
 
 export async function PATCH(request: Request) {
@@ -53,8 +70,27 @@ export async function PATCH(request: Request) {
       );
     }
 
-    const { name, email, currentPassword, newPassword } = parsed.data;
-    const user = await db.user.findUnique({ where: { id: session.id } });
+    const {
+      name,
+      email,
+      phoneNumber,
+      dateOfBirth,
+      maritalStatus,
+      currentPassword,
+      newPassword,
+    } = parsed.data;
+    const user = await db.user.findUnique({
+      where: { id: session.id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        passwordHash: true,
+        phoneNumber: true,
+        dateOfBirth: true,
+        maritalStatus: true,
+      },
+    });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -72,13 +108,47 @@ export async function PATCH(request: Request) {
       }
     }
 
+    const normalizedPhone = phoneNumber?.trim()
+      ? normalizePhoneNumber(phoneNumber)
+      : null;
+
+    if (phoneNumber?.trim() && !normalizedPhone) {
+      return NextResponse.json(
+        { error: "Enter a valid mobile number" },
+        { status: 400 }
+      );
+    }
+
+    if (normalizedPhone && normalizedPhone !== user.phoneNumber) {
+      const existingPhone = await getUserByPhone(normalizedPhone);
+      if (existingPhone && existingPhone.id !== user.id) {
+        return NextResponse.json(
+          { error: "This mobile number is already in use" },
+          { status: 409 }
+        );
+      }
+    }
+
     const updateData: {
       name: string;
       email: string;
+      phoneNumber: string | null;
+      dateOfBirth: Date | null;
+      maritalStatus:
+        | "SINGLE"
+        | "MARRIED"
+        | "DIVORCED"
+        | "WIDOWED"
+        | "SEPARATED"
+        | "PREFER_NOT_TO_SAY"
+        | null;
       passwordHash?: string;
     } = {
       name: name.trim(),
       email: normalizedEmail,
+      phoneNumber: normalizedPhone,
+      dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+      maritalStatus: maritalStatus || null,
     };
 
     if (newPassword) {
@@ -99,6 +169,9 @@ export async function PATCH(request: Request) {
         name: true,
         email: true,
         avatarUrl: true,
+        phoneNumber: true,
+        dateOfBirth: true,
+        maritalStatus: true,
         role: true,
         points: true,
         createdAt: true,
@@ -115,6 +188,14 @@ export async function PATCH(request: Request) {
     const changes: string[] = [];
     if (user.name !== updated.name) changes.push("name");
     if (user.email !== updated.email) changes.push("email");
+    if (user.phoneNumber !== updated.phoneNumber) changes.push("phoneNumber");
+    if (
+      user.dateOfBirth?.toISOString().slice(0, 10) !==
+      updated.dateOfBirth?.toISOString().slice(0, 10)
+    ) {
+      changes.push("dateOfBirth");
+    }
+    if (user.maritalStatus !== updated.maritalStatus) changes.push("maritalStatus");
     if (newPassword) changes.push("password");
 
     await logAudit({
