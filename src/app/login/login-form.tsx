@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Mail, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { PhoneInput } from "@/components/ui/phone-input";
 import { cn } from "@/lib/utils";
 
@@ -111,15 +112,23 @@ export function LoginForm() {
         />
       )}
 
-      <Input
+      <PasswordInput
         id="password"
         name="password"
-        type="password"
         label="Password"
         placeholder="••••••••"
         required
         autoComplete="current-password"
       />
+
+      <p className="text-right text-sm">
+        <a
+          href="mailto:hello@intelligenlms.com?subject=Password%20reset"
+          className="font-medium text-brand-600 transition-colors hover:underline dark:text-brand-400"
+        >
+          Forgot password?
+        </a>
+      </p>
 
       <Button type="submit" className="h-11 w-full" disabled={loading}>
         {loading ? "Signing in..." : "Sign in"}

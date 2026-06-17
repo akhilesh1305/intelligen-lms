@@ -3,5 +3,5 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="bg-[#1a1a1a]">{children}</div>;
+  return <div className="bg-surface">{children}</div>;
 }

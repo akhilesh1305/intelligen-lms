@@ -9,7 +9,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border bg-panel shadow-card transition-all duration-300 ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-card-hover",
+        "rounded-[20px] border border-border bg-panel shadow-card transition-all duration-300 ease-out motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-card-hover",
         glass && "glass-card",
         className
       )}

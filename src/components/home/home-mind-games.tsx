@@ -57,7 +57,7 @@ export function HomeMindGames({ games }: { games: CorporateGameMeta[] }) {
   }, []);
 
   return (
-    <section className="relative overflow-hidden border-b border-border bg-panel/50 py-10 dark:bg-panel/30 sm:py-12">
+    <section className="relative overflow-hidden border-b border-border bg-panel/50 py-24 dark:bg-panel/30">
       <div className="pointer-events-none absolute -left-20 top-10 h-64 w-64 animate-float rounded-full bg-brand-500/10 blur-3xl" />
       <div
         className="pointer-events-none absolute -right-16 bottom-8 h-72 w-72 animate-float rounded-full bg-cyan-500/10 blur-3xl"

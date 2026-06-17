@@ -58,7 +58,7 @@ export function CourseCard({
     <Link href={href} className="group block h-full">
       <article
         className={cn(
-          "group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-panel/90 shadow-card backdrop-blur-sm transition-all duration-500 motion-safe:hover:-translate-y-2 motion-safe:hover:border-brand-400/40 motion-safe:hover:shadow-card-hover dark:bg-panel/80",
+          "group flex h-full flex-col overflow-hidden rounded-[20px] border border-border bg-panel/90 shadow-card backdrop-blur-sm transition-all duration-300 motion-safe:hover:-translate-y-2 motion-safe:hover:border-brand-400/40 motion-safe:hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:bg-panel/80",
           variant === "compact" && "flex-row"
         )}
       >
@@ -105,21 +105,24 @@ export function CourseCard({
           <div className="mt-3 flex items-center gap-1 text-sm text-muted">
             <User className="h-3.5 w-3.5 shrink-0" />
             <span className="truncate">{instructorName}</span>
-          </div>
-
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-            {rating != null && reviewCount > 0 ? (
-              <StarRating rating={rating} reviewCount={reviewCount} />
-            ) : (
-              <span className="text-xs font-semibold text-muted">No reviews yet</span>
-            )}
-            <span className="flex items-center gap-1 text-sm text-muted">
+            <span className="text-border">·</span>
+            <span className="flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" />
               {duration}
             </span>
-            <span className="text-sm font-semibold text-ink">
-              {isFreeCourse(pricePaise) ? "Free" : formatInr(pricePaise)}
-            </span>
+          </div>
+
+          <div className="mt-auto border-t border-border pt-3">
+            <div className="flex items-center justify-between gap-2">
+              {rating != null && reviewCount > 0 ? (
+                <StarRating rating={rating} reviewCount={reviewCount} />
+              ) : (
+                <span className="text-xs text-muted">No reviews yet</span>
+              )}
+              <span className="text-sm font-bold text-ink">
+                {isFreeCourse(pricePaise) ? "Free" : formatInr(pricePaise)}
+              </span>
+            </div>
           </div>
 
           {enrolled && progress !== undefined && (

@@ -59,7 +59,7 @@ export async function Navbar() {
             {session ? (
               <>
                 <NotificationsBell />
-                <div className="hidden lg:block">
+                <div className="flex shrink-0">
                   <ThemeToggle />
                 </div>
                 <Link
@@ -115,10 +115,10 @@ export async function Navbar() {
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm">
+                  <Button size="sm" className="shadow-sm">
                     <UserPlus className="h-4 w-4" />
-                    <span className="hidden lg:inline">Join</span>
-                    <span className="hidden xl:inline"> for Free</span>
+                    <span className="hidden md:inline">Start Free Trial</span>
+                    <span className="md:hidden">Join</span>
                   </Button>
                 </Link>
               </div>

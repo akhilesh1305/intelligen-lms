@@ -28,6 +28,8 @@
   --color-accent-cyan: #06b6d4;
   --color-accent-cyan-light: #cffafe;
   --color-surface: #f8fafc;
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
   --color-ink: #0f172a;
   --color-muted: #64748b;
   --color-panel: #ffffff;
@@ -38,12 +40,18 @@
   --shadow-elevated: 0 20px 50px rgb(15 23 42 / 0.12), 0 0 0 1px rgb(255 255 255 / 0.05);
   --shadow-glow: 0 0 48px rgb(79 70 229 / 0.35);
   --shadow-glow-cyan: 0 0 40px rgb(6 182 212 / 0.3);
-  --radius-card: 1.125rem;
+  --radius-card: 1.25rem;
+  --text-display: 3.5rem;
+  --text-title: 2rem;
+  --text-body: 1rem;
+  --text-caption: 0.875rem;
 }
 
 .dark {
   color-scheme: dark;
   --color-surface: #020617;
+  --color-background: #020617;
+  --color-foreground: #f1f5f9;
   --color-ink: #f1f5f9;
   --color-muted: #94a3b8;
   --color-panel: #0f172a;
@@ -116,6 +124,28 @@
 
   h2 {
     @apply text-2xl sm:text-3xl lg:text-4xl font-bold;
+  }
+
+  .section-padding {
+    @apply px-4 py-24 sm:px-6 lg:px-8;
+  }
+
+  .text-display {
+    font-size: clamp(2.25rem, 5vw, var(--text-display));
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+
+  .text-title {
+    font-size: clamp(1.5rem, 3vw, var(--text-title));
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  .dark select,
+  .dark option {
+    background-color: var(--color-panel);
+    color: var(--color-ink);
   }
 
   .dark .bg-white {

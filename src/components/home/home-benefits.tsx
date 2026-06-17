@@ -40,7 +40,7 @@ const benefits = [
 
 export function HomeBenefits() {
   return (
-    <section className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <section className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <GradientOrbs variant="section" className="opacity-60" />
       <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-50/80 via-panel to-accent-cyan-light/50 shadow-elevated backdrop-blur-sm dark:from-brand-500/10 dark:via-panel dark:to-accent-cyan-light">
         <div className="grid lg:grid-cols-2">

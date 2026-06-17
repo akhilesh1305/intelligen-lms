@@ -22,7 +22,7 @@ export type FeaturedCourse = {
 
 export function HomeFeaturedCourses({ courses }: { courses: FeaturedCourse[] }) {
   return (
-    <section className="border-y border-border bg-panel/50 py-16 dark:bg-panel/30">
+    <section className="border-y border-border bg-panel/50 py-24 dark:bg-panel/30">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <AnimateOnScroll>
           <SectionHeader

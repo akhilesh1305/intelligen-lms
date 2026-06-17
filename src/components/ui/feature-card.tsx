@@ -17,20 +17,20 @@ export function FeatureCard({
   return (
     <article
       className={cn(
-        "feature-card-glow group relative overflow-hidden rounded-2xl border border-border bg-panel/80 p-6 shadow-card backdrop-blur-sm transition-all duration-300 motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-card-hover",
+        "feature-card-glow glass-card group relative overflow-hidden rounded-[20px] border border-border/80 p-7 shadow-card transition-all duration-300 motion-safe:hover:-translate-y-1.5 motion-safe:hover:shadow-card-hover",
         className
       )}
     >
       <div
         className={cn(
-          "flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-lg transition-transform duration-300 group-hover:scale-110 group-hover:shadow-glow",
+          "flex h-12 w-12 items-center justify-center rounded-[14px] bg-gradient-to-br text-white shadow-lg transition-transform duration-300 motion-safe:group-hover:scale-110 motion-safe:group-hover:shadow-glow",
           gradient
         )}
       >
         <Icon className="h-5 w-5" />
       </div>
-      <h3 className="mt-5 text-lg font-bold text-ink">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted">{description}</p>
+      <h3 className="mt-6 text-lg font-bold text-ink">{title}</h3>
+      <p className="mt-2.5 text-sm leading-relaxed text-muted">{description}</p>
     </article>
   );
 }

@@ -50,10 +50,10 @@ export default async function LoginPage({
         </>
       }
       error={error}
-      extra={
+      sso={
         ssoProviders.length > 0 ? (
           <SsoButtons providers={ssoProviders} variant="light" />
-        ) : null
+        ) : undefined
       }
       footer={
         <Link href="/" className="hover:text-brand-600">

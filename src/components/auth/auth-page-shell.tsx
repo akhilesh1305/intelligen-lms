@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { ArrowLeft, CheckCircle2, Sparkles } from "lucide-react";
 import { Logo } from "@/components/brand/logo";
+import { AuthDivider } from "@/components/auth/auth-divider";
 import { cn } from "@/lib/utils";
 
 export function AuthPageShell({
@@ -19,6 +20,7 @@ export function AuthPageShell({
   children,
   footer,
   extra,
+  sso,
 }: {
   image: string;
   imageAlt: string;
@@ -31,6 +33,7 @@ export function AuthPageShell({
   children: ReactNode;
   footer?: ReactNode;
   extra?: ReactNode;
+  sso?: ReactNode;
 }) {
   const [mounted, setMounted] = useState(false);
 
@@ -40,7 +43,7 @@ export function AuthPageShell({
   }, []);
 
   return (
-    <div className="relative flex min-h-dvh overflow-hidden bg-background">
+    <div className="relative flex min-h-dvh overflow-hidden bg-surface">
       {/* Hero panel */}
       <div className="relative hidden w-[46%] overflow-hidden lg:block xl:w-[50%]">
         <Image
@@ -172,7 +175,13 @@ export function AuthPageShell({
               </div>
             ) : null}
 
-            <div className="mt-8 rounded-2xl border border-border bg-panel p-6 shadow-elevated sm:p-8">
+            <div className="mt-8 rounded-[20px] border border-border bg-panel p-6 shadow-elevated sm:p-8">
+              {sso ? (
+                <>
+                  {sso}
+                  <AuthDivider />
+                </>
+              ) : null}
               {children}
             </div>
 

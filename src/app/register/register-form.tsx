@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { PhoneInput } from "@/components/ui/phone-input";
 
 export function RegisterForm() {
@@ -44,7 +46,7 @@ export function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
           {error}
@@ -73,27 +75,32 @@ export function RegisterForm() {
         required
         helperText="Select your country code, then enter your mobile number without the leading zero."
       />
-      <Input
+      <PasswordInput
         id="password"
         name="password"
-        type="password"
         label="Password"
         placeholder="••••••••"
         minLength={6}
         required
+        autoComplete="new-password"
       />
       <input type="hidden" name="role" value="STUDENT" />
-      <label className="flex items-start gap-2 text-sm text-muted">
-        <input type="checkbox" name="privacyConsent" required className="mt-1 rounded border-border" />
-        <span>
-          I agree to the privacy policy and consent to processing my personal
-          data (GDPR).
-        </span>
-      </label>
-      <label className="flex items-start gap-2 text-sm text-muted">
-        <input type="checkbox" name="marketingConsent" className="mt-1 rounded border-border" />
-        <span>Send me product updates and learning tips (optional).</span>
-      </label>
+      <Checkbox
+        id="privacyConsent"
+        name="privacyConsent"
+        required
+        label={
+          <>
+            I agree to the privacy policy and consent to processing my personal
+            data (GDPR).
+          </>
+        }
+      />
+      <Checkbox
+        id="marketingConsent"
+        name="marketingConsent"
+        label="Send me product updates and learning tips (optional)."
+      />
       <Button type="submit" className="h-11 w-full" disabled={loading}>
         {loading ? "Creating account..." : "Create account"}
       </Button>

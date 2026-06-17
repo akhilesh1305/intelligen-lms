@@ -2,9 +2,13 @@ import { HomeBenefits } from "@/components/home/home-benefits";
 import { HomeCategories } from "@/components/home/home-categories";
 import { HomeCta } from "@/components/home/home-cta";
 import { HomeFeaturedCourses } from "@/components/home/home-featured-courses";
+import { HomeFeatures } from "@/components/home/home-features";
+import { HomeGamification } from "@/components/home/home-gamification";
 import { HomeHero } from "@/components/home/home-hero";
+import { HomeHowItWorks } from "@/components/home/home-how-it-works";
 import { HomeMindGames } from "@/components/home/home-mind-games";
 import { HomeTestimonials } from "@/components/home/home-testimonials";
+import { HomeTrust } from "@/components/home/home-trust";
 import { AnimatedCounter } from "@/components/motion/animated-counter";
 import { getSession } from "@/lib/auth";
 import { CORPORATE_GAMES } from "@/lib/corporate-games";
@@ -50,6 +54,8 @@ export default async function HomePage() {
   return (
     <div>
       <HomeHero isLoggedIn={!!session} />
+      <HomeTrust />
+      <HomeHowItWorks />
 
       <section className="relative border-b border-border bg-panel/60 backdrop-blur-sm">
         <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-border sm:grid-cols-4">
@@ -64,9 +70,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <HomeFeatures />
       <HomeMindGames games={CORPORATE_GAMES} />
       <HomeCategories />
       <HomeFeaturedCourses courses={featured} />
+      <HomeGamification />
       <HomeBenefits />
       <HomeTestimonials reviews={featuredReviews} />
       <HomeCta isLoggedIn={!!session} />

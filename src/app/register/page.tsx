@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
+import { SsoButtons } from "@/components/auth/sso-buttons";
 import { RegisterForm } from "./register-form";
 import { getSession } from "@/lib/auth";
+import { getEnabledSsoProviders } from "@/lib/security/sso";
 import { AUTH_PAGE_IMAGES, AUTH_REGISTER_PERKS } from "@/lib/auth-images";
 
 export default async function RegisterPage() {
   const session = await getSession();
   if (session) redirect("/dashboard");
+
+  const ssoProviders = await getEnabledSsoProviders();
 
   return (
     <AuthPageShell
@@ -24,6 +28,11 @@ export default async function RegisterPage() {
             Log in
           </Link>
         </>
+      }
+      sso={
+        ssoProviders.length > 0 ? (
+          <SsoButtons providers={ssoProviders} variant="light" />
+        ) : undefined
       }
       footer={
         <Link href="/" className="hover:text-brand-600">

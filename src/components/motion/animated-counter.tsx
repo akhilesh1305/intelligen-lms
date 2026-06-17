@@ -8,11 +8,13 @@ export function AnimatedCounter({
   label,
   color,
   suffix = "",
+  compact = false,
 }: {
   value: string;
   label: string;
   color: string;
   suffix?: string;
+  compact?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
@@ -58,7 +60,7 @@ export function AnimatedCounter({
     : value;
 
   return (
-    <div ref={ref} className="px-4 py-8 text-center sm:py-10">
+    <div ref={ref} className={cn("px-4 text-center", compact ? "py-2" : "py-8 sm:py-10")}>
       <p className={cn("text-3xl font-bold tabular-nums", color)}>{display}</p>
       <p className="mt-1 text-sm font-medium text-muted">{label}</p>
     </div>

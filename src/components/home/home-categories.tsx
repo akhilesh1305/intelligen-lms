@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 export function HomeCategories() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
       <AnimateOnScroll>
         <SectionHeader
           title="Explore top categories"

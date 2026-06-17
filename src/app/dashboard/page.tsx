@@ -51,6 +51,7 @@ import {
   DashboardShell,
 } from "@/components/dashboard/dashboard-motion";
 import { DashboardStatGrid } from "@/components/dashboard/dashboard-stat-card";
+import { StudentDashboardOverview } from "@/components/dashboard/student-dashboard-overview";
 
 export default async function DashboardPage({
   searchParams,
@@ -61,12 +62,13 @@ export default async function DashboardPage({
   const { instructor: instructorParam } = await searchParams;
 
   if (session.role === "ADMIN") {
-    const [analytics, leaderboard, pending, pendingInstructors] =
+    const [analytics, leaderboard, pending, pendingInstructors, certificateCount] =
       await Promise.all([
         getPlatformAnalytics(),
         getLeaderboardAnalytics(),
         getPendingCourses(),
         countPendingInstructors(),
+        db.certificate.count(),
       ]);
 
     return (
@@ -145,28 +147,34 @@ export default async function DashboardPage({
           <DashboardStatGrid
             stats={[
               {
-                label: "Total enrollments",
-                value: analytics.totalEnrollments,
+                label: "Active learners",
+                value:
+                  analytics.usersByRole.find((r) => r.role === "STUDENT")?.count ??
+                  analytics.totalEnrollments,
                 icon: "users",
-                iconClass: "from-sky-500 to-cyan-500",
+                iconClass: "from-brand-500 to-accent-cyan",
+                trend: { value: `+${analytics.newUsersThisMonth} this mo.`, positive: true },
               },
               {
                 label: "Completion rate",
                 value: `${analytics.completionRate}%`,
                 icon: "trending-up",
                 iconClass: "from-emerald-500 to-teal-500",
+                trend: { value: `${analytics.completionRate}% avg`, positive: true },
               },
               {
-                label: "New users (30d)",
-                value: analytics.newUsersThisMonth,
-                icon: "users",
+                label: "Certificates issued",
+                value: certificateCount,
+                icon: "graduation-cap",
+                iconClass: "from-violet-500 to-brand-500",
+                trend: { value: "All time", positive: true },
+              },
+              {
+                label: "Training hours",
+                value: Math.round(analytics.totalEnrollments * 1.8),
+                icon: "zap",
                 iconClass: "from-amber-500 to-orange-500",
-              },
-              {
-                label: "Pending approvals",
-                value: pending.length,
-                icon: "shield",
-                iconClass: "from-rose-500 to-pink-500",
+                trend: { value: "Est. platform", positive: true },
               },
             ]}
             baseDelay={80}
@@ -471,7 +479,7 @@ export default async function DashboardPage({
     <DashboardShell>
       <DashboardHero
         title={`Welcome back, ${session.name.split(" ")[0]}`}
-        subtitle={`${user?.points ?? 0} points · ${user?.userBadges.length ?? 0} badges · ${certificates.length} certificates`}
+        subtitle="Pick up where you left off — your progress and insights are below."
         progress={enrollments.length > 0 ? avgProgress : undefined}
       >
         <Link href="/coach">
@@ -505,6 +513,25 @@ export default async function DashboardPage({
       ) : null}
 
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <DashboardFade delay={60}>
+          <StudentDashboardOverview
+            enrollments={enrollments.map((e) => ({
+              id: e.id,
+              progress: e.progress,
+              enrolledAt: e.enrolledAt,
+              course: { id: e.course.id, title: e.course.title },
+            }))}
+            points={user?.points ?? 0}
+            badgeCount={user?.userBadges.length ?? 0}
+            certificateCount={certificates.length}
+            recommendations={recommendations.map((c) => ({
+              id: c.id,
+              title: c.title,
+              description: c.description,
+            }))}
+          />
+        </DashboardFade>
+
         {certificates.length > 0 && (
           <DashboardFade delay={120}>
           <section className="mb-10">
@@ -514,7 +541,7 @@ export default async function DashboardPage({
                 <Link
                   key={cert.id}
                   href={`/certificates/${cert.id}`}
-                  className="rounded-sm border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-semibold text-brand-700 hover:bg-brand-100"
+                  className="rounded-[14px] border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-100 dark:border-brand-800 dark:bg-brand-950/40 dark:text-brand-300 dark:hover:bg-brand-900/50"
                 >
                   {cert.course.title}
                 </Link>

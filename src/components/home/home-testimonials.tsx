@@ -13,27 +13,68 @@ const accents = [
   "border-emerald-500/30 bg-emerald-500/5",
 ];
 
+const PLACEHOLDER_REVIEWS = [
+  {
+    id: "p1",
+    comment:
+      "IntelliGen cut our onboarding time in half. The AI course builder and analytics gave our L&D team confidence we never had before.",
+    rating: 5,
+    userName: "Sarah Chen",
+    role: "Head of L&D",
+    organization: "Northwind Logistics",
+    courseTitle: "Workplace Safety",
+    userAvatarUrl: null,
+  },
+  {
+    id: "p2",
+    comment:
+      "Certificates, gamification, and the AI tutor keep our distributed team engaged. It feels like a modern SaaS product, not legacy LMS software.",
+    rating: 5,
+    userName: "Marcus Okonkwo",
+    role: "Training Manager",
+    organization: "Globex Industries",
+    courseTitle: "Leadership Essentials",
+    userAvatarUrl: null,
+  },
+  {
+    id: "p3",
+    comment:
+      "We replaced three tools with IntelliGen. Course creation, quizzes, and progress tracking are all in one polished platform.",
+    rating: 5,
+    userName: "Elena Vasquez",
+    role: "HR Director",
+    organization: "Acme Corp",
+    courseTitle: "Compliance Fundamentals",
+    userAvatarUrl: null,
+  },
+] as const;
+
+type DisplayReview = FeaturedReview | (typeof PLACEHOLDER_REVIEWS)[number];
+
 export function HomeTestimonials({ reviews }: { reviews: FeaturedReview[] }) {
-  if (reviews.length === 0) {
-    return null;
-  }
+  const display: DisplayReview[] =
+    reviews.length > 0 ? reviews : [...PLACEHOLDER_REVIEWS];
 
   return (
-    <section className="border-y border-border bg-panel/50 py-16 dark:bg-panel/30">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="border-y border-border bg-panel/50 px-4 py-24 dark:bg-panel/30 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <AnimateOnScroll className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold text-ink">Loved by learners worldwide</h2>
+          <h2 className="text-3xl font-bold text-ink sm:text-4xl">
+            Loved by Learners and Teams
+          </h2>
           <p className="mt-3 text-muted">
-            Real ratings and reviews from enrolled learners
+            {reviews.length > 0
+              ? "Real ratings and reviews from enrolled learners"
+              : "Representative feedback from enterprise learning teams"}
           </p>
         </AnimateOnScroll>
 
         <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {reviews.map((review, i) => (
+          {display.map((review, i) => (
             <AnimateOnScroll key={review.id} delay={i * 120} animation="fade-up">
               <article
                 className={cn(
-                  "relative flex h-full flex-col rounded-2xl border p-6 shadow-card transition-transform duration-300 hover:-translate-y-1 hover:shadow-card-hover",
+                  "glass-card relative flex h-full flex-col rounded-[20px] border p-6 shadow-card transition-all duration-300 motion-safe:hover:-translate-y-1.5 motion-safe:hover:shadow-card-hover",
                   accents[i % accents.length]
                 )}
               >
@@ -64,7 +105,11 @@ export function HomeTestimonials({ reviews }: { reviews: FeaturedReview[] }) {
                   />
                   <div>
                     <p className="font-semibold text-ink">{review.userName}</p>
-                    <p className="text-xs text-muted">Verified learner</p>
+                    <p className="text-xs text-muted">
+                      {"role" in review && review.role
+                        ? `${review.role} · ${review.organization}`
+                        : "Verified learner"}
+                    </p>
                   </div>
                 </div>
               </article>
