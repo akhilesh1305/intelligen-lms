@@ -3,8 +3,13 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Lock } from "lucide-react";
 import { requireAuth } from "@/lib/auth";
 import { getOrganizationById } from "@/lib/organizations";
+import {
+  getOrganizationLifecycle,
+  getOrganizationLifecycleLabel,
+} from "@/lib/organization-lifecycle";
 import { OrganizationMemberForm } from "@/components/admin/organization-member-form";
 import { OrganizationMemberActions } from "@/components/admin/organization-member-actions";
+import { OrganizationContractPanel } from "@/components/admin/organization-contract-panel";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -24,6 +29,16 @@ export default async function AdminOrganizationDetailPage({
   const org = await getOrganizationById(id);
   if (!org) notFound();
 
+  const lifecycle = getOrganizationLifecycle(org);
+  const lifecycleVariant =
+    lifecycle === "active"
+      ? "success"
+      : lifecycle === "pending"
+        ? "info"
+        : lifecycle === "expired"
+          ? "warning"
+          : "danger";
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
       <Link
@@ -38,6 +53,9 @@ export default async function AdminOrganizationDetailPage({
         <h1 className="text-3xl font-bold text-ink">{org.name}</h1>
         <p className="mt-1 text-muted">/{org.slug}</p>
         <div className="mt-3 flex flex-wrap gap-2">
+          <Badge variant={lifecycleVariant}>
+            {getOrganizationLifecycleLabel(lifecycle)}
+          </Badge>
           <Badge variant="brand">
             {org.allowPublicCourses ? "Public + org courses" : "Org courses only"}
           </Badge>
@@ -45,6 +63,20 @@ export default async function AdminOrganizationDetailPage({
             <Badge variant="info">Domains: {org.allowedDomains.join(", ")}</Badge>
           ) : null}
         </div>
+      </div>
+
+      <div className="mt-8">
+        <OrganizationContractPanel
+          organization={{
+            id: org.id,
+            name: org.name,
+            status: org.status,
+            contractStartsAt: org.contractStartsAt?.toISOString() ?? null,
+            contractEndsAt: org.contractEndsAt?.toISOString() ?? null,
+            terminatedAt: org.terminatedAt?.toISOString() ?? null,
+            terminationNote: org.terminationNote,
+          }}
+        />
       </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-2">

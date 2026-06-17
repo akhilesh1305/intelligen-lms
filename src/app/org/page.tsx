@@ -6,6 +6,7 @@ import {
   getAccessibleOrganizations,
   getOrgAdminMemberships,
 } from "@/lib/org-admin";
+import { isOrganizationOperational } from "@/lib/organization-lifecycle";
 import { Card, CardContent } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +24,17 @@ export default async function OrgHubPage() {
     if (memberships.length === 0) {
       redirect("/dashboard");
     }
-    redirect(`/org/${memberships[0].organization.slug}`);
+
+    const activeMembership = memberships.find((m) =>
+      isOrganizationOperational(m.organization)
+    );
+    if (!activeMembership) {
+      redirect(
+        `/org/suspended?slug=${memberships[0].organization.slug}`
+      );
+    }
+
+    redirect(`/org/${activeMembership.organization.slug}`);
   }
 
   const organizations = await getAccessibleOrganizations(session);

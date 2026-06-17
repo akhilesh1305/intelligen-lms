@@ -5,18 +5,35 @@ export function SectionHeader({
   description,
   className,
   action,
+  gradient = false,
 }: {
   title: string;
   description?: string;
   className?: string;
   action?: React.ReactNode;
+  gradient?: boolean;
 }) {
   return (
-    <div className={cn("flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between", className)} data-section-header>
+    <div
+      className={cn(
+        "flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between",
+        className
+      )}
+      data-section-header
+    >
       <div className="min-w-0">
-        <h2 className="text-xl font-bold text-ink sm:text-2xl lg:text-3xl">{title}</h2>
+        <h2
+          className={cn(
+            "text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl",
+            gradient ? "gradient-text" : "text-ink"
+          )}
+        >
+          {title}
+        </h2>
         {description && (
-          <p className="mt-2 max-w-2xl text-base text-muted">{description}</p>
+          <p className="mt-2 max-w-2xl text-base leading-relaxed text-muted">
+            {description}
+          </p>
         )}
       </div>
       {action ? (

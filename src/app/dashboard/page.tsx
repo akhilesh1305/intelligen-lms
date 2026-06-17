@@ -148,27 +148,25 @@ export default async function DashboardPage({
                 label: "Total enrollments",
                 value: analytics.totalEnrollments,
                 icon: "users",
-                iconClass: "bg-sky-100 text-sky-600 dark:bg-sky-950 dark:text-sky-400",
+                iconClass: "from-sky-500 to-cyan-500",
               },
               {
                 label: "Completion rate",
                 value: `${analytics.completionRate}%`,
                 icon: "trending-up",
-                iconClass:
-                  "bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400",
+                iconClass: "from-emerald-500 to-teal-500",
               },
               {
                 label: "New users (30d)",
                 value: analytics.newUsersThisMonth,
                 icon: "users",
-                iconClass:
-                  "bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400",
+                iconClass: "from-amber-500 to-orange-500",
               },
               {
                 label: "Pending approvals",
                 value: pending.length,
                 icon: "shield",
-                iconClass: "bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400",
+                iconClass: "from-rose-500 to-pink-500",
               },
             ]}
             baseDelay={80}
@@ -199,29 +197,25 @@ export default async function DashboardPage({
                   label: "Players this week",
                   value: leaderboard.participants,
                   icon: "users",
-                  iconClass:
-                    "bg-violet-100 text-violet-600 dark:bg-violet-950 dark:text-violet-400",
+                  iconClass: "from-violet-500 to-brand-500",
                 },
                 {
                   label: "Quizzes played",
                   value: leaderboard.totalAttempts,
                   icon: "zap",
-                  iconClass:
-                    "bg-orange-100 text-orange-600 dark:bg-orange-950 dark:text-orange-400",
+                  iconClass: "from-orange-500 to-amber-500",
                 },
                 {
                   label: "Points awarded",
                   value: leaderboard.totalPoints,
                   icon: "trophy",
-                  iconClass:
-                    "bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400",
+                  iconClass: "from-yellow-500 to-amber-600",
                 },
                 {
                   label: "Active quizzes",
                   value: leaderboard.dailyQuizCount + leaderboard.weeklyQuizCount,
                   icon: "trending-up",
-                  iconClass:
-                    "bg-teal-100 text-teal-600 dark:bg-teal-950 dark:text-teal-400",
+                  iconClass: "from-teal-500 to-cyan-500",
                 },
               ]}
               baseDelay={120}

@@ -51,7 +51,7 @@ export default async function HomePage() {
     <div>
       <HomeHero isLoggedIn={!!session} />
 
-      <section className="border-b border-border bg-panel">
+      <section className="relative border-b border-border bg-panel/60 backdrop-blur-sm">
         <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-border sm:grid-cols-4">
           {stats.map((stat) => (
             <AnimatedCounter

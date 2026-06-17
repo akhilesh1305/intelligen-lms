@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   BookOpen,
   GraduationCap,
+  ScrollText,
   Shield,
   Trophy,
   UserCheck,
@@ -12,7 +13,6 @@ import {
   getOrgUserDirectory,
   requireOrganizationAdminBySlug,
 } from "@/lib/org-admin";
-import { OrgAdminToolbar } from "@/components/org/org-admin-toolbar";
 import { OrgUserDirectory } from "@/components/org/org-user-directory";
 import {
   DashboardFade,
@@ -105,6 +105,12 @@ export default async function OrgAdminDashboardPage({
                 All user data
               </Button>
             </Link>
+            <Link href={`/org/${slug}/settings`}>
+              <Button variant="soft" size="sm">
+                <ScrollText className="h-4 w-4 text-brand-600 dark:text-brand-400" />
+                Certificates
+              </Button>
+            </Link>
             <Link href="#all-users">
               <Button variant="soft" size="sm">
                 <Users className="h-4 w-4 text-violet-600 dark:text-violet-400" />
@@ -132,17 +138,6 @@ export default async function OrgAdminDashboardPage({
           </div>
         }
       />
-      </DashboardFade>
-
-      <DashboardFade delay={80}>
-      <div className="mt-6">
-        <OrgAdminToolbar
-          organizations={accessibleOrgs}
-          currentSlug={slug}
-          active="dashboard"
-          isPlatformAdmin={isPlatformAdmin}
-        />
-      </div>
       </DashboardFade>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

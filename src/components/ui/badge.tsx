@@ -1,7 +1,7 @@
 import { HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-type BadgeVariant = "default" | "success" | "warning" | "info" | "brand";
+type BadgeVariant = "default" | "success" | "warning" | "info" | "brand" | "danger";
 
 const variants: Record<BadgeVariant, string> = {
   default: "bg-surface text-ink ring-1 ring-border dark:bg-slate-800 dark:text-slate-200",
@@ -12,6 +12,8 @@ const variants: Record<BadgeVariant, string> = {
   info: "bg-sky-50 text-sky-800 ring-1 ring-sky-200 dark:bg-sky-500/15 dark:text-sky-300 dark:ring-sky-500/30",
   brand:
     "bg-brand-50 text-brand-700 ring-1 ring-brand-200 dark:bg-brand-500/15 dark:text-brand-300 dark:ring-brand-500/30",
+  danger:
+    "bg-red-50 text-red-700 ring-1 ring-red-200 dark:bg-red-500/15 dark:text-red-300 dark:ring-red-500/30",
 };
 
 export function Badge({
@@ -22,7 +24,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold uppercase tracking-wide",
+        "inline-flex items-center rounded-lg px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide",
         variants[variant],
         className
       )}

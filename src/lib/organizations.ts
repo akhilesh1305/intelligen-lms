@@ -1,6 +1,7 @@
 import type { Course, CourseVisibility, Prisma, Role } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { isOrganizationOperational } from "@/lib/organization-lifecycle";
 
 export type SessionLike = {
   id: string;
@@ -40,6 +41,50 @@ export async function isOrganizationMember(
   return Boolean(member);
 }
 
+export async function canUserAccessOrganization(
+  userId: string,
+  organizationId: string
+): Promise<boolean> {
+  const member = await db.organizationMember.findUnique({
+    where: {
+      organizationId_userId: { organizationId, userId },
+    },
+    include: {
+      organization: {
+        select: {
+          status: true,
+          contractStartsAt: true,
+          contractEndsAt: true,
+        },
+      },
+    },
+  });
+  if (!member) return false;
+  return isOrganizationOperational(member.organization);
+}
+
+export async function getOperationalOrganizationIds(
+  userId: string
+): Promise<string[]> {
+  const memberships = await db.organizationMember.findMany({
+    where: { userId },
+    include: {
+      organization: {
+        select: {
+          id: true,
+          status: true,
+          contractStartsAt: true,
+          contractEndsAt: true,
+        },
+      },
+    },
+  });
+
+  return memberships
+    .filter((m) => isOrganizationOperational(m.organization))
+    .map((m) => m.organizationId);
+}
+
 export async function isOrganizationAdmin(
   userId: string,
   organizationId: string
@@ -69,10 +114,20 @@ export async function canManageOrganizationCourses(
 }
 
 export function userHidesPublicCatalog(
-  memberships: { organization: { allowPublicCourses: boolean } }[]
+  memberships: {
+    organization: {
+      allowPublicCourses: boolean;
+      status: string;
+      contractStartsAt: Date | null;
+      contractEndsAt: Date | null;
+    };
+  }[]
 ): boolean {
-  if (memberships.length === 0) return false;
-  return memberships.every((m) => !m.organization.allowPublicCourses);
+  const operational = memberships.filter((m) =>
+    isOrganizationOperational(m.organization)
+  );
+  if (operational.length === 0) return false;
+  return operational.every((m) => !m.organization.allowPublicCourses);
 }
 
 export function buildAccessibleCoursesWhere(
@@ -148,7 +203,7 @@ export async function canUserViewCourse(
 
   if (course.visibility === "ORGANIZATION") {
     if (!course.organizationId || !session) return false;
-    return isOrganizationMember(session.id, course.organizationId);
+    return canUserAccessOrganization(session.id, course.organizationId);
   }
 
   return false;
@@ -174,7 +229,7 @@ export async function getAccessibleCoursesWhereForUser(
   }
 
   const memberships = await getUserOrganizationMemberships(session.id);
-  const orgIds = memberships.map((m) => m.organizationId);
+  const orgIds = await getOperationalOrganizationIds(session.id);
   const hidePublic = userHidesPublicCatalog(memberships);
 
   return buildAccessibleCoursesWhere(session, orgIds, hidePublic);
@@ -228,10 +283,16 @@ export async function joinOrganizationsByEmailDomain(
 
   const orgs = await db.organization.findMany({
     where: { allowedDomains: { has: domain } },
-    select: { id: true },
+    select: {
+      id: true,
+      status: true,
+      contractStartsAt: true,
+      contractEndsAt: true,
+    },
   });
 
   for (const org of orgs) {
+    if (!isOrganizationOperational(org)) continue;
     await db.organizationMember.upsert({
       where: {
         organizationId_userId: {

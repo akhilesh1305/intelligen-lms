@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Building2, LayoutDashboard, Plus, Upload, Users } from "lucide-react";
+import { Building2, LayoutDashboard, Plus, ScrollText, Upload, Users } from "lucide-react";
 import type { AccessibleOrg } from "@/lib/org-admin";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +14,7 @@ export function OrgAdminToolbar({
 }: {
   organizations: AccessibleOrg[];
   currentSlug: string;
-  active: "dashboard" | "users" | "members";
+  active: "dashboard" | "users" | "members" | "settings";
   isPlatformAdmin?: boolean;
 }) {
   const router = useRouter();
@@ -45,6 +45,12 @@ export function OrgAdminToolbar({
       href: `/org/${currentSlug}/members`,
       label: "Mass upload",
       icon: Upload,
+    },
+    {
+      id: "settings" as const,
+      href: `/org/${currentSlug}/settings`,
+      label: "Certificates",
+      icon: ScrollText,
     },
   ];
 
@@ -139,8 +145,9 @@ export function OrgAdminToolbar({
 
       <nav
         aria-label="Organization admin"
-        className="flex flex-wrap gap-0.5 sm:gap-1"
+        className="-mx-1 overflow-x-auto px-1 pb-1"
       >
+        <div className="flex min-w-max flex-wrap gap-0.5 sm:gap-1">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = active === item.id;
@@ -180,6 +187,7 @@ export function OrgAdminToolbar({
             </Link>
           );
         })}
+        </div>
       </nav>
     </div>
   );

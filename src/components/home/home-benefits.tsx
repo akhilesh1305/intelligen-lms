@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { Award, Globe, PlayCircle, TrendingUp } from "lucide-react";
 import { AnimateOnScroll } from "@/components/motion/animate-on-scroll";
+import { FeatureCard } from "@/components/ui/feature-card";
+import { GradientOrbs } from "@/components/decorative/gradient-orbs";
 import { HOME_SECTION_IMAGES } from "@/lib/home-images";
-import { cn } from "@/lib/utils";
 
 const benefits = [
   {
@@ -12,35 +13,36 @@ const benefits = [
     title: "Learn at your own pace",
     description:
       "Access course materials anytime. Pause, rewind, and revisit lessons whenever you need.",
-    color: "from-brand-500 to-brand-600",
+    gradient: "from-brand-500 to-accent-cyan",
   },
   {
     icon: Award,
     title: "Expert instructors",
     description:
       "Courses created by industry professionals with real-world experience.",
-    color: "from-violet-500 to-violet-600",
+    gradient: "from-violet-500 to-brand-500",
   },
   {
     icon: TrendingUp,
     title: "Track your progress",
     description:
       "Visual progress tracking keeps you motivated and on path to completion.",
-    color: "from-emerald-500 to-emerald-600",
+    gradient: "from-emerald-500 to-accent-cyan",
   },
   {
     icon: Globe,
     title: "Learn anywhere",
     description:
       "Responsive platform works seamlessly on desktop, tablet, and mobile.",
-    color: "from-amber-500 to-amber-600",
+    gradient: "from-amber-500 to-orange-500",
   },
 ];
 
 export function HomeBenefits() {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div className="overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-brand-50 via-panel to-accent-violet-light shadow-card dark:from-brand-500/10 dark:via-panel dark:to-accent-violet-light">
+    <section className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <GradientOrbs variant="section" className="opacity-60" />
+      <div className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-brand-50/80 via-panel to-accent-cyan-light/50 shadow-elevated backdrop-blur-sm dark:from-brand-500/10 dark:via-panel dark:to-accent-cyan-light">
         <div className="grid lg:grid-cols-2">
           <div className="relative hidden min-h-[320px] lg:block">
             <Image
@@ -50,36 +52,28 @@ export function HomeBenefits() {
               className="object-cover"
               sizes="50vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-panel/90 dark:to-panel/80" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-panel/95 dark:to-panel/85" />
           </div>
 
           <div className="p-8 sm:p-12 lg:p-16">
             <AnimateOnScroll>
-              <h2 className="text-3xl font-bold text-ink">
-                Why learners choose IntelliGen
+              <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+                Why learners choose{" "}
+                <span className="gradient-text">IntelliGen</span>
               </h2>
-              <p className="mt-3 text-muted">
+              <p className="mt-3 text-lg text-muted">
                 A learning experience designed for real results
               </p>
             </AnimateOnScroll>
 
-            <div className="mt-10 grid gap-8 sm:grid-cols-2">
+            <div className="mt-10 grid gap-5 sm:grid-cols-2">
               {benefits.map((benefit, i) => (
-                <AnimateOnScroll key={benefit.title} delay={i * 100} animation="fade-up">
-                  <div className="group text-left">
-                    <div
-                      className={cn(
-                        "flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-elevated transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3",
-                        benefit.color
-                      )}
-                    >
-                      <benefit.icon className="h-5 w-5" />
-                    </div>
-                    <h3 className="mt-4 font-bold text-ink">{benefit.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted">
-                      {benefit.description}
-                    </p>
-                  </div>
+                <AnimateOnScroll
+                  key={benefit.title}
+                  delay={i * 100}
+                  animation="fade-up"
+                >
+                  <FeatureCard {...benefit} className="h-full bg-panel/70" />
                 </AnimateOnScroll>
               ))}
             </div>

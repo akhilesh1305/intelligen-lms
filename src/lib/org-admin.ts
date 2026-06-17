@@ -7,6 +7,7 @@ import { getChallengeWindow } from "@/lib/challenge-window";
 import { db } from "@/lib/db";
 import { parseMemberCsv } from "@/lib/org-member-csv";
 import { isOrganizationAdmin, slugifyOrganizationName } from "@/lib/organizations";
+import { isOrganizationOperational } from "@/lib/organization-lifecycle";
 import { getCurrentWeekSlug, getWeekLabel } from "@/lib/weekly-leaderboard";
 
 import type { SessionLike } from "@/lib/organizations";
@@ -86,6 +87,13 @@ export async function requireOrganizationAdminBySlug(slug: string) {
 
   const allowed = await canManageOrganization(session.id, session.role, org.id);
   if (!allowed) redirect("/dashboard");
+
+  if (
+    session.role !== "ADMIN" &&
+    !isOrganizationOperational(org)
+  ) {
+    redirect(`/org/suspended?slug=${org.slug}`);
+  }
 
   const accessibleOrgs = await getOrganizationsForOrgAdminSwitcher(session);
 

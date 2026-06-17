@@ -11,7 +11,6 @@ import {
   getOrgUserDirectory,
   requireOrganizationAdminBySlug,
 } from "@/lib/org-admin";
-import { OrgAdminToolbar } from "@/components/org/org-admin-toolbar";
 import { OrgUserDirectory } from "@/components/org/org-user-directory";
 import { Card, CardContent } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
@@ -22,8 +21,7 @@ export default async function OrgUsersPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { org, isPlatformAdmin, accessibleOrgs } =
-    await requireOrganizationAdminBySlug(slug);
+  const { org, isPlatformAdmin } = await requireOrganizationAdminBySlug(slug);
 
   const [users, analytics] = await Promise.all([
     getOrgUserDirectory(org.id),
@@ -44,15 +42,6 @@ export default async function OrgUsersPage({
             : "Search, filter, and export learning data for your organization members. Org admins only."
         }
       />
-
-      <div className="mt-6">
-        <OrgAdminToolbar
-          organizations={accessibleOrgs}
-          currentSlug={slug}
-          active="users"
-          isPlatformAdmin={isPlatformAdmin}
-        />
-      </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[

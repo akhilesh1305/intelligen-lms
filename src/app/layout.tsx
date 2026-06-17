@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
-import { Source_Sans_3 } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import { AppChrome } from "@/components/layout/app-chrome";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ThemeScript } from "@/components/theme/theme-script";
 import "./globals.css";
 
-const sourceSans = Source_Sans_3({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-certificate",
   weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
 const appUrl =
@@ -49,8 +56,8 @@ export const viewport = {
   maximumScale: 5,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#004bb8" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0e17" },
+    { media: "(prefers-color-scheme: light)", color: "#0f172a" },
+    { media: "(prefers-color-scheme: dark)", color: "#020617" },
   ],
 };
 
@@ -66,7 +73,7 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body className={`${sourceSans.variable} font-sans`}>
+      <body className={`${inter.variable} ${playfair.variable} font-sans`}>
         <ThemeProvider>
           <AppChrome>{children}</AppChrome>
         </ThemeProvider>

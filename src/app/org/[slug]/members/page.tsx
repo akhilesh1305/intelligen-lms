@@ -5,7 +5,6 @@ import {
   requireOrganizationAdminBySlug,
 } from "@/lib/org-admin";
 import { formatPhoneForDisplay } from "@/lib/phone";
-import { OrgAdminToolbar } from "@/components/org/org-admin-toolbar";
 import { OrgMemberCsvUpload } from "@/components/org/org-member-csv-upload";
 import { TableScroll } from "@/components/ui/table-scroll";
 import { Badge } from "@/components/ui/badge";
@@ -25,8 +24,7 @@ export default async function OrgMembersPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { org, isPlatformAdmin, accessibleOrgs } =
-    await requireOrganizationAdminBySlug(slug);
+  const { org, isPlatformAdmin } = await requireOrganizationAdminBySlug(slug);
 
   const members = await getOrgMembersForAdmin(org.id);
   const instructors = members.filter((m) => m.role === "ORG_INSTRUCTOR");
@@ -43,15 +41,6 @@ export default async function OrgMembersPage({
             : "Mass import users with employee ID and manage your organization roster"
         }
       />
-
-      <div className="mt-6">
-        <OrgAdminToolbar
-          organizations={accessibleOrgs}
-          currentSlug={slug}
-          active="members"
-          isPlatformAdmin={isPlatformAdmin}
-        />
-      </div>
 
       <Card className="mt-6 border-brand-200 bg-brand-50/50 dark:border-brand-900 dark:bg-brand-950/20">
         <CardContent className="pt-6">

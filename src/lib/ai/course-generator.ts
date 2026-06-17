@@ -14,8 +14,11 @@ export type GeneratedModule = {
 };
 
 export type CourseOutline = {
+  title?: string;
+  description?: string;
   modules: GeneratedModule[];
   source: "openai" | "local";
+  sourceSummary?: string;
 };
 
 const lessonSchema = z.object({
@@ -31,6 +34,8 @@ const moduleSchema = z.object({
 });
 
 const outlineSchema = z.object({
+  title: z.string().min(3).optional(),
+  description: z.string().min(10).optional(),
   modules: z.array(moduleSchema).min(1),
 });
 
@@ -79,11 +84,67 @@ Each lesson content must be educational, practical, and formatted with headings.
   );
 
   if (ai) {
-    return { modules: ai.data.modules, source: ai.source };
+    return {
+      title: ai.data.title,
+      description: ai.data.description,
+      modules: ai.data.modules,
+      source: ai.source,
+    };
   }
 
   return {
     modules: buildLocalOutline(topic, modules, lessons),
     source: "local",
+  };
+}
+
+function buildLocalOutlineFromSources(
+  sourceMaterial: string,
+  moduleCount: number,
+  lessonsPerModule: number
+): GeneratedModule[] {
+  const snippet = sourceMaterial.slice(0, 120).replace(/\s+/g, " ");
+  const topic = snippet || "Uploaded material";
+  return buildLocalOutline(topic, moduleCount, lessonsPerModule);
+}
+
+export async function generateCourseOutlineFromSources(
+  sourceMaterial: string,
+  moduleCount: number,
+  lessonsPerModule: number,
+  topic?: string,
+  description?: string
+): Promise<CourseOutline> {
+  const modules = Math.min(Math.max(moduleCount, 1), 6);
+  const lessons = Math.min(Math.max(lessonsPerModule, 1), 5);
+
+  const ai = await chatJSON(
+    `You generate structured LMS course outlines from source documents (PDFs, transcripts, video notes).
+Return JSON: {"title":"string (optional)","description":"string (optional)","modules":[{"title":"string","summary":"string","lessons":[{"title":"string","content":"string (200-400 words, markdown)","summary":"string"}]}]}
+Base modules and lessons on the source material. Each lesson content must be educational and practical.`,
+    `Course topic hint: ${topic || "Infer from sources"}
+Course description hint: ${description || "Infer from sources"}
+Generate ${modules} modules with ${lessons} lessons each.
+
+Source material:
+${sourceMaterial}`,
+    outlineSchema,
+    { maxTokens: 4500 }
+  );
+
+  if (ai) {
+    return {
+      title: ai.data.title,
+      description: ai.data.description,
+      modules: ai.data.modules,
+      source: ai.source,
+      sourceSummary: `${sourceMaterial.length} characters processed`,
+    };
+  }
+
+  return {
+    modules: buildLocalOutlineFromSources(sourceMaterial, modules, lessons),
+    source: "local",
+    sourceSummary: `${sourceMaterial.length} characters processed (offline template)`,
   };
 }

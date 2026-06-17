@@ -2,9 +2,14 @@ import Link from "next/link";
 import { ArrowLeft, Building2 } from "lucide-react";
 import { requireAuth } from "@/lib/auth";
 import { getOrganizationsForAdmin } from "@/lib/organizations";
+import {
+  getOrganizationLifecycle,
+  getOrganizationLifecycleLabel,
+} from "@/lib/organization-lifecycle";
 import { CreateOrganizationForm } from "@/components/admin/create-organization-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { SectionHeader } from "@/components/ui/section-header";
+import { Badge } from "@/components/ui/badge";
 
 export default async function AdminOrganizationsPage() {
   await requireAuth(["ADMIN"]);
@@ -59,7 +64,18 @@ export default async function AdminOrganizationsPage() {
         {organizations.length === 0 ? (
           <p className="text-sm text-muted">No organizations yet.</p>
         ) : (
-          organizations.map((org) => (
+          organizations.map((org) => {
+            const lifecycle = getOrganizationLifecycle(org);
+            const lifecycleVariant =
+              lifecycle === "active"
+                ? "success"
+                : lifecycle === "pending"
+                  ? "info"
+                  : lifecycle === "expired"
+                    ? "warning"
+                    : "danger";
+
+            return (
             <Link key={org.id} href={`/admin/organizations/${org.id}`}>
               <Card className="transition-colors hover:border-brand-400/40">
                 <CardContent className="flex items-center justify-between gap-4 py-4">
@@ -68,6 +84,11 @@ export default async function AdminOrganizationsPage() {
                     <div>
                       <p className="font-semibold text-ink">{org.name}</p>
                       <p className="text-sm text-muted">/{org.slug}</p>
+                      <div className="mt-1">
+                        <Badge variant={lifecycleVariant}>
+                          {getOrganizationLifecycleLabel(lifecycle)}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
                   <div className="text-right text-sm text-muted">
@@ -77,7 +98,8 @@ export default async function AdminOrganizationsPage() {
                 </CardContent>
               </Card>
             </Link>
-          ))
+            );
+          })
         )}
       </div>
     </div>

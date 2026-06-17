@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import {
+  parseContractEndDate,
+  parseContractStartDate,
+} from "@/lib/organization-lifecycle";
 import { organizationSchema } from "@/lib/validations";
 
 export async function PATCH(
@@ -27,6 +31,8 @@ export async function PATCH(
     name?: string;
     allowedDomains?: string[];
     allowPublicCourses?: boolean;
+    contractStartsAt?: Date | null;
+    contractEndsAt?: Date | null;
   } = {};
 
   if (parsed.data.name) data.name = parsed.data.name;
@@ -37,6 +43,28 @@ export async function PATCH(
   }
   if (parsed.data.allowPublicCourses !== undefined) {
     data.allowPublicCourses = parsed.data.allowPublicCourses;
+  }
+
+  if (parsed.data.contractStartsAt !== undefined) {
+    data.contractStartsAt = parsed.data.contractStartsAt
+      ? parseContractStartDate(parsed.data.contractStartsAt)
+      : null;
+  }
+  if (parsed.data.contractEndsAt !== undefined) {
+    data.contractEndsAt = parsed.data.contractEndsAt
+      ? parseContractEndDate(parsed.data.contractEndsAt)
+      : null;
+  }
+
+  if (
+    data.contractStartsAt &&
+    data.contractEndsAt &&
+    data.contractStartsAt.getTime() > data.contractEndsAt.getTime()
+  ) {
+    return NextResponse.json(
+      { error: "Contract start date must be before the end date" },
+      { status: 400 }
+    );
   }
 
   const organization = await db.organization.update({

@@ -154,6 +154,13 @@ export const organizationSchema = z.object({
     .optional(),
   allowedDomains: z.array(z.string().min(3)).optional(),
   allowPublicCourses: z.boolean().optional(),
+  contractStartsAt: z.string().nullable().optional(),
+  contractEndsAt: z.string().nullable().optional(),
+});
+
+export const organizationTerminateSchema = z.object({
+  confirm: z.literal(true),
+  terminationNote: z.string().max(500).optional(),
 });
 
 export const orgAdminAccountSchema = z.object({
@@ -191,6 +198,23 @@ export const aiCourseGenerateSchema = z.object({
   moduleCount: z.coerce.number().int().min(1).max(6).default(3),
   lessonsPerModule: z.coerce.number().int().min(1).max(5).default(2),
   apply: z.boolean().optional(),
+  outline: z
+    .object({
+      modules: z.array(
+        z.object({
+          title: z.string().min(2),
+          summary: z.string().min(1),
+          lessons: z.array(
+            z.object({
+              title: z.string().min(2),
+              content: z.string().min(1),
+              summary: z.string().min(1),
+            })
+          ),
+        })
+      ),
+    })
+    .optional(),
 });
 
 export const aiSummarizeSchema = z

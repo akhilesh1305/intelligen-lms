@@ -56,18 +56,18 @@ export function DashboardStatCard({
 
   return (
     <DashboardFade delay={delay} animation="scale-in">
-      <Card className="transition-all duration-300 motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-card-hover">
-        <CardContent className="flex items-center gap-4 py-5">
+      <Card glass className="group overflow-hidden">
+        <CardContent className="relative flex items-center gap-4 py-5">
           <div
             className={cn(
-              "flex h-12 w-12 items-center justify-center rounded-lg transition-transform duration-300 motion-safe:group-hover:scale-105",
+              "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg transition-all duration-300 motion-safe:group-hover:scale-110 motion-safe:group-hover:shadow-glow",
               iconClass
             )}
           >
-            <Icon className="h-5 w-5" />
+            <Icon className="h-5 w-5 text-white" />
           </div>
-          <div>
-            <p className="text-2xl font-bold text-ink">{value}</p>
+          <div className="min-w-0">
+            <p className="text-2xl font-bold tracking-tight text-ink">{value}</p>
             <p className="text-sm text-muted">{label}</p>
           </div>
         </CardContent>

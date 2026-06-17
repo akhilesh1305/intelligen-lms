@@ -46,18 +46,28 @@ export default async function CertificatePage({
             width: 100%;
             max-width: none;
             box-shadow: none;
-            aspect-ratio: 1.414 / 1;
+            aspect-ratio: 11 / 8.5;
           }
         }
       `}</style>
 
-      <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8 print:p-0">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 print:p-0">
         <CertificateDocument
           studentName={certificate.user.name}
           courseTitle={certificate.course.title}
           instructorName={certificate.course.instructor.name}
           certificateNo={certificate.certificateNo}
           issuedAt={certificate.issuedAt}
+          organization={
+            certificate.course.organization
+              ? {
+                  name: certificate.course.organization.name,
+                  logoUrl: certificate.course.organization.logoUrl,
+                  signatoryName: certificate.course.organization.signatoryName,
+                  signatureUrl: certificate.course.organization.signatureUrl,
+                }
+              : null
+          }
         />
 
         <div className="mt-6 flex justify-center gap-4 print:hidden">

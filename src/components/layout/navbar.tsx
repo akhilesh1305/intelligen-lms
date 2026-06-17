@@ -17,6 +17,7 @@ import { HeaderMoreMenu } from "./header-more-menu";
 import { DesktopNavLinks } from "./desktop-nav-links";
 import { NotificationsBell } from "./notifications-bell";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { NavbarShell } from "./navbar-shell";
 import { PromoBanner } from "./promo-banner";
 
 export async function Navbar() {
@@ -43,7 +44,7 @@ export async function Navbar() {
         : null;
 
   return (
-    <header className="safe-top sticky top-0 z-50 border-b border-border glass-panel">
+    <NavbarShell>
       <PromoBanner />
 
       <div className="animate-header-enter-delayed mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -133,6 +134,6 @@ export async function Navbar() {
           </nav>
         </div>
       </div>
-    </header>
+    </NavbarShell>
   );
 }

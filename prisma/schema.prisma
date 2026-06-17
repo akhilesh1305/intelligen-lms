@@ -24,6 +24,11 @@ enum OrganizationRole {
   ORG_LEARNER
 }
 
+enum OrganizationStatus {
+  ACTIVE
+  TERMINATED
+}
+
 enum InstructorStatus {
   PENDING
   APPROVED
@@ -260,14 +265,21 @@ model User {
 }
 
 model Organization {
-  id                 String   @id @default(cuid())
+  id                 String             @id @default(cuid())
   name               String
-  slug               String   @unique
+  slug               String             @unique
   logoUrl            String?
-  allowedDomains     String[] @default([])
-  allowPublicCourses Boolean  @default(true)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  signatoryName      String?
+  signatureUrl       String?
+  allowedDomains     String[]           @default([])
+  allowPublicCourses Boolean            @default(true)
+  status             OrganizationStatus @default(ACTIVE)
+  contractStartsAt   DateTime?
+  contractEndsAt     DateTime?
+  terminatedAt       DateTime?
+  terminationNote    String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
 
   members OrganizationMember[]
   courses Course[]

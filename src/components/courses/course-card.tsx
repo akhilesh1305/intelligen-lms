@@ -58,7 +58,7 @@ export function CourseCard({
     <Link href={href} className="group block h-full">
       <article
         className={cn(
-          "flex h-full flex-col overflow-hidden rounded-xl border border-border bg-panel shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-card-hover hover:border-brand-300/50 dark:hover:border-brand-500/30",
+          "group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-panel/90 shadow-card backdrop-blur-sm transition-all duration-500 motion-safe:hover:-translate-y-2 motion-safe:hover:border-brand-400/40 motion-safe:hover:shadow-card-hover dark:bg-panel/80",
           variant === "compact" && "flex-row"
         )}
       >
@@ -96,7 +96,7 @@ export function CourseCard({
             {enrolled && <Badge variant="success">Enrolled</Badge>}
           </div>
 
-          <h3 className="line-clamp-2 font-bold leading-snug text-ink group-hover:text-brand-600">
+          <h3 className="line-clamp-2 text-base font-bold leading-snug text-ink transition-colors group-hover:text-brand-600">
             {title}
           </h3>
 

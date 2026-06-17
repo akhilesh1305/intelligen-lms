@@ -1,6 +1,6 @@
 # IntelliGen LMS — Feature inventory
 
-**Last updated:** 2026-06-14
+**Last updated:** 2026-06-18
 
 Use this table to see what is already built. **When you add or materially change a feature, add or update a row here** in the same PR/commit (see `.cursor/rules/feature-table.mdc`).
 
@@ -45,7 +45,7 @@ Use this table to see what is already built. **When you add or materially change
 | 13 | Competency / skills | Learning | ✅ | `/competency` | Skill assessments and course mapping |
 | 14 | Offline downloads | Learning | ✅ | `/offline`, `/offline/downloads` | Save lessons for offline reading |
 | 15 | AI learning assistant | AI | 🧪 | `/assistant` | Chat assistant with course context |
-| 16 | AI course generator | AI | 🧪 | Instructor tools | Modules/lessons from prompts |
+| 16 | AI course generator | AI | 🧪 | `/instructor/courses/[id]` | Modules/lessons from topic, PDFs, or videos |
 | 17 | Content summarizer | AI | 🧪 | Learn UI / API | Summarize long lesson content |
 | 18 | AI voice narration | AI | 🧪 | Learn UI | OpenAI TTS or browser speech |
 | 19 | Interview preparation | AI | 🧪 | `/ai` | Mock interview Q&A |
@@ -124,6 +124,7 @@ Use this table to see what is already built. **When you add or materially change
 
 | Date | Change |
 |------|--------|
+| 2026-06-18 | AI course generator: PDF text extraction + video upload with optional transcripts |
 | 2026-06-14 | Global page transitions + scroll-reveal animations on all routes |
 | 2026-06-14 | Corporate games: daily shuffle from 16-scenario catalog (not fixed sets) |
 | 2026-06-14 | General Knowledge games: trivia-only content (no course/LMS topics) |

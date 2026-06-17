@@ -52,8 +52,15 @@ export async function getCertificate(id: string) {
   return db.certificate.findUnique({
     where: { id },
     include: {
-      user: { select: { name: true, email: true } },
-      course: { select: { title: true, instructor: { select: { name: true } } } },
+      user: { select: { name: true, email: true, id: true } },
+      course: {
+        select: {
+          title: true,
+          organizationId: true,
+          organization: { select: { name: true, logoUrl: true, signatoryName: true, signatureUrl: true } },
+          instructor: { select: { name: true } },
+        },
+      },
     },
   });
 }

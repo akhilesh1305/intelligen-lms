@@ -3,54 +3,61 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-brand-50: #e8f1fc;
-  --color-brand-100: #d0e3f9;
-  --color-brand-200: #a1c7f3;
-  --color-brand-300: #6ba8eb;
-  --color-brand-400: #2d87e0;
-  --color-brand-500: #0056d2;
-  --color-brand-600: #004bb8;
-  --color-brand-700: #003d96;
-  --color-brand-800: #002f73;
-  --color-brand-900: #001f4d;
+  --color-primary: #0f172a;
+  --color-secondary: #4f46e5;
+  --color-accent: #06b6d4;
+  --color-success: #10b981;
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #4f46e5;
+  --color-brand-600: #4338ca;
+  --color-brand-700: #3730a3;
+  --color-brand-800: #1e293b;
+  --color-brand-900: #0f172a;
   --color-accent-violet: #7c3aed;
   --color-accent-violet-light: #ede9fe;
-  --color-accent-emerald: #059669;
+  --color-accent-emerald: #10b981;
   --color-accent-emerald-light: #d1fae5;
-  --color-accent-amber: #d97706;
+  --color-accent-amber: #f59e0b;
   --color-accent-amber-light: #fef3c7;
-  --color-accent-rose: #e11d48;
+  --color-accent-rose: #f43f5e;
   --color-accent-rose-light: #ffe4e6;
-  --color-accent-cyan: #0891b2;
+  --color-accent-cyan: #06b6d4;
   --color-accent-cyan-light: #cffafe;
-  --color-surface: #f0f4fa;
-  --color-ink: #1c1d1f;
-  --color-muted: #6a6f73;
+  --color-surface: #f8fafc;
+  --color-ink: #0f172a;
+  --color-muted: #64748b;
   --color-panel: #ffffff;
   --color-border: #e2e8f0;
-  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
-  --shadow-card: 0 1px 3px rgba(0, 43, 120, 0.06), 0 4px 14px rgba(0, 43, 120, 0.08);
-  --shadow-card-hover: 0 4px 12px rgba(0, 43, 120, 0.12), 0 12px 28px rgba(0, 43, 120, 0.1);
-  --shadow-elevated: 0 8px 24px rgba(0, 43, 120, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-glow: 0 0 40px rgba(0, 86, 210, 0.15);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 20px rgb(15 23 42 / 0.06);
+  --shadow-card-hover: 0 8px 30px rgb(79 70 229 / 0.12), 0 2px 8px rgb(15 23 42 / 0.06);
+  --shadow-elevated: 0 20px 50px rgb(15 23 42 / 0.12), 0 0 0 1px rgb(255 255 255 / 0.05);
+  --shadow-glow: 0 0 48px rgb(79 70 229 / 0.35);
+  --shadow-glow-cyan: 0 0 40px rgb(6 182 212 / 0.3);
+  --radius-card: 1.125rem;
 }
 
 .dark {
   color-scheme: dark;
-  --color-surface: #0a0e17;
-  --color-ink: #e8edf5;
-  --color-muted: #8b9cb3;
-  --color-panel: #141b2d;
-  --color-border: #2a3548;
-  --color-accent-violet-light: rgb(124 58 237 / 0.18);
-  --color-accent-emerald-light: rgb(5 150 105 / 0.18);
-  --color-accent-amber-light: rgb(217 119 6 / 0.18);
-  --color-accent-rose-light: rgb(225 29 72 / 0.18);
-  --color-accent-cyan-light: rgb(8 145 178 / 0.18);
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 14px rgba(0, 0, 0, 0.25);
-  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.45), 0 12px 28px rgba(0, 86, 210, 0.12);
-  --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
-  --shadow-glow: 0 0 48px rgba(45, 135, 224, 0.2);
+  --color-surface: #020617;
+  --color-ink: #f1f5f9;
+  --color-muted: #94a3b8;
+  --color-panel: #0f172a;
+  --color-border: #1e293b;
+  --color-accent-violet-light: rgb(124 58 237 / 0.15);
+  --color-accent-emerald-light: rgb(16 185 129 / 0.15);
+  --color-accent-amber-light: rgb(245 158 11 / 0.15);
+  --color-accent-rose-light: rgb(244 63 94 / 0.15);
+  --color-accent-cyan-light: rgb(6 182 212 / 0.15);
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px rgb(0 0 0 / 0.35);
+  --shadow-card-hover: 0 12px 40px rgb(79 70 229 / 0.2), 0 4px 12px rgb(0 0 0 / 0.4);
+  --shadow-elevated: 0 24px 60px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(255 255 255 / 0.06);
+  --shadow-glow: 0 0 56px rgb(79 70 229 / 0.25);
+  --shadow-glow-cyan: 0 0 48px rgb(6 182 212 / 0.2);
 }
 
 @layer base {
@@ -63,18 +70,28 @@
     @apply bg-surface text-ink antialiased;
     overflow-x: hidden;
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgb(0 86 210 / 0.08), transparent),
-      radial-gradient(ellipse 60% 40% at 100% 0%, rgb(124 58 237 / 0.05), transparent);
+      radial-gradient(ellipse 90% 60% at 50% -30%, rgb(79 70 229 / 0.09), transparent),
+      radial-gradient(ellipse 50% 40% at 100% 0%, rgb(6 182 212 / 0.06), transparent),
+      radial-gradient(ellipse 40% 30% at 0% 100%, rgb(124 58 237 / 0.05), transparent);
   }
 
   .dark body {
     background-image:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgb(45 135 224 / 0.12), transparent),
-      radial-gradient(ellipse 60% 40% at 100% 0%, rgb(124 58 237 / 0.08), transparent);
+      radial-gradient(ellipse 90% 60% at 50% -30%, rgb(79 70 229 / 0.15), transparent),
+      radial-gradient(ellipse 50% 40% at 100% 0%, rgb(6 182 212 / 0.1), transparent),
+      radial-gradient(ellipse 40% 30% at 0% 80%, rgb(124 58 237 / 0.08), transparent);
   }
 
   h1, h2, h3, h4 {
-    @apply tracking-tight text-ink;
+    @apply tracking-tight text-ink font-semibold;
+  }
+
+  h1 {
+    @apply text-4xl sm:text-5xl lg:text-6xl font-bold;
+  }
+
+  h2 {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-bold;
   }
 
   .dark .bg-white {
@@ -154,6 +171,50 @@
   .certificate-sheet * {
     color-scheme: light;
   }
+
+  /* Certificate always renders as a light document, even in dark mode */
+  .dark .certificate-sheet {
+    background-color: var(--certificate-cream) !important;
+    color: #1c1d1f !important;
+  }
+
+  .dark .certificate-sheet .text-ink {
+    color: #1c1d1f !important;
+  }
+
+  .dark .certificate-sheet .text-muted {
+    color: #6a6f73 !important;
+  }
+
+  .dark .certificate-sheet .text-brand-900 {
+    color: #001f4d !important;
+  }
+
+  .dark .certificate-sheet .text-brand-800 {
+    color: #002f73 !important;
+  }
+
+  .dark .certificate-sheet .text-brand-700 {
+    color: #003d96 !important;
+  }
+
+  .dark .certificate-sheet .text-brand-600 {
+    color: #004bb8 !important;
+  }
+
+  .dark .certificate-sheet .text-brand-500 {
+    color: #0056d2 !important;
+  }
+
+  .dark .certificate-sheet .certificate-completion-label {
+    background-color: #ffffff !important;
+    color: #004bb8 !important;
+  }
+
+  .dark .certificate-sheet .certificate-brand-zone .text-brand-500,
+  .dark .certificate-sheet .certificate-brand-zone .dark\:text-cyan-400 {
+    color: #0056d2 !important;
+  }
 }
 
 @layer utilities {
@@ -178,7 +239,393 @@
   }
 
   .certificate-sheet {
-    aspect-ratio: 1.414 / 1;
+    --certificate-gold: #b8943f;
+    --certificate-gold-light: #e8d5a8;
+    --certificate-cream: #fdfbf7;
+    aspect-ratio: 11 / 8.5;
+    background-color: var(--certificate-cream);
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),
+      radial-gradient(
+        ellipse 70% 55% at 50% 45%,
+        color-mix(in srgb, white 70%, var(--certificate-cream)) 0%,
+        transparent 70%
+      ),
+      var(--certificate-cream);
+  }
+
+  .certificate-classic.certificate-frame-outer {
+    border: 3px solid var(--certificate-gold);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--certificate-gold-light) 80%, white),
+      inset 0 0 0 8px color-mix(in srgb, white 92%, var(--certificate-cream)),
+      0 4px 24px color-mix(in srgb, var(--color-brand-900) 10%, transparent);
+  }
+
+  .certificate-gold-frame {
+    border: 1px solid color-mix(in srgb, var(--certificate-gold) 70%, var(--color-brand-600));
+    box-shadow: inset 0 0 0 4px color-mix(in srgb, white 85%, var(--certificate-cream));
+  }
+
+  .certificate-classic-heading {
+    line-height: 1.1;
+  }
+
+  .certificate-classic-kicker {
+    text-indent: 0.35em;
+  }
+
+  .certificate-org-divider {
+    background: linear-gradient(
+      180deg,
+      transparent,
+      color-mix(in srgb, var(--certificate-gold) 45%, var(--color-brand-300)) 50%,
+      transparent
+    );
+  }
+
+  .certificate-frame-outer {
+    border: 2px solid var(--color-brand-700);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--certificate-gold) 35%, white),
+      inset 0 0 0 5px color-mix(in srgb, var(--color-brand-100) 40%, white),
+      0 1px 2px color-mix(in srgb, var(--color-brand-900) 6%, transparent);
+  }
+
+  .certificate-title-ribbon {
+    position: relative;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--color-brand-50) 80%, white) 15%,
+      color-mix(in srgb, var(--color-brand-100) 55%, white) 50%,
+      color-mix(in srgb, var(--color-brand-50) 80%, white) 85%,
+      transparent 100%
+    );
+    border-radius: 2px;
+    border-top: 1px solid color-mix(in srgb, var(--certificate-gold) 35%, var(--color-brand-200));
+    border-bottom: 1px solid color-mix(in srgb, var(--certificate-gold) 35%, var(--color-brand-200));
+  }
+
+  .certificate-title-text {
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+  }
+
+  @media (min-width: 640px) {
+    .certificate-title-text {
+      letter-spacing: 0.36em;
+      text-indent: 0.36em;
+    }
+  }
+
+  .certificate-recipient {
+    line-height: 1.15;
+    padding-block: 0.25rem;
+    color: #001f4d;
+  }
+
+  .dark .certificate-sheet .certificate-recipient {
+    color: #001f4d !important;
+  }
+
+  .certificate-course-title {
+    position: relative;
+    padding-bottom: 0.625rem;
+  }
+
+  .certificate-course-title::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: min(12rem, 60%);
+    height: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--certificate-gold) 50%, var(--color-brand-300)) 30%,
+      color-mix(in srgb, var(--certificate-gold) 50%, var(--color-brand-300)) 70%,
+      transparent
+    );
+  }
+
+  .certificate-flourish {
+    color: color-mix(in srgb, var(--certificate-gold) 45%, var(--color-brand-500));
+  }
+
+  .certificate-org-divider > div:first-child,
+  .certificate-org-divider > div:last-child {
+    background: linear-gradient(
+      180deg,
+      transparent,
+      color-mix(in srgb, var(--certificate-gold) 40%, var(--color-brand-300)) 50%,
+      transparent
+    );
+    width: 1px;
+  }
+
+  .certificate-org-divider > div:nth-child(2) {
+    background: color-mix(in srgb, var(--certificate-gold) 55%, var(--color-brand-500));
+  }
+
+  .certificate-org-logo {
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--color-brand-900) 4%, transparent);
+  }
+
+  .certificate-wordmark-intelli {
+    color: #0c2d5e;
+  }
+
+  .certificate-wordmark-gen {
+    background: linear-gradient(90deg, #38bdf8 0%, #06b6d4 55%, #0891b2 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .certificate-wordmark-lms {
+    color: #06b6d4;
+  }
+
+  .certificate-brand-lockup {
+    align-items: center;
+  }
+
+  .certificate-brand-lockup img {
+    display: block;
+  }
+
+  .certificate-footer {
+    border-top: 1px solid color-mix(in srgb, var(--color-brand-200) 70%, var(--certificate-gold-light));
+  }
+
+  .certificate-signature-line {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-brand-600) 70%, var(--certificate-gold)) 0%,
+      color-mix(in srgb, var(--color-brand-400) 40%, transparent) 85%,
+      transparent 100%
+    );
+  }
+
+  .certificate-signature-line--right {
+    background: linear-gradient(
+      270deg,
+      color-mix(in srgb, var(--color-brand-600) 70%, var(--certificate-gold)) 0%,
+      color-mix(in srgb, var(--color-brand-400) 40%, transparent) 85%,
+      transparent 100%
+    );
+  }
+
+  .certificate-seal {
+    background: radial-gradient(
+      circle at 38% 32%,
+      #ffffff 0%,
+      color-mix(in srgb, var(--color-brand-50) 90%, white) 40%,
+      color-mix(in srgb, var(--color-brand-200) 45%, white) 100%
+    );
+    box-shadow:
+      0 0 0 1.5px color-mix(in srgb, var(--certificate-gold) 55%, var(--color-brand-600)),
+      0 0 0 3.5px color-mix(in srgb, var(--color-brand-100) 85%, white),
+      0 0 0 5px color-mix(in srgb, var(--certificate-gold-light) 50%, white),
+      0 2px 8px color-mix(in srgb, var(--color-brand-700) 12%, transparent);
+  }
+
+  .certificate-seal-ring {
+    border: 1px dashed color-mix(in srgb, var(--certificate-gold) 35%, var(--color-brand-400));
+    opacity: 0.55;
+    inset: 5px;
+  }
+
+  .certificate-corner-ornament {
+    color: var(--certificate-gold);
+    opacity: 0.7;
+  }
+
+  .certificate-shape-layer {
+    border-radius: 1px;
+  }
+
+  .certificate-crest {
+    color: color-mix(in srgb, var(--certificate-gold) 30%, var(--color-brand-500));
+    opacity: 0.55;
+  }
+
+  .certificate-side-accent {
+    opacity: 0.45;
+  }
+
+  .certificate-bottom-wave {
+    opacity: 0.5;
+  }
+
+  .certificate-dot-grid {
+    background-image: radial-gradient(
+      circle,
+      color-mix(in srgb, var(--certificate-gold) 25%, var(--color-brand-300)) 0.5px,
+      transparent 0.5px
+    );
+    background-size: 18px 18px;
+    mask-image: radial-gradient(ellipse 75% 65% at 50% 50%, black 20%, transparent 75%);
+  }
+
+  .certificate-diamond-cluster {
+    opacity: 0.45;
+  }
+
+  .certificate-seal-halo {
+    opacity: 0.5;
+  }
+
+  .certificate-ribbon-diamond {
+    background: color-mix(in srgb, var(--certificate-gold) 60%, var(--color-brand-500));
+  }
+
+  .certificate-course-pill {
+    border-radius: 0.375rem;
+    border: 1px solid color-mix(in srgb, var(--certificate-gold) 25%, var(--color-brand-200));
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, white 92%, var(--color-brand-50)) 0%,
+      color-mix(in srgb, white 98%, var(--certificate-gold-light)) 100%
+    );
+    box-shadow: inset 0 1px 0 color-mix(in srgb, white 80%, transparent);
+  }
+
+  .certificate-section-rule {
+    opacity: 0.6;
+  }
+
+  .certificate-name-rules {
+    height: 5px;
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--certificate-gold) 50%, var(--color-brand-400)) 20%,
+        color-mix(in srgb, var(--certificate-gold) 50%, var(--color-brand-400)) 80%,
+        transparent
+      )
+      0 0 / 100% 1px no-repeat,
+      linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--certificate-gold) 35%, var(--color-brand-300)) 25%,
+        color-mix(in srgb, var(--certificate-gold) 35%, var(--color-brand-300)) 75%,
+        transparent
+      )
+      0 4px / 100% 1px no-repeat;
+  }
+
+  .certificate-completion-lines {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+  }
+
+  .certificate-completion-line {
+    height: 1px;
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--certificate-gold) 45%, var(--color-brand-300)) 15%,
+      color-mix(in srgb, var(--certificate-gold) 45%, var(--color-brand-300)) 85%,
+      transparent
+    );
+  }
+
+  .certificate-completion-line--top {
+    margin-bottom: 0.5rem;
+  }
+
+  .certificate-completion-line--bottom {
+    margin-top: 0.5rem;
+  }
+
+  .certificate-double-signature-line {
+    height: 5px;
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-brand-600) 75%, var(--certificate-gold)),
+        color-mix(in srgb, var(--color-brand-400) 50%, transparent) 90%,
+        transparent
+      )
+      0 0 / 100% 1px no-repeat,
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-brand-500) 55%, var(--certificate-gold-light)),
+        color-mix(in srgb, var(--color-brand-300) 35%, transparent) 85%,
+        transparent
+      )
+      0 4px / 100% 1px no-repeat;
+  }
+
+  .certificate-double-signature-line--right {
+    background:
+      linear-gradient(
+        270deg,
+        color-mix(in srgb, var(--color-brand-600) 75%, var(--certificate-gold)),
+        color-mix(in srgb, var(--color-brand-400) 50%, transparent) 90%,
+        transparent
+      )
+      0 0 / 100% 1px no-repeat,
+      linear-gradient(
+        270deg,
+        color-mix(in srgb, var(--color-brand-500) 55%, var(--certificate-gold-light)),
+        color-mix(in srgb, var(--color-brand-300) 35%, transparent) 85%,
+        transparent
+      )
+      0 4px / 100% 1px no-repeat;
+  }
+
+  .certificate-attestation-line {
+    opacity: 0.65;
+  }
+
+  .certificate-completion-label {
+    line-height: 1;
+  }
+
+  @media print {
+    .certificate-sheet {
+      background: #ffffff !important;
+      box-shadow: none !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .certificate-frame-outer {
+      border-width: 2px !important;
+      box-shadow: inset 0 0 0 1px #c4a35a !important;
+    }
+
+    .certificate-seal {
+      box-shadow:
+        0 0 0 1.5px var(--color-brand-600),
+        0 0 0 3.5px #e8f1fc,
+        0 0 0 5px #f5edd8;
+    }
+
+    .certificate-footer,
+    .certificate-title-ribbon,
+    .certificate-course-title::after,
+    .certificate-course-pill,
+    .certificate-signature-line,
+    .certificate-double-signature-line,
+    .certificate-name-rules,
+    .certificate-completion-line,
+    .certificate-section-rule,
+    .certificate-attestation-line,
+    .certificate-flourish,
+    .certificate-crest,
+    .certificate-seal-halo,
+    .certificate-dot-grid {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
   }
 
   .safe-bottom {
@@ -214,37 +661,125 @@
   }
 
   .hero-gradient {
-    background: linear-gradient(135deg, #001f4d 0%, #004bb8 45%, #5b21b6 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #312e81 35%, #4f46e5 65%, #0891b2 100%);
   }
 
   .dark .hero-gradient {
-    background: linear-gradient(135deg, #000a1a 0%, #002f73 40%, #4c1d95 100%);
+    background: linear-gradient(135deg, #020617 0%, #1e1b4b 40%, #3730a3 70%, #0e7490 100%);
   }
 
   .cta-gradient {
-    background: linear-gradient(135deg, #004bb8 0%, #0056d2 50%, #7c3aed 100%);
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 40%, #06b6d4 100%);
   }
 
   .dark .cta-gradient {
-    background: linear-gradient(135deg, #002f73 0%, #004bb8 50%, #6d28d9 100%);
+    background: linear-gradient(135deg, #3730a3 0%, #4f46e5 50%, #0891b2 100%);
   }
 
   .glass-panel {
-    background: rgb(255 255 255 / 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgb(255 255 255 / 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom-color: rgb(226 232 240 / 0.6);
+  }
+
+  .glass-panel-scrolled {
+    background: rgb(255 255 255 / 0.88);
+    box-shadow: 0 4px 24px rgb(15 23 42 / 0.06);
+    border-bottom-color: rgb(226 232 240 / 0.9);
   }
 
   .dark .glass-panel {
-    background: rgb(20 27 45 / 0.85);
+    background: rgb(15 23 42 / 0.75);
+    border-bottom-color: rgb(30 41 59 / 0.8);
+  }
+
+  .dark .glass-panel-scrolled {
+    background: rgb(15 23 42 / 0.92);
+    box-shadow: 0 4px 32px rgb(0 0 0 / 0.4);
+  }
+
+  .glass-card {
+    background: rgb(255 255 255 / 0.65);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgb(255 255 255 / 0.5);
+    box-shadow: var(--shadow-card);
+  }
+
+  .dark .glass-card {
+    background: rgb(15 23 42 / 0.55);
+    border-color: rgb(255 255 255 / 0.08);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .btn-glow {
+    box-shadow: 0 4px 14px rgb(79 70 229 / 0.35);
+  }
+
+  .btn-glow:hover {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .feature-card-glow {
+    position: relative;
+  }
+
+  .feature-card-glow::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgb(79 70 229 / 0.4), rgb(6 182 212 / 0.2), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .feature-card-glow:hover::before {
+    opacity: 1;
+  }
+
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-border) 80%, transparent) 0%,
+      color-mix(in srgb, var(--color-border) 40%, white) 50%,
+      color-mix(in srgb, var(--color-border) 80%, transparent) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+    border-radius: 0.5rem;
+  }
+
+  .dark .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgb(30 41 59 / 0.8) 0%,
+      rgb(51 65 85 / 0.6) 50%,
+      rgb(30 41 59 / 0.8) 100%
+    );
+    background-size: 200% 100%;
   }
 
   .surface-card {
-    @apply rounded-lg border border-border bg-panel shadow-card transition-shadow duration-200;
+    @apply rounded-2xl border border-border bg-panel shadow-card transition-all duration-300;
   }
 
   .surface-card:hover {
     box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
   }
 
   @keyframes float {

@@ -22,7 +22,7 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-border bg-gradient-to-br from-slate-900 via-brand-900 to-slate-900 text-slate-300">
+    <footer className="relative overflow-hidden border-t border-border bg-gradient-to-br from-slate-950 via-brand-900 to-slate-950 text-slate-300">
       <div className="pointer-events-none absolute -right-20 top-0 h-64 w-64 rounded-full bg-brand-500/10 blur-3xl" />
       <div className="pointer-events-none absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-accent-violet/10 blur-3xl" />
       <div className="relative mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { instructorApiGuard } from "@/lib/instructor";
 import { db } from "@/lib/db";
+import { applyCourseOutline } from "@/lib/ai/apply-course-outline";
 import { generateCourseOutline } from "@/lib/ai/course-generator";
 import { aiCourseGenerateSchema } from "@/lib/validations";
 
@@ -15,12 +16,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid input" }, { status: 400 });
   }
 
-  const { courseId, topic, description, moduleCount, lessonsPerModule, apply } =
+  const { courseId, topic, description, moduleCount, lessonsPerModule, apply, outline: editedOutline } =
     parsed.data;
 
   const course = await db.course.findUnique({ where: { id: courseId } });
   if (!course || (course.instructorId !== session.id && session.role !== "ADMIN")) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  if (apply && editedOutline) {
+    const modulesCreated = await applyCourseOutline(courseId, editedOutline);
+    return NextResponse.json({
+      modules: editedOutline.modules,
+      applied: true,
+      modulesCreated,
+      source: "edited",
+    });
   }
 
   const outline = await generateCourseOutline(
@@ -34,31 +45,11 @@ export async function POST(request: Request) {
     return NextResponse.json(outline);
   }
 
-  const existingModuleCount = await db.module.count({ where: { courseId } });
-
-  for (let mi = 0; mi < outline.modules.length; mi++) {
-    const mod = outline.modules[mi];
-    const createdModule = await db.module.create({
-      data: {
-        courseId,
-        title: mod.title,
-        order: existingModuleCount + mi + 1,
-        lessons: {
-          create: mod.lessons.map((lesson, li) => ({
-            title: lesson.title,
-            content: `${lesson.content}\n\n---\n**Summary:** ${lesson.summary}`,
-            order: li + 1,
-          })),
-        },
-      },
-      include: { lessons: true },
-    });
-    void createdModule;
-  }
+  const modulesCreated = await applyCourseOutline(courseId, outline);
 
   return NextResponse.json({
     ...outline,
     applied: true,
-    modulesCreated: outline.modules.length,
+    modulesCreated,
   });
 }
