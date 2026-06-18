@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { getSession } from "@/lib/auth";
-import { hasOpenAI } from "@/lib/ai/client";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -59,7 +58,6 @@ const FEATURES = [
 
 export default async function AiPage() {
   const session = await getSession();
-  const openAiEnabled = hasOpenAI();
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
@@ -83,19 +81,6 @@ export default async function AiPage() {
           </div>
         }
       />
-
-      <Card className="mt-6 border-brand-200 bg-brand-50/50 dark:bg-brand-950/20">
-        <CardContent className="py-4 text-sm text-ink">
-          OpenAI:{" "}
-          <strong>{openAiEnabled ? "Connected" : "Not configured"}</strong>
-          {!openAiEnabled ? (
-            <span className="text-muted">
-              {" "}
-              — Set <code>OPENAI_API_KEY</code> for best results. Local fallbacks still work.
-            </span>
-          ) : null}
-        </CardContent>
-      </Card>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {FEATURES.map((f) => (
