@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
+  BarChart3,
   Gamepad2,
   Globe,
   Sparkles,
@@ -13,6 +14,7 @@ import { GAMES_PAGE_IMAGES } from "@/lib/game-images";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
+  { href: "#player-dashboard", label: "Your stats", icon: BarChart3 },
   { href: "#corporate-games", label: "Corporate", icon: Gamepad2 },
   { href: "#quiz-games", label: "Quiz", icon: Zap },
   { href: "#knowledge-games", label: "General knowledge", icon: Globe },

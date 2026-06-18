@@ -3,11 +3,13 @@ import { getUserCorporateGameAttempts, CORPORATE_GAMES } from "@/lib/corporate-g
 import { getActiveChallenges } from "@/lib/challenges";
 import { db } from "@/lib/db";
 import { KNOWLEDGE_GAMES, getKnowledgeGameAttempt } from "@/lib/knowledge-games";
+import { getGamesPlayerProfile } from "@/lib/games-player-profile";
 import { CorporateGamesSection } from "@/components/games/corporate-games-section";
 import { QuizGamesSection } from "@/components/games/quiz-games-section";
 import { KnowledgeGamesSection } from "@/components/games/knowledge-games-section";
 import { GamesHashScroll } from "@/components/games/games-hash-scroll";
 import { GamesHero } from "@/components/games/games-hero";
+import { GamesPlayerDashboard } from "@/components/games/dashboard/games-player-dashboard";
 
 async function getGamesHubStats(userId: string | undefined) {
   const totalGames =
@@ -41,7 +43,10 @@ async function getGamesHubStats(userId: string | undefined) {
 
 export default async function GamesPage() {
   const session = await getSession();
-  const stats = await getGamesHubStats(session?.id);
+  const [stats, profile] = await Promise.all([
+    getGamesHubStats(session?.id),
+    getGamesPlayerProfile(session?.id),
+  ]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -61,6 +66,8 @@ export default async function GamesPage() {
         <GamesHashScroll />
 
         <div className="relative mt-12 space-y-20 sm:space-y-24">
+          <GamesPlayerDashboard profile={profile} />
+
           <CorporateGamesSection session={session} />
           <QuizGamesSection />
           <KnowledgeGamesSection session={session} />
