@@ -11,6 +11,7 @@ import { LeaderboardTabs } from "@/components/leaderboard/leaderboard-tabs";
 import { SectionHeader } from "@/components/ui/section-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/utils";
 import { TableScroll } from "@/components/ui/table-scroll";
 import { AchievementLevelBadge } from "@/components/challenges/achievement-level-badge";
@@ -38,6 +39,16 @@ export default async function LeaderboardPage() {
 
       <LeaderboardTabs active="quiz" />
 
+      {leaders.length === 0 ? (
+        <EmptyState
+          icon={Trophy}
+          title="No quiz scores yet"
+          description={`Be the first on the leaderboard for ${getWeekLabel()}.`}
+          action={{ label: "Play quizzes", href: "/challenges" }}
+          secondaryAction={{ label: "View games hub", href: "/games" }}
+          className="mt-8"
+        />
+      ) : (
       <TableScroll className="mt-8 rounded-sm border border-slate-200 bg-white shadow-card dark:border-slate-800 dark:bg-slate-900">
         <table className="w-full min-w-[520px]">
           <thead className="border-b border-slate-100 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
@@ -60,14 +71,7 @@ export default async function LeaderboardPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-            {leaders.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="px-6 py-12 text-center text-muted">
-                  No quiz scores yet this week — be the first!
-                </td>
-              </tr>
-            ) : (
-              leaders.map((user, i) => {
+              {leaders.map((user, i) => {
                 const RankIcon = rankIcons[i] ?? null;
                 const isCurrentUser = session?.id === user.userId;
 
@@ -125,11 +129,11 @@ export default async function LeaderboardPage() {
                     </td>
                   </tr>
                 );
-              })
-            )}
+              })}
           </tbody>
         </table>
       </TableScroll>
+      )}
 
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         <Card>

@@ -15,7 +15,7 @@ export function ProgressBar({
       )}
     >
       <div
-        className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400 transition-all duration-500 ease-out"
+        className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400 transition-[width] duration-700 ease-out motion-safe:transition-all"
         style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
       />
     </div>

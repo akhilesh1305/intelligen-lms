@@ -1,6 +1,7 @@
-import { Award, Clock } from "lucide-react";
+import { Award, Clock, LogIn, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { GamesPlayerProfile } from "@/lib/games-player-profile";
+import { EmptyState } from "@/components/ui/empty-state";
 
 function formatWhen(date: Date) {
   return date.toLocaleDateString("en-IN", {
@@ -28,11 +29,22 @@ export function RecentAchievementsSection({
       </div>
 
       {!profile.isLoggedIn || profile.recentBadges.length === 0 ? (
-        <p className="mt-6 rounded-[14px] border border-dashed border-border px-4 py-10 text-center text-sm text-muted">
-          {profile.isLoggedIn
-            ? "Play games and complete quizzes to earn your first badge."
-            : "Sign in to see your achievement timeline."}
-        </p>
+        <EmptyState
+          size="inline"
+          icon={profile.isLoggedIn ? Trophy : LogIn}
+          title={profile.isLoggedIn ? "No achievements yet" : "Sign in to track achievements"}
+          description={
+            profile.isLoggedIn
+              ? "Play games and complete quizzes to earn your first badge."
+              : "Your badge timeline and milestones appear here after you sign in."
+          }
+          action={
+            profile.isLoggedIn
+              ? { label: "Play games", href: "/games" }
+              : { label: "Sign in", href: "/login" }
+          }
+          className="mt-6 border-none bg-transparent shadow-none"
+        />
       ) : (
         <>
           <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

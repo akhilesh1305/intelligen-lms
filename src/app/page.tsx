@@ -1,12 +1,15 @@
+import { HomeAiShowcase } from "@/components/home/home-ai-showcase";
 import { HomeBenefits } from "@/components/home/home-benefits";
 import { HomeCategories } from "@/components/home/home-categories";
 import { HomeCta } from "@/components/home/home-cta";
+import { HomeDemoVideo } from "@/components/home/home-demo-video";
 import { HomeFeaturedCourses } from "@/components/home/home-featured-courses";
 import { HomeFeatures } from "@/components/home/home-features";
 import { HomeGamification } from "@/components/home/home-gamification";
 import { HomeHero } from "@/components/home/home-hero";
 import { HomeHowItWorks } from "@/components/home/home-how-it-works";
 import { HomeMindGames } from "@/components/home/home-mind-games";
+import { HomeSuccessMetrics } from "@/components/home/home-success-metrics";
 import { HomeTestimonials } from "@/components/home/home-testimonials";
 import { HomeTrust } from "@/components/home/home-trust";
 import { AnimatedCounter } from "@/components/motion/animated-counter";
@@ -71,6 +74,9 @@ export default async function HomePage() {
       </section>
 
       <HomeFeatures />
+      <HomeAiShowcase />
+      <HomeDemoVideo />
+      <HomeSuccessMetrics />
       <HomeMindGames games={CORPORATE_GAMES} />
       <HomeCategories />
       <HomeFeaturedCourses courses={featured} />

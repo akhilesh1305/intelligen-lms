@@ -1,9 +1,10 @@
 "use client";
 
-import { Gift } from "lucide-react";
+import { Gift, LogIn, Sparkles } from "lucide-react";
 import { ProgressRing } from "@/components/games/dashboard/progress-ring";
 import { cn } from "@/lib/utils";
 import type { GamesPlayerProfile } from "@/lib/games-player-profile";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export function RewardProgressTrack({
   profile,
@@ -23,11 +24,24 @@ export function RewardProgressTrack({
       </div>
 
       {!profile.isLoggedIn || profile.rewards.length === 0 ? (
-        <p className="mt-6 rounded-[14px] border border-dashed border-border px-4 py-10 text-center text-sm text-muted">
-          {profile.isLoggedIn
-            ? "You have unlocked all tracked milestones — keep playing!"
-            : "Sign in to track rank, badge, and mastery rewards."}
-        </p>
+        <EmptyState
+          size="inline"
+          icon={profile.isLoggedIn ? Sparkles : LogIn}
+          title={
+            profile.isLoggedIn ? "All milestones unlocked" : "Sign in to track rewards"
+          }
+          description={
+            profile.isLoggedIn
+              ? "Keep playing to climb ranks and earn new badges."
+              : "Track rank, badge, and mastery rewards after you sign in."
+          }
+          action={
+            profile.isLoggedIn
+              ? { label: "Play more games", href: "/games" }
+              : { label: "Sign in", href: "/login" }
+          }
+          className="mt-6 border-none bg-transparent shadow-none"
+        />
       ) : (
         <ul className="mt-5 space-y-4">
           {profile.rewards.map((reward) => (

@@ -39,8 +39,8 @@ export function HomeCta({ isLoggedIn }: { isLoggedIn: boolean }) {
             Ready to Transform Learning?
           </h2>
           <p className="mt-4 text-lg text-blue-100">
-            Launch AI-powered training for your team in minutes. Start free or
-            book a walkthrough with our team.
+            Join teams seeing 95% higher completion, 40% lower training costs, and 3x
+            faster onboarding. Start free or book a walkthrough with our team.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
             <Link href={isLoggedIn ? "/dashboard" : "/register"}>

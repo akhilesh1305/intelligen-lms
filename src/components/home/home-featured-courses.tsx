@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 import { CourseCard } from "@/components/courses/course-card";
 import { AnimateOnScroll } from "@/components/motion/animate-on-scroll";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { SectionHeader } from "@/components/ui/section-header";
 
 export type FeaturedCourse = {
@@ -38,6 +39,16 @@ export function HomeFeaturedCourses({ courses }: { courses: FeaturedCourse[] }) 
             }
           />
         </AnimateOnScroll>
+        {courses.length === 0 ? (
+          <EmptyState
+            icon={BookOpen}
+            title="Courses coming soon"
+            description="New expert-led courses are being added. Check back shortly or create your own."
+            action={{ label: "Browse catalog", href: "/courses" }}
+            secondaryAction={{ label: "Become an instructor", href: "/register" }}
+            className="mt-10"
+          />
+        ) : (
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {courses.map((course, i) => (
             <AnimateOnScroll key={course.id} delay={i * 90} animation="fade-up">
@@ -56,6 +67,7 @@ export function HomeFeaturedCourses({ courses }: { courses: FeaturedCourse[] }) 
             </AnimateOnScroll>
           ))}
         </div>
+        )}
       </div>
     </section>
   );

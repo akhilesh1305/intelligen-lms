@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { CourseCard } from "@/components/courses/course-card";
 import { CoursesCatalogToolbar } from "@/components/courses/courses-catalog-toolbar";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getCourseCategory } from "@/lib/course-visuals";
 import { getReviewStatsForCourses } from "@/lib/reviews";
 import { LogoWatermark } from "@/components/brand/logo-watermark";
@@ -133,7 +134,17 @@ export default async function CoursesPage({
       </section>
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <Suspense fallback={null}>
+        <Suspense
+          fallback={
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <Skeleton className="h-11 w-full max-w-md rounded-[12px]" />
+              <div className="flex gap-2">
+                <Skeleton className="h-10 w-28 rounded-[12px]" />
+                <Skeleton className="h-10 w-32 rounded-[12px]" />
+              </div>
+            </div>
+          }
+        >
           <CoursesCatalogToolbar
             query={q ?? ""}
             category={activeCategory}

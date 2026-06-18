@@ -4,6 +4,7 @@ import { CERTIFICATE_TEMPLATES } from "@/lib/certificate-templates";
 import type { LockedCertificateItem } from "@/lib/certificate-hub";
 import { cn } from "@/lib/utils";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export function CertificateProgressTracker({
   items,
@@ -16,19 +17,14 @@ export function CertificateProgressTracker({
 
   if (active.length === 0) {
     return (
-      <section className={cn("glass-card rounded-[20px] p-6", className)}>
-        <h2 className="text-lg font-bold text-ink">Certificate progress</h2>
-        <p className="mt-2 text-sm text-muted">
-          Enroll in a course and complete all lessons, quizzes, and assignments to unlock
-          your next credential.
-        </p>
-        <Link
-          href="/courses"
-          className="mt-4 inline-flex text-sm font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400"
-        >
-          Browse courses →
-        </Link>
-      </section>
+      <EmptyState
+        size="compact"
+        icon={Target}
+        title="No certificate progress yet"
+        description="Enroll in a course and complete lessons, quizzes, and assignments to unlock your next credential."
+        action={{ label: "Browse courses", href: "/courses" }}
+        className={className}
+      />
     );
   }
 

@@ -4,6 +4,7 @@ import type { ComponentType, ReactNode } from "react";
 import Link from "next/link";
 import {
   Bot,
+  BookOpen,
   Calendar,
   Clock,
   Flame,
@@ -15,6 +16,7 @@ import { DashboardFade } from "@/components/dashboard/dashboard-motion";
 import { DashboardStatGrid } from "@/components/dashboard/dashboard-stat-card";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/utils";
 
 type Enrollment = {
@@ -101,7 +103,14 @@ export function StudentDashboardOverview({
               </div>
               <div className="mt-6 space-y-4">
                 {enrollments.length === 0 ? (
-                  <p className="text-sm text-muted">Enroll in a course to see progress.</p>
+                  <EmptyState
+                    size="inline"
+                    icon={BookOpen}
+                    title="No progress yet"
+                    description="Enroll in a course to track completion here."
+                    action={{ label: "Browse courses", href: "/courses" }}
+                    className="border-none bg-transparent shadow-none"
+                  />
                 ) : (
                   enrollments.slice(0, 5).map((e) => (
                     <div key={e.id}>
@@ -148,7 +157,14 @@ export function StudentDashboardOverview({
         <DashboardFade delay={200}>
           <Widget title="Recent activity" icon={Clock}>
             {recent.length === 0 ? (
-              <p className="text-sm text-muted">No activity yet.</p>
+              <EmptyState
+                size="inline"
+                icon={Clock}
+                title="No activity yet"
+                description="Your recent learning activity will show up here."
+                action={{ label: "Start learning", href: "/courses" }}
+                className="border-none bg-transparent p-0 shadow-none"
+              />
             ) : (
               <ul className="space-y-3">
                 {recent.map((e) => (
@@ -247,7 +263,7 @@ function Widget({
   children: ReactNode;
 }) {
   return (
-    <Card glass className={cn("h-full rounded-[20px]")}>
+    <Card glass className={cn("flex h-full min-h-[10rem] flex-col rounded-[20px]")}>
       <CardContent className="pt-6">
         <div className="mb-4 flex items-center gap-2">
           <Icon className="h-4 w-4 text-brand-500" />

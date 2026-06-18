@@ -4,6 +4,7 @@ import type { AchievementLevel } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { AchievementLevelBadge } from "./achievement-level-badge";
 import { TableScroll } from "@/components/ui/table-scroll";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const rankIcons = [Trophy, Medal, Award];
 
@@ -45,7 +46,14 @@ export function ChallengeLeaderboard({
         ) : null}
       </div>
       {leaders.length === 0 ? (
-        <p className="mt-4 text-sm text-muted">No completions yet — be the first!</p>
+        <EmptyState
+          size="compact"
+          icon={Trophy}
+          title="No completions yet"
+          description="Be the first to complete this challenge and claim the top spot."
+          action={{ label: "Play now", href: "/challenges" }}
+          className="mt-4"
+        />
       ) : (
         <TableScroll hint={false} className="mt-4">
           <div className="rounded-lg border border-border bg-panel">

@@ -60,7 +60,7 @@ export function DashboardStatCard({
 
   return (
     <DashboardFade delay={delay} animation="scale-in">
-      <Card glass className="group overflow-hidden rounded-[20px]">
+      <Card glass className="group h-full min-h-[7.5rem] overflow-hidden rounded-[20px]">
         <CardContent className="relative flex items-start justify-between gap-4 py-5">
           <div className="flex min-w-0 items-center gap-4">
             <div

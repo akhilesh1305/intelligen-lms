@@ -19,7 +19,7 @@ const playfair = Playfair_Display({
 });
 
 const appUrl =
-  process.env.NEXT_PUBLIC_APP_URL ??
+  process.env.NEXT_PUBLIC_APP_URL?.trim() ||
   (process.env.NODE_ENV === "production"
     ? "https://learn.intelligenlms.com"
     : "http://localhost:3001");

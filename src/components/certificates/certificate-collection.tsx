@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { Award, Lock, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { EmptyState } from "@/components/ui/empty-state";
 import { CertificateCard } from "@/components/certificates/certificate-card";
 import { CertificateProgressTracker } from "@/components/certificates/certificate-progress-tracker";
 import type { CertificateHubData } from "@/lib/certificate-hub";
@@ -72,6 +73,7 @@ export function CertificateCollection({ hub }: { hub: SerializedHub }) {
 
   const showEarned = tab === "all" || tab === "earned";
   const showLocked = tab === "all" || tab === "locked";
+  const isHubEmpty = hub.earned.length === 0 && hub.locked.length === 0;
 
   return (
     <div className="space-y-10">
@@ -95,7 +97,7 @@ export function CertificateCollection({ hub }: { hub: SerializedHub }) {
                 type="button"
                 onClick={() => setTab(id)}
                 className={cn(
-                  "rounded-full px-3.5 py-1.5 text-xs font-semibold capitalize transition-colors",
+                  "rounded-full px-3.5 py-1.5 text-xs font-semibold capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2",
                   tab === id
                     ? "bg-brand-600 text-white"
                     : "border border-border bg-panel text-muted hover:text-ink"
@@ -129,6 +131,16 @@ export function CertificateCollection({ hub }: { hub: SerializedHub }) {
         </div>
       </div>
 
+      {isHubEmpty ? (
+        <EmptyState
+          icon={Award}
+          title="No certificates yet"
+          description="Complete a course to earn verified, shareable credentials."
+          action={{ label: "Browse courses", href: "/courses" }}
+          secondaryAction={{ label: "View demo certificates", href: "/certificates/demo" }}
+        />
+      ) : (
+        <>
       <CertificateProgressTracker items={hub.locked} />
 
       {showEarned ? (
@@ -138,7 +150,22 @@ export function CertificateCollection({ hub }: { hub: SerializedHub }) {
             <span className="ml-2 text-sm font-medium text-muted">({filteredEarned.length})</span>
           </h2>
           {filteredEarned.length === 0 ? (
-            <p className="mt-4 text-sm text-muted">No earned certificates match your filters.</p>
+            <EmptyState
+              size="compact"
+              icon={Award}
+              title={hub.earned.length === 0 ? "No earned certificates yet" : "No matches found"}
+              description={
+                hub.earned.length === 0
+                  ? "Finish a course to unlock your first certificate."
+                  : "Try a different search term or template filter."
+              }
+              action={
+                hub.earned.length === 0
+                  ? { label: "Browse courses", href: "/courses" }
+                  : undefined
+              }
+              className="mt-5"
+            />
           ) : (
             <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {filteredEarned.map((item) => (
@@ -168,7 +195,14 @@ export function CertificateCollection({ hub }: { hub: SerializedHub }) {
             Complete these courses to unlock verified credentials
           </p>
           {filteredLocked.length === 0 ? (
-            <p className="mt-4 text-sm text-muted">No locked certificates match your filters.</p>
+            <EmptyState
+              size="compact"
+              icon={Lock}
+              title="No locked certificates match"
+              description="Adjust your filters or enroll in more courses to unlock credentials."
+              action={{ label: "Explore courses", href: "/courses" }}
+              className="mt-5"
+            />
           ) : (
             <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
               {filteredLocked.map((item) => (
@@ -186,6 +220,8 @@ export function CertificateCollection({ hub }: { hub: SerializedHub }) {
           )}
         </section>
       ) : null}
+        </>
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   Download,
   Plus,
   Shield,
+  Trophy,
   UserCheck,
   Users,
 } from "lucide-react";
@@ -35,6 +36,7 @@ import { CourseCard } from "@/components/courses/course-card";
 import { Recommendations } from "@/components/courses/recommendations";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import {
@@ -241,9 +243,14 @@ export default async function DashboardPage({
                   {leaderboard.topLearners.length > 0 ? (
                     <WeeklyLeaderboardChart data={leaderboard.topLearners} />
                   ) : (
-                    <p className="flex h-full items-center justify-center text-sm text-muted">
-                      No quiz scores yet this week
-                    </p>
+                    <EmptyState
+                      size="compact"
+                      icon={Trophy}
+                      title="No quiz scores yet"
+                      description="Be the first on the leaderboard this week."
+                      action={{ label: "Play quizzes", href: "/challenges" }}
+                      className="h-full border-none shadow-none"
+                    />
                   )}
                 </div>
               </CardContent>
@@ -257,9 +264,14 @@ export default async function DashboardPage({
                   {leaderboard.quizActivity.length > 0 ? (
                     <QuizActivityChart data={leaderboard.quizActivity} />
                   ) : (
-                    <p className="flex h-full items-center justify-center text-sm text-muted">
-                      No quiz activity yet this week
-                    </p>
+                    <EmptyState
+                      size="compact"
+                      icon={ClipboardList}
+                      title="No quiz activity yet"
+                      description="Quiz completions will appear here as learners play."
+                      action={{ label: "View challenges", href: "/challenges" }}
+                      className="h-full border-none shadow-none"
+                    />
                   )}
                 </div>
               </CardContent>
@@ -407,21 +419,20 @@ export default async function DashboardPage({
 
           {courses.length === 0 ? (
             <DashboardFade delay={180}>
-            <Card>
-              <CardContent className="py-16 text-center">
-                <BookOpen className="mx-auto h-14 w-14 text-slate-300" />
-                <h3 className="mt-4 text-xl font-bold text-ink">No courses yet</h3>
-                {approved ? (
-                  <Link href="/instructor/courses/new" className="mt-8 inline-block">
-                    <Button size="lg">Create your first course</Button>
-                  </Link>
-                ) : (
-                  <p className="mt-4 text-sm text-muted">
-                    Course creation unlocks after admin approval.
-                  </p>
-                )}
-              </CardContent>
-            </Card>
+            <EmptyState
+              icon={BookOpen}
+              title="No courses yet"
+              description={
+                approved
+                  ? "Create your first course and publish it when you're ready."
+                  : "Course creation unlocks after admin approval."
+              }
+              action={
+                approved
+                  ? { label: "Create your first course", href: "/instructor/courses/new" }
+                  : undefined
+              }
+            />
             </DashboardFade>
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -551,15 +562,14 @@ export default async function DashboardPage({
 
         {enrollments.length === 0 ? (
           <DashboardFade delay={240}>
-          <Card className="mt-8">
-            <CardContent className="py-16 text-center">
-              <BookOpen className="mx-auto h-14 w-14 text-slate-300" />
-              <h3 className="mt-4 text-xl font-bold text-ink">No courses yet</h3>
-              <Link href="/courses" className="mt-8 inline-block">
-                <Button size="lg">Browse courses</Button>
-              </Link>
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={BookOpen}
+            title="No courses yet"
+            description="Browse the catalog and enroll in your first course to start learning."
+            action={{ label: "Browse courses", href: "/courses" }}
+            secondaryAction={{ label: "Explore AI paths", href: "/paths" }}
+            className="mt-8"
+          />
           </DashboardFade>
         ) : (
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -596,9 +606,14 @@ export default async function DashboardPage({
               }
             />
             {orgOnlyCourses.length === 0 ? (
-              <p className="mt-4 text-sm text-muted">
-                No new company courses right now. Check back later.
-              </p>
+              <EmptyState
+                size="compact"
+                icon={Building2}
+                title="No org courses available"
+                description="Check back later for private training from your organization."
+                action={{ label: "Browse public courses", href: "/courses" }}
+                className="mt-6"
+              />
             ) : (
               <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {orgOnlyCourses.slice(0, 3).map((course, index) => (
