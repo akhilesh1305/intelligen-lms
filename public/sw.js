@@ -1,5 +1,5 @@
-const CACHE_NAME = "intelligen-pwa-v13";
-const SHELL_URLS = ["/offline", "/manifest.webmanifest", "/logo-icon.png"];
+const CACHE_NAME = "intelligen-pwa-v14";
+const SHELL_URLS = ["/manifest.webmanifest", "/logo-icon.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -21,16 +21,6 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
 
   if (request.method !== "GET") return;
-
-  if (request.mode === "navigate") {
-    event.respondWith(
-      fetch(request).catch(async () => {
-        const cached = await caches.match("/offline");
-        return cached || new Response("Offline", { status: 503 });
-      })
-    );
-    return;
-  }
 
   const url = new URL(request.url);
   if (

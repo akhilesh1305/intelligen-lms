@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Lock, Monitor, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Bell, Lock, Monitor, ShieldCheck } from "lucide-react";
 import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,6 +7,7 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { DeviceList } from "@/components/security/device-list";
 import { GdprTools } from "@/components/security/gdpr-tools";
 import { TwoFactorBackupSetup } from "@/components/security/two-factor-backup-setup";
+import { PushNotificationToggle } from "@/components/mobile/push-notification-toggle";
 import { SecuritySettingsClient } from "./security-client";
 
 export default async function SecuritySettingsPage() {
@@ -72,6 +73,21 @@ export default async function SecuritySettingsPage() {
             </p>
             <div className="mt-4">
               <DeviceList />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center gap-2">
+              <Bell className="h-5 w-5 text-brand-600" />
+              <h2 className="text-lg font-semibold text-ink">Push notifications</h2>
+            </div>
+            <p className="mt-2 text-sm text-muted">
+              Get alerts for course updates, deadlines, and achievements on this device.
+            </p>
+            <div className="mt-4">
+              <PushNotificationToggle />
             </div>
           </CardContent>
         </Card>

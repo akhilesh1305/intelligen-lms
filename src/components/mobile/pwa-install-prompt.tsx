@@ -56,7 +56,7 @@ export function PwaInstallPrompt() {
         <div className="min-w-0 flex-1">
           <p className="font-bold text-ink">Install IntelliGen LMS</p>
           <p className="mt-1 text-sm text-muted">
-            Add to your home screen for offline learning and push notifications.
+            Add to your home screen for quick access and push notifications.
           </p>
           <div className="mt-3 flex gap-2">
             <Button size="sm" onClick={handleInstall}>

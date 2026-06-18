@@ -28,11 +28,6 @@
       "name": "My Learning",
       "url": "/dashboard",
       "description": "Continue your courses"
-    },
-    {
-      "name": "Offline Downloads",
-      "url": "/offline/downloads",
-      "description": "View downloaded lessons"
     }
   ]
 }

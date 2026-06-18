@@ -16,7 +16,6 @@ import { LessonVideo } from "@/components/courses/lesson-video";
 import { CompleteLessonButton } from "./complete-button";
 import { LessonAiTools } from "@/components/ai/lesson-ai-tools";
 import { LearnLessonSidebar } from "@/components/learn/learn-lesson-sidebar";
-import { OfflineLessonActions } from "@/components/mobile/offline-lesson-actions";
 
 export default async function LearnPage({
   params,
@@ -78,12 +77,6 @@ export default async function LearnPage({
   });
 
   const activeLesson = allLessons.find((l) => l.id === lessonId) ?? allLessons[0];
-  const activeModule = activeLesson
-    ? course.modules.find((m) => m.lessons.some((l) => l.id === activeLesson.id))
-    : undefined;
-  const activeLessonOrder = activeModule
-    ? activeModule.lessons.findIndex((l) => l.id === activeLesson?.id)
-    : 0;
   const activeTab = tab ?? "lessons";
 
   return (
@@ -208,18 +201,6 @@ export default async function LearnPage({
                   {activeLesson.content}
                 </div>
               </div>
-              <OfflineLessonActions
-                lesson={{
-                  id: activeLesson.id,
-                  title: activeLesson.title,
-                  content: activeLesson.content,
-                  videoUrl: activeLesson.videoUrl,
-                }}
-                courseId={courseId}
-                courseTitle={course.title}
-                moduleTitle={activeModule?.title ?? "Module"}
-                lessonOrder={activeLessonOrder}
-              />
               <LessonAiTools
                 lessonId={activeLesson.id}
                 lessonTitle={activeLesson.title}
@@ -229,7 +210,6 @@ export default async function LearnPage({
                 <CompleteLessonButton
                   key={activeLesson.id}
                   lessonId={activeLesson.id}
-                  courseId={courseId}
                   completed={completedSet.has(activeLesson.id)}
                 />
               </div>

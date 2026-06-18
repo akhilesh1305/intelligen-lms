@@ -8,7 +8,6 @@ import {
   Briefcase,
   Building2,
   CreditCard,
-  Download,
   Gamepad2,
   LayoutDashboard,
   LogOut,
@@ -64,7 +63,6 @@ export function MobileNav({
     { href: "/ai", label: "AI Tools", icon: Sparkles },
     { href: "/assistant", label: "AI Chat", icon: MessageSquare },
     { href: "/webinars", label: "Webinars", icon: Video },
-    { href: "/offline/downloads", label: "Offline & push", icon: Download },
     { href: "/feed", label: "Community feed", icon: Rss },
     { href: "/games", label: "Games", icon: Gamepad2 },
   ];
