@@ -45,7 +45,7 @@ export default async function LearnPage({
     redirect(`/courses/${courseId}`);
   }
 
-  if (!access.enrolled && access.canLearn) {
+  if (access.canLearn) {
     await ensureEnrollment(session.id, courseId);
   }
 
@@ -227,6 +227,7 @@ export default async function LearnPage({
               />
               <div className="mt-6">
                 <CompleteLessonButton
+                  key={activeLesson.id}
                   lessonId={activeLesson.id}
                   courseId={courseId}
                   completed={completedSet.has(activeLesson.id)}

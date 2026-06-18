@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle, CloudOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { queueProgressSync } from "@/lib/offline/db";
@@ -19,28 +19,44 @@ export function CompleteLessonButton({
   const [loading, setLoading] = useState(false);
   const [isDone, setIsDone] = useState(completed);
   const [queued, setQueued] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsDone(completed);
+    setQueued(false);
+    setError(null);
+  }, [lessonId, completed]);
 
   async function handleComplete() {
     setLoading(true);
+    setError(null);
 
-    if (!navigator.onLine) {
-      await queueProgressSync({ lessonId, courseId, completed: true });
-      setIsDone(true);
-      setQueued(true);
+    try {
+      if (!navigator.onLine) {
+        await queueProgressSync({ lessonId, courseId, completed: true });
+        setIsDone(true);
+        setQueued(true);
+        return;
+      }
+
+      const res = await fetch("/api/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lessonId, completed: true }),
+      });
+
+      if (res.ok) {
+        setIsDone(true);
+        router.refresh();
+        return;
+      }
+
+      const data = (await res.json().catch(() => null)) as { error?: string } | null;
+      setError(data?.error ?? "Could not save progress. Please try again.");
+    } catch {
+      setError("Network error. Check your connection and try again.");
+    } finally {
       setLoading(false);
-      return;
-    }
-
-    const res = await fetch("/api/progress", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ lessonId, completed: true }),
-    });
-    setLoading(false);
-
-    if (res.ok) {
-      setIsDone(true);
-      router.refresh();
     }
   }
 
@@ -62,8 +78,11 @@ export function CompleteLessonButton({
   }
 
   return (
-    <Button onClick={handleComplete} disabled={loading}>
-      {loading ? "Saving..." : "Mark as complete"}
-    </Button>
+    <div className="space-y-2">
+      <Button type="button" onClick={handleComplete} disabled={loading}>
+        {loading ? "Saving..." : "Mark as complete"}
+      </Button>
+      {error ? <p className="text-sm text-red-600 dark:text-red-400">{error}</p> : null}
+    </div>
   );
 }

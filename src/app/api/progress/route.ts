@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
+import { ensureEnrollment, getCourseAccess } from "@/lib/access";
 import { getSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { addPoints } from "@/lib/gamification";
 import { syncEnrollmentProgress } from "@/lib/progress";
-
 export async function POST(request: Request) {
   const session = await getSession();
   if (!session) {
@@ -34,9 +34,16 @@ export async function POST(request: Request) {
   });
 
   if (!enrollment) {
-    return NextResponse.json({ error: "Not enrolled in this course" }, { status: 403 });
+    const access = await getCourseAccess(
+      session.id,
+      lesson.module.courseId,
+      session.role
+    );
+    if (!access.canLearn) {
+      return NextResponse.json({ error: "Not enrolled in this course" }, { status: 403 });
+    }
+    await ensureEnrollment(session.id, lesson.module.courseId);
   }
-
   const wasCompleted = await db.lessonProgress.findUnique({
     where: { userId_lessonId: { userId: session.id, lessonId } },
   });
