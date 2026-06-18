@@ -1,159 +1,100 @@
-# Deploy IntelliGen LMS to Railway (Public Production)
+# Deploy IntelliGen LMS to Vercel (Public Production)
 
-This guide walks you through putting your LMS on the internet with **Railway** + **PostgreSQL**.
+This guide deploys the **Next.js app on Vercel**. PostgreSQL can stay on Railway (easiest migration) or move to [Vercel Postgres](https://vercel.com/storage/postgres), Neon, or Supabase.
 
-## One-command deploy (fastest)
+## One-command deploy
 
 From the project folder in PowerShell:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/deploy-railway.ps1
+powershell -ExecutionPolicy Bypass -File scripts/deploy-vercel.ps1
 ```
 
-This will:
-1. Install Railway CLI (if needed)
-2. Open browser for Railway login
-3. Create project + PostgreSQL
-4. Set environment variables
-5. Deploy and generate a public URL
-
-**You only need to sign in to Railway when the browser opens.**
+You will sign in to Vercel when prompted. Set environment variables in the Vercel dashboard before the first production deploy.
 
 ---
 
-## Manual deploy
-
 ## Prerequisites
 
-- A [GitHub](https://github.com) account
-- A [Railway](https://railway.app) account (free tier works to start)
-- Your project pushed to a GitHub repository
+- [GitHub](https://github.com) repository with your code (`main` branch)
+- [Vercel](https://vercel.com) account (Hobby tier works to start)
+- PostgreSQL `DATABASE_URL` (existing Railway Postgres is fine)
 
-## Step 1 — Push code to GitHub
+## Step 1 — Import from GitHub (recommended)
 
-```bash
-git init
-git add .
-git commit -m "Prepare for production deployment"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/intelligen-lms.git
-git push -u origin main
-```
+1. Go to [vercel.com/new](https://vercel.com/new).
+2. Import **akhilesh1305/intelligen-lms** (or your fork).
+3. Framework preset: **Next.js** (auto-detected).
+4. Build command: `npm run vercel-build` (set in `vercel.json`).
+5. Do **not** deploy yet — add environment variables first.
 
-## Step 2 — Create Railway project
+## Step 2 — Environment variables
 
-1. Go to [railway.app](https://railway.app) and sign in with GitHub.
-2. Click **New Project** → **Deploy from GitHub repo**.
-3. Select your `intelligen-lms` repository.
-
-## Step 3 — Add PostgreSQL
-
-1. In your Railway project, click **+ New** → **Database** → **PostgreSQL**.
-2. Click the PostgreSQL service → **Variables** tab.
-3. Copy the `DATABASE_URL` value (starts with `postgresql://`).
-
-## Step 4 — Configure the web service
-
-Click your **Next.js app service** (not the database) → **Variables** and add:
+In Vercel → **Project** → **Settings** → **Environment Variables** (Production):
 
 | Variable | Value |
 |----------|--------|
-| `DATABASE_URL` | Paste from PostgreSQL service (use **Reference** to link services) |
-| `SESSION_SECRET` | Long random string (32+ chars), e.g. run `openssl rand -base64 32` |
+| `DATABASE_URL` | PostgreSQL connection string (see below) |
+| `SESSION_SECRET` | Long random string (`openssl rand -base64 32`) |
 | `NODE_ENV` | `production` |
 | `AVATAR_STORAGE` | `database` |
+| `NEXT_PUBLIC_APP_URL` | `https://your-project.vercel.app` (update after first deploy) |
+| `CRON_SECRET` | Random string for `/api/cron/generate-quizzes` |
 
-Optional (email & AI):
+Optional: `SMTP_*`, `OPENAI_API_KEY`, `RAZORPAY_*`, SSO keys — same as `.env.example`.
 
-| Variable | Value |
-|----------|--------|
-| `SMTP_HOST` | Your SMTP server |
-| `SMTP_PORT` | `587` |
-| `SMTP_USER` | SMTP username |
-| `SMTP_PASS` | SMTP password |
-| `SMTP_FROM` | `IntelliGen LMS <noreply@yourdomain.com>` |
-| `OPENAI_API_KEY` | For AI assistant & quiz generator |
+### Keep Railway Postgres (quickest migration)
 
-Razorpay (course purchases & subscriptions — India):
+1. Railway dashboard → **Postgres** service → **Variables** → copy `DATABASE_URL`.
+2. Paste into Vercel as `DATABASE_URL`.
+3. Ensure the database allows external connections (Railway public URL works).
 
-| Variable | Value |
-|----------|--------|
-| `RAZORPAY_KEY_ID` | From [Razorpay Dashboard](https://dashboard.razorpay.com/app/keys) (`rzp_test_` or `rzp_live_`) |
-| `RAZORPAY_KEY_SECRET` | Secret key (server only — never expose in client) |
-| `RAZORPAY_WEBHOOK_SECRET` | From Webhooks → add `https://your-domain/api/webhooks/razorpay` |
-| `NEXT_PUBLIC_APP_URL` | `https://learn.intelligenlms.com` (or your Railway URL) |
+### Or use Vercel Postgres / Neon
 
-**Link `DATABASE_URL`:** In the web service Variables, click **+ New Variable** → **Add Reference** → select PostgreSQL → `DATABASE_URL`.
+Create a new database, run `npm run db:setup` locally against the new URL once, then use that `DATABASE_URL` in Vercel.
 
-## Step 5 — Deploy
+## Step 3 — Deploy
 
-Railway auto-deploys on push. The first deploy will:
+**Git push (auto-deploy after GitHub is connected):**
 
-1. Install dependencies
-2. Generate Prisma client
-3. Build Next.js
-4. On start: run `prisma db push` + seed if database is empty
-5. Start the server on Railway's public port
-
-## Step 6 — Get your public URL
-
-1. Open your **web service** → **Settings** → **Networking**.
-2. Click **Generate Domain**.
-3. You'll get a URL like `https://intelligen-lms-production.up.railway.app`.
-
-Share that link — your site is now public.
-
-## Step 7 — Custom domain: `learn.intelligenlms.com`
-
-### A. Buy the domain
-
-Register **intelligenlms.com** at a registrar (Namecheap, Cloudflare, etc.) if you have not already.
-
-### B. Add domain in Railway
-
-1. Open [Railway](https://railway.app/dashboard) → project **intelligen-lms** → service **intelligen-web**.
-2. **Settings** → **Networking** → **+ Custom Domain**.
-3. Enter: `learn.intelligenlms.com`
-4. Railway shows the DNS record(s) to add — keep that page open.
-
-Or via CLI (after `railway login`):
-
-```powershell
-railway service link intelligen-web
-railway domain learn.intelligenlms.com
+```bash
+git push origin main
 ```
 
-### C. DNS at your registrar
+**Or CLI:**
 
-Add this record where you manage **intelligenlms.com** DNS:
+```powershell
+npx vercel@latest deploy --prod
+```
 
-| Type | Host / Name | Value / Target |
-|------|-------------|----------------|
-| **CNAME** | `learn` | `intelligen-web-production.up.railway.app` |
+Each build runs:
 
-Use the exact target Railway shows if it differs. TTL: automatic or 300 seconds.
+1. `prisma generate`
+2. `prisma db push` (schema sync)
+3. `next build`
 
-**Cloudflare:** use **DNS only** (grey cloud) until the domain is active, then you can enable the proxy.
+## Step 4 — Production URL
 
-### D. Railway environment variable
+After deploy, Vercel shows a URL like:
 
-In **intelligen-web** → **Variables**, add:
+`https://intelligen-lms.vercel.app`
 
-| Variable | Value |
-|----------|--------|
-| `NEXT_PUBLIC_APP_URL` | `https://learn.intelligenlms.com` |
+Update `NEXT_PUBLIC_APP_URL` to match and redeploy.
 
-Redeploy after adding (or push a new deploy). This fixes Open Graph / share preview URLs.
+## Step 5 — Custom domain (`learn.intelligenlms.com`)
 
-### E. Verify
+1. Vercel → **Project** → **Settings** → **Domains**.
+2. Add `learn.intelligenlms.com`.
+3. At your DNS registrar, add the records Vercel shows (usually **CNAME** `learn` → `cname.vercel-dns.com`).
+4. Set `NEXT_PUBLIC_APP_URL=https://learn.intelligenlms.com` and redeploy.
 
-- Wait 5–30 minutes for DNS (up to 48h in rare cases).
-- Railway **Networking** should show `learn.intelligenlms.com` as **Active** with HTTPS.
-- Open https://learn.intelligenlms.com — your LMS should load.
+## Scheduled quizzes (cron)
 
-The old Railway URL (`intelligen-web-production.up.railway.app`) will still work as a backup.
+`vercel.json` registers a daily cron hitting `/api/cron/generate-quizzes`. Set `CRON_SECRET` in Vercel; the route validates `Authorization: Bearer <CRON_SECRET>`.
 
-## Demo accounts (after first seed)
+> Cron jobs require Vercel **Pro** on team accounts; Hobby includes cron with limits — check [Vercel cron docs](https://vercel.com/docs/cron-jobs).
+
+## Demo accounts (after seed)
 
 | Role | Email | Password |
 |------|-------|----------|
@@ -161,42 +102,44 @@ The old Railway URL (`intelligen-web-production.up.railway.app`) will still work
 | Instructor | instructor@intelligen.lms | password123 |
 | Student | student@intelligen.lms | password123 |
 
-**Change these passwords before sharing widely.**
+Seed locally once against production DB (careful):
 
-## Local development with PostgreSQL
+```bash
+DATABASE_URL="your-production-url" npm run db:seed
+```
+
+**Change demo passwords before sharing widely.**
+
+## Local development
 
 ```bash
 docker compose up -d
-```
-
-Copy `.env.example` to `.env`:
-
-```
-DATABASE_URL="postgresql://intelligen:intelligen@localhost:5432/intelligen_lms"
-SESSION_SECRET="local-dev-secret-change-in-production"
-AVATAR_STORAGE="filesystem"
-```
-
-Then:
-
-```bash
+cp .env.example .env
 npm install
 npm run db:setup
 npm run dev
 ```
 
+## Railway → Vercel checklist
+
+- [ ] Copy `DATABASE_URL` from Railway Postgres to Vercel
+- [ ] Copy `SESSION_SECRET` and other secrets to Vercel
+- [ ] Set `AVATAR_STORAGE=database`
+- [ ] Deploy on Vercel and verify login + `/games`
+- [ ] Point custom domain DNS to Vercel (not Railway)
+- [ ] Update Razorpay webhook URL to Vercel domain
+- [ ] (Optional) Pause or delete Railway **web** service to avoid double hosting — **keep Postgres** until you migrate the DB
+
 ## Troubleshooting
 
 | Issue | Fix |
 |-------|-----|
-| Build fails on Prisma | Ensure `DATABASE_URL` is set before build (link PostgreSQL to web service) |
-| 500 on login | Check `SESSION_SECRET` is set |
-| Empty site / no courses | Redeploy — seed runs automatically when user table is empty |
-| Avatars disappear after redeploy | Set `AVATAR_STORAGE=database` (default in production) |
+| Build fails on Prisma | Ensure `DATABASE_URL` is set in Vercel **before** build |
+| 500 on login | Check `SESSION_SECRET` |
+| Avatars missing | `AVATAR_STORAGE=database` |
+| DB connection errors | Use pooled URL or reduce serverless concurrency; try `?sslmode=require` on Postgres URL |
+| Cron 401 | Set `CRON_SECRET` in Vercel env |
 
-## Security checklist before going live
+## Legacy Railway deploy
 
-- [ ] Set a strong `SESSION_SECRET`
-- [ ] Change demo account passwords
-- [ ] Configure SMTP for real emails
-- [ ] Review admin audit logs at `/admin/audit-logs`
+The previous Railway web deploy used `railway.toml` and `scripts/deploy-railway.ps1`. Those files remain for reference; production hosting is intended to run on Vercel.

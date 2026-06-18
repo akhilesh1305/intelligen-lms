@@ -10,6 +10,7 @@
     "dev:clean": "npm run clean && next dev -p 3001",
     "clean": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\"",
     "build": "next build",
+    "vercel-build": "prisma generate && prisma db push --accept-data-loss && next build",
     "start": "node scripts/start-production.mjs",
     "start:local": "next start -p 3001",
     "lint": "next lint",

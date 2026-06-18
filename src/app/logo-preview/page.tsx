@@ -70,10 +70,10 @@ export default function LogoPreviewPage() {
         <p className="mt-10 text-center text-sm text-muted">
           Production:{" "}
           <a
-            href="https://intelligen-web-production.up.railway.app/logo-preview"
+            href="/logo-preview"
             className="font-semibold text-brand-600 hover:underline"
           >
-            intelligen-web-production.up.railway.app/logo-preview
+            /logo-preview (production)
           </a>
         </p>
       </div>
