@@ -36,7 +36,6 @@ In Vercel → **Project** → **Settings** → **Environment Variables** (Produc
 |----------|--------|
 | `DATABASE_URL` | PostgreSQL connection string (see below) |
 | `SESSION_SECRET` | Long random string (`openssl rand -base64 32`) |
-| `NODE_ENV` | `production` |
 | `AVATAR_STORAGE` | `database` |
 | `NEXT_PUBLIC_APP_URL` | `https://your-project.vercel.app` (update after first deploy) |
 | `CRON_SECRET` | Random string for `/api/cron/generate-quizzes` |
