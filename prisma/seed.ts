@@ -564,10 +564,7 @@ async function main() {
     "emma@intelligen.lms": emma.id,
   };
 
-  console.log("Seeding demo courses...");
-  for (const course of demoCourses) {
-    await seedCourse(course, instructors[course.instructorEmail], student.id);
-  }
+  console.log("Skipping demo course seed (removed — use AI course generator instead).");
 
   // Migrate existing courses to APPROVED status
   await db.course.updateMany({
