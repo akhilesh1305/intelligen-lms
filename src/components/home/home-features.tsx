@@ -2,96 +2,83 @@
 
 import {
   Award,
-  BarChart3,
-  Bot,
-  Brain,
   Building2,
-  Map,
-  Sparkles,
+  MessageSquare,
+  Shield,
   Users,
+  Video,
 } from "lucide-react";
 import { AnimateOnScroll } from "@/components/motion/animate-on-scroll";
 import { FeatureCard } from "@/components/ui/feature-card";
 import { GradientOrbs } from "@/components/decorative/gradient-orbs";
+import { HOME_GRID, HOME_INNER, HOME_SECTION, HOME_SECTION_HEADER_CENTERED, homeStaggerDelay } from "@/components/home/home-polish";
 import { SectionHeader } from "@/components/ui/section-header";
+import { cn } from "@/lib/utils";
 
 const FEATURES = [
   {
-    icon: Sparkles,
-    title: "AI Course Generator",
-    description:
-      "Turn PDFs, videos, and docs into structured courses with modules and lessons in minutes.",
-    gradient: "from-brand-500 to-violet-600",
-  },
-  {
-    icon: Brain,
-    title: "AI Quiz Builder",
-    description:
-      "Auto-generate assessments from your content with difficulty tuning and instant feedback.",
-    gradient: "from-violet-500 to-brand-500",
-  },
-  {
-    icon: Map,
-    title: "AI Learning Paths",
-    description:
-      "Personalized roadmaps that adapt to skills, roles, and completion goals.",
-    gradient: "from-cyan-500 to-brand-500",
-  },
-  {
-    icon: BarChart3,
-    title: "Smart Analytics",
-    description:
-      "Real-time dashboards for completion, engagement, and course performance.",
-    gradient: "from-emerald-500 to-cyan-500",
-  },
-  {
-    icon: Award,
-    title: "Certificates",
-    description:
-      "Branded, verifiable credentials with org signatures and partnership seals.",
-    gradient: "from-amber-500 to-orange-500",
-  },
-  {
     icon: Building2,
-    title: "Team Management",
+    title: "Organization workspaces",
     description:
-      "Org workspaces, member imports, role-based access, and private catalogs.",
+      "Private catalogs, bulk member imports, and role-based access for distributed teams.",
     gradient: "from-brand-600 to-indigo-600",
   },
   {
-    icon: Users,
-    title: "Skill Gap Analysis",
+    icon: Award,
+    title: "Verified certificates",
     description:
-      "Identify competency gaps and assign targeted learning automatically.",
+      "Branded credentials with public verification — built for compliance and shareability.",
+    gradient: "from-amber-500 to-orange-500",
+  },
+  {
+    icon: Users,
+    title: "Skill gap analysis",
+    description:
+      "Map competencies, identify gaps, and assign the right learning to each role.",
     gradient: "from-rose-500 to-violet-500",
   },
   {
-    icon: Bot,
-    title: "AI Tutor Assistant",
+    icon: Shield,
+    title: "Enterprise security",
     description:
-      "24/7 coaching, summaries, career guidance, and in-context help for learners.",
-    gradient: "from-brand-500 to-accent-cyan",
+      "SSO, two-factor authentication, device controls, and audit logs for IT teams.",
+    gradient: "from-slate-600 to-brand-600",
+  },
+  {
+    icon: Video,
+    title: "Webinars & live sessions",
+    description:
+      "Host training events, register attendees, and track participation in one place.",
+    gradient: "from-cyan-500 to-brand-500",
+  },
+  {
+    icon: MessageSquare,
+    title: "Course forums",
+    description:
+      "Threaded discussions so learners ask questions and stay engaged with content.",
+    gradient: "from-emerald-500 to-cyan-500",
   },
 ];
 
 export function HomeFeatures() {
   return (
-    <section className="relative overflow-hidden px-4 py-24 sm:px-6 lg:px-8">
+    <section className={cn("relative overflow-hidden", HOME_SECTION)}>
       <GradientOrbs variant="section" className="opacity-50" />
-      <div className="relative mx-auto max-w-7xl">
+      <div className={HOME_INNER}>
         <AnimateOnScroll>
           <SectionHeader
+            eyebrow="Platform"
             gradient
-            title="Everything you need to scale learning"
-            description="Enterprise-grade AI tools that help L&D teams ship training faster and prove impact."
-            className="text-center [&_h2]:mx-auto [&_p]:mx-auto"
+            title="Enterprise platform, not just courses"
+            description="Governance, teams, credentials, and live training — the foundation L&D teams need to scale."
+            className={HOME_SECTION_HEADER_CENTERED}
           />
         </AnimateOnScroll>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className={cn(HOME_GRID, "sm:grid-cols-2 lg:grid-cols-3")}>
           {FEATURES.map((feature, i) => (
-            <AnimateOnScroll key={feature.title} delay={i * 60} animation="fade-up">
-              <FeatureCard {...feature} className="glass-card h-full rounded-[20px]" />
+            <AnimateOnScroll key={feature.title} delay={homeStaggerDelay(i)} animation="fade-up">
+              <FeatureCard {...feature} compact className="h-full" />
             </AnimateOnScroll>
           ))}
         </div>

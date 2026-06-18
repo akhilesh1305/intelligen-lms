@@ -50,7 +50,7 @@ export function AnimateOnScroll({
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
       className={cn(
-        "transition-all duration-700 ease-out will-change-transform",
+        "transition-all duration-600 ease-out will-change-transform",
         visible ? "translate-x-0 translate-y-0 scale-100 opacity-100" : hidden[animation],
         className
       )}

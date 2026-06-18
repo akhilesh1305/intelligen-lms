@@ -18,7 +18,7 @@ export async function getFeaturedReviews(limit = 3): Promise<FeaturedReview[]> {
       rating: { gte: 4 },
     },
     orderBy: [{ rating: "desc" }, { createdAt: "desc" }],
-    take: limit,
+    take: Math.max(limit * 4, 12),
     include: {
       user: { select: { name: true, avatarUrl: true } },
       course: { select: { title: true } },
@@ -26,7 +26,7 @@ export async function getFeaturedReviews(limit = 3): Promise<FeaturedReview[]> {
   });
 
   return rows
-    .filter((r) => r.comment && r.comment.trim().length > 0)
+    .filter((r) => r.comment && r.comment.trim().length >= 48)
     .map((r) => ({
       id: r.id,
       rating: r.rating,
@@ -35,7 +35,12 @@ export async function getFeaturedReviews(limit = 3): Promise<FeaturedReview[]> {
       userName: r.user.name,
       userAvatarUrl: r.user.avatarUrl,
       courseTitle: r.course.title,
-    }));
+    }))
+    .sort((a, b) => {
+      if (b.rating !== a.rating) return b.rating - a.rating;
+      return b.comment.length - a.comment.length;
+    })
+    .slice(0, limit);
 }
 
 export async function getCourseReviewStats(courseId: string) {

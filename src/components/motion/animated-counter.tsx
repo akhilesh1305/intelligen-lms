@@ -60,9 +60,11 @@ export function AnimatedCounter({
     : value;
 
   return (
-    <div ref={ref} className={cn("px-4 text-center", compact ? "py-2" : "py-8 sm:py-10")}>
-      <p className={cn("text-3xl font-bold tabular-nums", color)}>{display}</p>
-      <p className="mt-1 text-sm font-medium text-muted">{label}</p>
+    <div ref={ref} className={cn("px-2 text-center sm:px-4", compact ? "py-3 sm:py-4" : "py-8 sm:py-10")}>
+      <p className={cn("font-bold tabular-nums", compact ? "text-2xl sm:text-3xl" : "text-3xl", color)}>
+        {display}
+      </p>
+      <p className="mt-1 text-xs font-medium leading-snug text-muted sm:text-sm">{label}</p>
     </div>
   );
 }

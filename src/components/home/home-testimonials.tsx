@@ -1,17 +1,25 @@
 "use client";
 
-import { Quote } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { AnimateOnScroll } from "@/components/motion/animate-on-scroll";
+import {
+  HOME_CARD,
+  HOME_DESCRIPTION,
+  HOME_EYEBROW,
+  HOME_GRID,
+  HOME_INNER,
+  HOME_SECTION,
+  HOME_SECTION_CENTERED,
+  HOME_TITLE,
+  homeStaggerDelay,
+} from "@/components/home/home-polish";
 import { ReviewStars } from "@/components/ui/review-stars";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import type { FeaturedReview } from "@/lib/reviews";
 import { cn } from "@/lib/utils";
 
-const accents = [
-  "border-brand-500/30 bg-brand-500/5",
-  "border-violet-500/30 bg-violet-500/5",
-  "border-emerald-500/30 bg-emerald-500/5",
-];
+const MAX_TESTIMONIALS = 3;
 
 const PLACEHOLDER_REVIEWS = [
   {
@@ -22,8 +30,8 @@ const PLACEHOLDER_REVIEWS = [
     userName: "Sarah Chen",
     role: "Head of L&D",
     organization: "Northwind Logistics",
-    courseTitle: "Workplace Safety",
     userAvatarUrl: null,
+    subtitle: "Head of L&D · Northwind Logistics",
   },
   {
     id: "p2",
@@ -33,8 +41,8 @@ const PLACEHOLDER_REVIEWS = [
     userName: "Marcus Okonkwo",
     role: "Training Manager",
     organization: "Globex Industries",
-    courseTitle: "Leadership Essentials",
     userAvatarUrl: null,
+    subtitle: "Training Manager · Globex Industries",
   },
   {
     id: "p3",
@@ -44,77 +52,169 @@ const PLACEHOLDER_REVIEWS = [
     userName: "Elena Vasquez",
     role: "HR Director",
     organization: "Acme Corp",
-    courseTitle: "Compliance Fundamentals",
     userAvatarUrl: null,
+    subtitle: "HR Director · Acme Corp",
   },
 ] as const;
 
-type DisplayReview = FeaturedReview | (typeof PLACEHOLDER_REVIEWS)[number];
+type TestimonialItem = {
+  id: string;
+  comment: string;
+  rating: number;
+  userName: string;
+  userAvatarUrl: string | null;
+  subtitle: string;
+};
 
-export function HomeTestimonials({ reviews }: { reviews: FeaturedReview[] }) {
-  const display: DisplayReview[] =
-    reviews.length > 0 ? reviews : [...PLACEHOLDER_REVIEWS];
+function toTestimonial(review: FeaturedReview): TestimonialItem {
+  return {
+    id: review.id,
+    comment: review.comment,
+    rating: review.rating,
+    userName: review.userName,
+    userAvatarUrl: review.userAvatarUrl,
+    subtitle: `Verified learner · ${review.courseTitle}`,
+  };
+}
+
+function TestimonialCard({
+  item,
+  className,
+}: {
+  item: TestimonialItem;
+  className?: string;
+}) {
+  return (
+    <article
+      className={cn(HOME_CARD, "flex h-full flex-col p-4", className)}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <Quote className="h-6 w-6 shrink-0 text-brand-500/50" aria-hidden />
+        <ReviewStars rating={item.rating} size="sm" />
+      </div>
+
+      <p className="mt-3 line-clamp-4 flex-1 text-sm leading-relaxed text-ink">
+        &ldquo;{item.comment}&rdquo;
+      </p>
+
+      <div className="mt-4 flex items-center gap-3 border-t border-border pt-3">
+        <UserAvatar
+          name={item.userName}
+          avatarUrl={item.userAvatarUrl}
+          size="sm"
+          className="ring-brand-500/20"
+        />
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold text-ink">{item.userName}</p>
+          <p className="truncate text-xs text-muted">{item.subtitle}</p>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function TestimonialCarousel({ items }: { items: TestimonialItem[] }) {
+  const [active, setActive] = useState(0);
+  const count = items.length;
+
+  const goTo = useCallback(
+    (index: number) => {
+      setActive((index + count) % count);
+    },
+    [count]
+  );
+
+  useEffect(() => {
+    if (count <= 1) return;
+    const timer = window.setInterval(() => {
+      setActive((current) => (current + 1) % count);
+    }, 7000);
+    return () => window.clearInterval(timer);
+  }, [count]);
 
   return (
-    <section className="border-y border-border bg-panel/50 px-4 py-24 dark:bg-panel/30 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <AnimateOnScroll className="mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold text-ink sm:text-4xl">
-            Loved by Learners and Teams
-          </h2>
-          <p className="mt-3 text-muted">
-            {reviews.length > 0
-              ? "Real ratings and reviews from enrolled learners"
-              : "Representative feedback from enterprise learning teams"}
+    <div className="md:hidden">
+      <div className="relative overflow-hidden">
+        <div
+          className="flex transition-transform duration-500 ease-out motion-reduce:transition-none"
+          style={{ transform: `translateX(-${active * 100}%)` }}
+        >
+          {items.map((item) => (
+            <div key={item.id} className="w-full min-w-0 shrink-0">
+              <TestimonialCard item={item} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-center justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => goTo(active - 1)}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-panel text-muted transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40"
+          aria-label="Previous testimonial"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+
+        <div className="flex items-center gap-1.5">
+          {items.map((item, i) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => goTo(i)}
+              className={cn(
+                "h-2 rounded-full transition-all",
+                i === active ? "w-5 bg-brand-500" : "w-2 bg-border hover:bg-muted"
+              )}
+              aria-label={`Show testimonial ${i + 1}`}
+              aria-current={i === active}
+            />
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => goTo(active + 1)}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-panel text-muted transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40"
+          aria-label="Next testimonial"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export function HomeTestimonials({ reviews }: { reviews: FeaturedReview[] }) {
+  const hasLiveReviews = reviews.length > 0;
+  const items: TestimonialItem[] = (
+    hasLiveReviews ? reviews.map(toTestimonial) : [...PLACEHOLDER_REVIEWS]
+  ).slice(0, MAX_TESTIMONIALS);
+
+  return (
+    <section className={cn("border-y border-border bg-panel/50 dark:bg-panel/30", HOME_SECTION)}>
+      <div className={HOME_INNER}>
+        <AnimateOnScroll className={cn(HOME_SECTION_CENTERED, "max-w-2xl")}>
+          <p className={HOME_EYEBROW}>Social proof</p>
+          <h2 className={cn("mt-2", HOME_TITLE)}>Trusted by learning teams</h2>
+          <p className={HOME_DESCRIPTION}>
+            {hasLiveReviews
+              ? "Top-rated feedback from enrolled learners"
+              : "What L&D leaders say about IntelliGen"}
           </p>
         </AnimateOnScroll>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {display.map((review, i) => (
-            <AnimateOnScroll key={review.id} delay={i * 120} animation="fade-up">
-              <article
-                className={cn(
-                  "glass-card relative flex h-full flex-col rounded-[20px] border p-6 shadow-card transition-all duration-300 motion-safe:hover:-translate-y-1.5 motion-safe:hover:shadow-card-hover",
-                  accents[i % accents.length]
-                )}
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <Quote className="h-8 w-8 shrink-0 text-brand-400/60" />
-                  <div className="text-right">
-                    <ReviewStars rating={review.rating} />
-                    <p className="mt-1 text-xs font-semibold text-amber-600 dark:text-amber-400">
-                      {review.rating}.0 / 5
-                    </p>
-                  </div>
-                </div>
+        <div className={HOME_GRID}>
+          <TestimonialCarousel items={items} />
 
-                <p className="mt-4 flex-1 text-sm leading-relaxed text-ink">
-                  &ldquo;{review.comment}&rdquo;
-                </p>
-
-                <p className="mt-3 text-xs font-medium text-brand-600 dark:text-brand-400">
-                  Course: {review.courseTitle}
-                </p>
-
-                <div className="mt-4 flex items-center gap-3 border-t border-border pt-4">
-                  <UserAvatar
-                    name={review.userName}
-                    avatarUrl={review.userAvatarUrl}
-                    size="md"
-                    className="ring-brand-500/30"
-                  />
-                  <div>
-                    <p className="font-semibold text-ink">{review.userName}</p>
-                    <p className="text-xs text-muted">
-                      {"role" in review && review.role
-                        ? `${review.role} · ${review.organization}`
-                        : "Verified learner"}
-                    </p>
-                  </div>
-                </div>
-              </article>
-            </AnimateOnScroll>
-          ))}
+          <div className="hidden gap-4 md:grid md:grid-cols-3">
+            {items.map((item, i) => (
+              <AnimateOnScroll key={item.id} delay={homeStaggerDelay(i)} animation="fade-up">
+                <TestimonialCard item={item} />
+              </AnimateOnScroll>
+            ))}
+          </div>
         </div>
       </div>
     </section>

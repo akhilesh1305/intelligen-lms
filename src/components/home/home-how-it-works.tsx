@@ -2,7 +2,16 @@
 
 import { Award, BookOpen, UserPlus } from "lucide-react";
 import { AnimateOnScroll } from "@/components/motion/animate-on-scroll";
+import {
+  HOME_CARD,
+  HOME_GRID,
+  HOME_INNER,
+  HOME_SECTION,
+  HOME_SECTION_HEADER_CENTERED,
+  homeStaggerDelay,
+} from "@/components/home/home-polish";
 import { SectionHeader } from "@/components/ui/section-header";
+import { cn } from "@/lib/utils";
 
 const STEPS = [
   {
@@ -30,30 +39,34 @@ const STEPS = [
 
 export function HomeHowItWorks() {
   return (
-    <section className="border-y border-border bg-panel/40 px-4 py-24 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+    <section className={cn("border-y border-border bg-panel/40", HOME_SECTION)}>
+      <div className={HOME_INNER}>
         <AnimateOnScroll>
           <SectionHeader
+            eyebrow="Getting started"
             gradient
             title="How it works"
             description="From signup to certified teams in three steps."
-            className="text-center [&_h2]:mx-auto [&_p]:mx-auto"
+            className={HOME_SECTION_HEADER_CENTERED}
           />
         </AnimateOnScroll>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
+        <div className={cn(HOME_GRID, "md:grid-cols-3")}>
           {STEPS.map((item, i) => (
-            <AnimateOnScroll key={item.step} delay={i * 80} animation="fade-up">
-              <article className="glass-card relative h-full rounded-[20px] p-6">
+            <AnimateOnScroll key={item.step} delay={homeStaggerDelay(i)} animation="fade-up">
+              <article className={cn(HOME_CARD, "group relative h-full p-5")}>
                 <span className="text-xs font-bold uppercase tracking-widest text-brand-500">
                   Step {item.step}
                 </span>
                 <div
-                  className={`mt-4 flex h-12 w-12 items-center justify-center rounded-[14px] bg-gradient-to-br ${item.gradient} text-white shadow-lg`}
+                  className={cn(
+                    "mt-3 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-sm transition-transform duration-300 motion-safe:group-hover:scale-105",
+                    item.gradient
+                  )}
                 >
                   <item.icon className="h-5 w-5" />
                 </div>
-                <h3 className="mt-5 text-lg font-bold text-ink">{item.title}</h3>
+                <h3 className="mt-4 text-base font-bold text-ink sm:text-lg">{item.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{item.description}</p>
               </article>
             </AnimateOnScroll>
