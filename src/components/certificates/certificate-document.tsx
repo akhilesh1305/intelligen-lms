@@ -1,5 +1,10 @@
 import { Building2 } from "lucide-react";
 import { LogoWatermark } from "@/components/brand/logo-watermark";
+import {
+  CERTIFICATE_TEMPLATES,
+  resolveCertificateTemplate,
+  type CertificateTemplateId,
+} from "@/lib/certificate-templates";
 import { cn, formatDate } from "@/lib/utils";
 
 type CertificateOrganization = {
@@ -16,6 +21,8 @@ type CertificateDocumentProps = {
   certificateNo: string;
   issuedAt: Date;
   organization?: CertificateOrganization | null;
+  template?: CertificateTemplateId;
+  skillLevel?: string;
 };
 
 function ClassicCorner({ className }: { className?: string }) {
@@ -137,6 +144,20 @@ function CertificateSeal() {
   );
 }
 
+const TEMPLATE_KICKERS: Record<CertificateTemplateId, string> = {
+  classic: "Certificate",
+  corporate: "Corporate Credential",
+  "ai-professional": "AI Professional",
+  "technical-expert": "Technical Expert",
+};
+
+const TEMPLATE_HEADINGS: Record<CertificateTemplateId, string> = {
+  classic: "of Completion",
+  corporate: "of Achievement",
+  "ai-professional": "Certification",
+  "technical-expert": "Mastery Certificate",
+};
+
 export function CertificateDocument({
   studentName,
   courseTitle,
@@ -144,13 +165,28 @@ export function CertificateDocument({
   certificateNo,
   issuedAt,
   organization,
+  template,
+  skillLevel,
 }: CertificateDocumentProps) {
   const isOrgCertificate = Boolean(organization);
+  const resolvedTemplate =
+    template ??
+    resolveCertificateTemplate({
+      organizationId: organization ? "org" : null,
+      skillLevel: (skillLevel as "BEGINNER" | "INTERMEDIATE" | "ADVANCED") ?? "BEGINNER",
+      title: courseTitle,
+    });
+  const templateMeta = CERTIFICATE_TEMPLATES[resolvedTemplate];
 
   return (
     <div
       id="certificate"
-      className="certificate-sheet certificate-classic certificate-frame-outer relative mx-auto aspect-[11/8.5] w-full max-w-6xl overflow-hidden text-ink shadow-elevated"
+      className={cn(
+        "certificate-sheet certificate-classic certificate-frame-outer relative mx-auto aspect-[11/8.5] w-full max-w-6xl overflow-hidden text-ink shadow-elevated",
+        `certificate-template-${resolvedTemplate}`
+      )}
+      data-template={resolvedTemplate}
+      data-template-label={templateMeta.label}
     >
       <LogoWatermark
         size={400}
@@ -202,10 +238,10 @@ export function CertificateDocument({
           )}
 
           <p className="certificate-classic-kicker mt-3 text-[10px] font-semibold uppercase tracking-[0.35em] text-brand-600 sm:mt-4 sm:text-xs">
-            Certificate
+            {TEMPLATE_KICKERS[resolvedTemplate]}
           </p>
           <h2 className="certificate-classic-heading mt-0.5 font-[family-name:var(--font-certificate)] text-xl font-semibold tracking-wide text-brand-900 sm:text-2xl lg:text-3xl">
-            of Completion
+            {TEMPLATE_HEADINGS[resolvedTemplate]}
           </h2>
           <TitleDivider className="certificate-flourish mx-auto mt-2 h-2 w-full max-w-md text-brand-500 sm:mt-3 sm:max-w-lg" />
         </div>

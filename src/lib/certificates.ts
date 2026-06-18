@@ -56,6 +56,7 @@ export async function getCertificate(id: string) {
       course: {
         select: {
           title: true,
+          skillLevel: true,
           organizationId: true,
           organization: { select: { name: true, logoUrl: true, signatoryName: true, signatureUrl: true } },
           instructor: { select: { name: true } },

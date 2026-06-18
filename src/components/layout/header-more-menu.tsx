@@ -10,6 +10,7 @@ import {
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import {
+  Award,
   CreditCard,
   Gamepad2,
   MoreHorizontal,
@@ -22,6 +23,7 @@ import { LeaderboardNavSwitch } from "@/components/layout/leaderboard-nav-switch
 import { cn } from "@/lib/utils";
 
 export const NAV_MORE_LINKS = [
+  { href: "/certificates", label: "Certificates", icon: Award },
   { href: "/pricing", label: "Pricing", icon: CreditCard },
   { href: "/competency", label: "Skills", icon: Target },
   { href: "/webinars", label: "Webinars", icon: Video },

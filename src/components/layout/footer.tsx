@@ -8,6 +8,7 @@ const footerLinks = {
     { label: "Learning paths", href: "/paths" },
     { label: "Pricing", href: "/pricing" },
     { label: "Dashboard", href: "/dashboard" },
+    { label: "Certificates", href: "/certificates" },
   ],
   Company: [
     { label: "Book a demo", href: "mailto:hello@intelligenlms.com?subject=Enterprise%20Demo" },

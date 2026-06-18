@@ -30,6 +30,7 @@ import {
 import { getUserOrganizationMemberships } from "@/lib/organizations";
 import { getPublishedCoursesForUser } from "@/lib/courses";
 import { getRecommendedCourses } from "@/lib/recommendations";
+import { getCertificateHubData } from "@/lib/certificate-hub";
 import { CourseCard } from "@/components/courses/course-card";
 import { Recommendations } from "@/components/courses/recommendations";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,7 @@ import {
 } from "@/components/dashboard/dashboard-motion";
 import { DashboardStatGrid } from "@/components/dashboard/dashboard-stat-card";
 import { StudentDashboardOverview } from "@/components/dashboard/student-dashboard-overview";
+import { DashboardCertificateWidget } from "@/components/certificates/dashboard-certificate-widget";
 
 export default async function DashboardPage({
   searchParams,
@@ -446,7 +448,7 @@ export default async function DashboardPage({
     );
   }
 
-  const [enrollments, recommendations, certificates, orgMemberships, accessibleCourses] =
+  const [enrollments, recommendations, certificates, orgMemberships, accessibleCourses, certificateHub] =
     await Promise.all([
     getStudentEnrollments(session.id),
     getRecommendedCourses(session.id, session.role),
@@ -456,6 +458,7 @@ export default async function DashboardPage({
     }),
     getUserOrganizationMemberships(session.id),
     getPublishedCoursesForUser(session.id, session.role),
+    getCertificateHubData(session.id),
   ]);
 
   const enrolledIds = new Set(enrollments.map((e) => e.courseId));
@@ -532,26 +535,11 @@ export default async function DashboardPage({
           />
         </DashboardFade>
 
-        {certificates.length > 0 && (
-          <DashboardFade delay={120}>
-          <section className="mb-10">
-            <h2 className="text-lg font-bold text-ink">Your certificates</h2>
-            <div className="mt-4 flex flex-wrap gap-3">
-              {certificates.map((cert) => (
-                <Link
-                  key={cert.id}
-                  href={`/certificates/${cert.id}`}
-                  className="rounded-[14px] border border-brand-200 bg-brand-50 px-4 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-100 dark:border-brand-800 dark:bg-brand-950/40 dark:text-brand-300 dark:hover:bg-brand-900/50"
-                >
-                  {cert.course.title}
-                </Link>
-              ))}
-            </div>
-          </section>
-          </DashboardFade>
-        )}
+        <DashboardFade delay={90}>
+          <DashboardCertificateWidget hub={certificateHub} className="mb-10" />
+        </DashboardFade>
 
-        <DashboardFade delay={180}>
+        <DashboardFade delay={120}>
         <SectionHeader
           title="My courses"
           action={

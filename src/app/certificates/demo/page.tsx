@@ -76,7 +76,7 @@ export default function DemoCertificatePage() {
 
           <section>
             <h2 className="mb-4 text-center text-lg font-bold text-ink">
-              Organization certificate
+              Organization certificate (Corporate template)
             </h2>
             <p className="mb-4 text-center text-sm text-muted">
               Dual logos, org signatory name, and signature image when configured
@@ -86,7 +86,31 @@ export default function DemoCertificatePage() {
               </Link>
               .
             </p>
-            <CertificateDocument {...ORG_DEMO} />
+            <CertificateDocument {...ORG_DEMO} template="corporate" />
+          </section>
+
+          <section>
+            <h2 className="mb-4 text-center text-lg font-bold text-ink">
+              AI Professional template
+            </h2>
+            <CertificateDocument
+              {...PLATFORM_DEMO}
+              courseTitle="Getting Started with AI Tools"
+              certificateNo="IGLMS-DEMO-AI-2026"
+              template="ai-professional"
+            />
+          </section>
+
+          <section>
+            <h2 className="mb-4 text-center text-lg font-bold text-ink">
+              Technical Expert template
+            </h2>
+            <CertificateDocument
+              {...PLATFORM_DEMO}
+              courseTitle="Cybersecurity Essentials for Teams"
+              certificateNo="IGLMS-DEMO-TECH-2026"
+              template="technical-expert"
+            />
           </section>
         </div>
 

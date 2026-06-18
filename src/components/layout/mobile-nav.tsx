@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
+  Award,
   BookOpen,
   Briefcase,
   Building2,
@@ -124,6 +125,7 @@ export function MobileNav({
               </div>
 
               {session ? (
+                <>
                 <Link
                   href="/dashboard"
                   onClick={() => setOpen(false)}
@@ -132,6 +134,15 @@ export function MobileNav({
                   <LayoutDashboard className="h-5 w-5 text-brand-600" />
                   My Learning
                 </Link>
+                <Link
+                  href="/certificates"
+                  onClick={() => setOpen(false)}
+                  className="mb-1 flex min-h-12 items-center gap-3 rounded-xl bg-surface px-3 py-3 text-base font-semibold text-ink active:bg-brand-50 dark:active:bg-brand-950/30"
+                >
+                  <Award className="h-5 w-5 text-brand-600" />
+                  Certificates
+                </Link>
+                </>
               ) : null}
 
               {session && orgAdminHref ? (

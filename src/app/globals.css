@@ -498,6 +498,36 @@
     opacity: 0.7;
   }
 
+  .certificate-template-corporate {
+    --certificate-gold: #4b5563;
+    --certificate-gold-light: #d1d5db;
+    --certificate-cream: #f8fafc;
+  }
+
+  .certificate-template-corporate .certificate-classic-kicker {
+    color: #334155;
+  }
+
+  .certificate-template-ai-professional {
+    --certificate-gold: #06b6d4;
+    --certificate-gold-light: #a5f3fc;
+    --certificate-cream: #f0fdfa;
+  }
+
+  .certificate-template-ai-professional .certificate-classic-kicker {
+    color: #0891b2;
+  }
+
+  .certificate-template-technical-expert {
+    --certificate-gold: #059669;
+    --certificate-gold-light: #a7f3d0;
+    --certificate-cream: #f0fdf4;
+  }
+
+  .certificate-template-technical-expert .certificate-classic-kicker {
+    color: #047857;
+  }
+
   .certificate-shape-layer {
     border-radius: 1px;
   }
