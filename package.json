@@ -17,6 +17,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
+    "db:seed-ai-courses": "tsx scripts/seed-ai-courses.ts",
     "db:seed-org": "tsx prisma/seed-demo-org.ts",
     "db:setup": "prisma db push && tsx prisma/seed.ts",
     "promo:video": "node scripts/generate-promo-video.mjs",
