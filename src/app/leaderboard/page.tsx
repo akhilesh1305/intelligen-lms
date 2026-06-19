@@ -15,12 +15,18 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/utils";
 import { TableScroll } from "@/components/ui/table-scroll";
 import { AchievementLevelBadge } from "@/components/challenges/achievement-level-badge";
+import { shouldUseDemoData, getDemoWeeklyLeaderboard } from "@/lib/demo";
 import { ACHIEVEMENT_LEVELS, UNRANKED_INFO } from "@/lib/achievement-levels";
 const rankIcons = [Trophy, Medal, Award];
 
 export default async function LeaderboardPage() {
   const session = await getSession();
-  const leaders = await getWeeklyLeaderboard(20);
+  const leaders = shouldUseDemoData(session?.email)
+    ? getDemoWeeklyLeaderboard(
+        20,
+        session ? { id: session.id, name: session.name } : undefined
+      )
+    : await getWeeklyLeaderboard(20);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">

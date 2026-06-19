@@ -10,6 +10,7 @@ import {
 } from "@/lib/knowledge-games";
 import { GAMES_PAGE_IMAGES, KNOWLEDGE_GAME_IMAGES } from "@/lib/game-images";
 import type { SessionLike } from "@/lib/organizations";
+import { STICKY_ANCHOR_MT } from "@/components/home/home-polish";
 import { cn } from "@/lib/utils";
 
 export async function KnowledgeGamesSection({
@@ -29,7 +30,7 @@ export async function KnowledgeGamesSection({
   const completedToday = attempts.filter((a) => a.attempt).length;
 
   return (
-    <section id="knowledge-games" className="scroll-mt-28">
+    <section id="knowledge-games" className={cn(STICKY_ANCHOR_MT)}>
       <GamesAnimatedSection>
         <GamesSectionBanner
           src={GAMES_PAGE_IMAGES.knowledgeSection}

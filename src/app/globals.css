@@ -40,6 +40,8 @@
   --shadow-elevated: 0 20px 50px rgb(15 23 42 / 0.12), 0 0 0 1px rgb(255 255 255 / 0.05);
   --shadow-glow: 0 0 48px rgb(79 70 229 / 0.35);
   --shadow-glow-cyan: 0 0 40px rgb(6 182 212 / 0.3);
+  --chart-grid: #e2e8f0;
+  --chart-axis: #64748b;
   --radius-card: 1.25rem;
   --text-display: 3.5rem;
   --text-title: 2rem;
@@ -66,6 +68,8 @@
   --shadow-elevated: 0 24px 60px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(255 255 255 / 0.06);
   --shadow-glow: 0 0 56px rgb(79 70 229 / 0.25);
   --shadow-glow-cyan: 0 0 48px rgb(6 182 212 / 0.2);
+  --chart-grid: #334155;
+  --chart-axis: #94a3b8;
 }
 
 @layer base {
@@ -1804,4 +1808,79 @@
       background-clip: unset;
     }
   }
+}
+
+/* Screenshot Mode — client-only presentation layer (sessionStorage + data attribute) */
+html[data-screenshot-mode="true"] [data-screenshot-clutter] {
+  display: none !important;
+}
+
+html[data-screenshot-mode="true"] main.mobile-main {
+  min-height: auto !important;
+}
+
+html[data-screenshot-mode="true"] .mobile-main {
+  padding-bottom: 0;
+}
+
+html[data-screenshot-mode="true"] [data-section-header] {
+  margin-bottom: 0.25rem;
+}
+
+html[data-screenshot-mode="true"] .shadow-card,
+html[data-screenshot-mode="true"] .shadow-elevated {
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.05), 0 8px 24px rgb(15 23 42 / 0.06);
+}
+
+/* Recording Mode — client-only demo capture (sessionStorage + data attribute) */
+html[data-recording-mode="true"] [data-screenshot-clutter] {
+  display: none !important;
+}
+
+html[data-recording-mode="true"] .animate-float,
+html[data-recording-mode="true"] .animate-pulse-glow,
+html[data-recording-mode="true"] .header-promo-icon,
+html[data-recording-mode="true"] .logo-hover,
+html[data-recording-mode="true"] .scroll-reveal:not(.scroll-reveal-visible) {
+  animation: none !important;
+}
+
+html[data-recording-mode="true"] .scroll-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+html[data-recording-mode="true"] .page-transition-hidden {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+html[data-recording-mode="true"] main.mobile-main {
+  min-height: auto !important;
+}
+
+html[data-recording-mode="true"] [data-recording-expand] .h-\[220px\] {
+  height: 300px !important;
+}
+
+html[data-recording-mode="true"] [data-recording-expand] .sm\:h-\[280px\] {
+  height: 320px !important;
+}
+
+html[data-recording-mode="true"] [data-recording-expand] .mt-10 {
+  margin-top: 2rem;
+}
+
+html[data-recording-mode="true"]:not([data-charts-ready="true"]) [data-recording-chart] {
+  opacity: 0.35;
+  transition: opacity 0.35s ease;
+}
+
+html[data-recording-mode="true"][data-charts-ready="true"] [data-recording-chart] {
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+html[data-recording-mode="true"] .recording-mode-dot {
+  box-shadow: 0 0 0 4px rgb(244 63 94 / 0.35);
 }

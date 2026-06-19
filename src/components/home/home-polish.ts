@@ -3,10 +3,13 @@ import { cn } from "@/lib/utils";
 /** Prevent horizontal scroll from hero glow / float cards */
 export const HOME_PAGE = "overflow-x-clip";
 
+/** Offset anchor targets below sticky app chrome + section nav */
+export const STICKY_ANCHOR_MT = "scroll-mt-36 sm:scroll-mt-40";
+
 /** Shared homepage layout + motion tokens */
 export const HOME_SECTION = "px-4 py-12 sm:px-6 lg:px-8";
 
-export const HOME_INNER = "mx-auto w-full max-w-7xl";
+export const HOME_INNER = "mx-auto w-full min-w-0 max-w-7xl";
 
 export const HOME_GRID = "mt-8 grid gap-4";
 

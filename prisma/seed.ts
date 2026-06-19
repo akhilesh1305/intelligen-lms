@@ -558,6 +558,39 @@ async function main() {
     },
   });
 
+  await db.user.upsert({
+    where: { email: "demo-admin@intelligen.lms" },
+    update: { role: "ADMIN", name: "Demo Admin" },
+    create: {
+      email: "demo-admin@intelligen.lms",
+      name: "Demo Admin",
+      passwordHash,
+      role: "ADMIN",
+    },
+  });
+
+  await db.user.upsert({
+    where: { email: "demo-learner@intelligen.lms" },
+    update: {
+      name: "Jordan Lee",
+      points: 1840,
+      challengePoints: 312,
+      challengesPassed: 22,
+      achievementLevel: "GOLD",
+    },
+    create: {
+      email: "demo-learner@intelligen.lms",
+      name: "Jordan Lee",
+      passwordHash,
+      role: "STUDENT",
+      points: 1840,
+      challengePoints: 312,
+      challengesPassed: 22,
+      achievementLevel: "GOLD",
+    },
+  });
+  console.log("  + Demo experience accounts (admin & learner)");
+
   const instructors: Record<string, string> = {
     "instructor@intelligen.lms": instructor.id,
     "marcus@intelligen.lms": marcus.id,
@@ -1219,6 +1252,8 @@ async function main() {
 
   console.log("\nSeed completed:");
   console.log(`  Admin:      admin@intelligen.lms / password123`);
+  console.log(`  Demo Admin: demo-admin@intelligen.lms / password123`);
+  console.log(`  Demo Learner: demo-learner@intelligen.lms / password123`);
   console.log(`  Instructor: instructor@intelligen.lms / password123`);
   console.log(`  Instructor: marcus@intelligen.lms / password123`);
   console.log(`  Instructor: emma@intelligen.lms / password123`);

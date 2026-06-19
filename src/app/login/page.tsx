@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { AuthPageShell } from "@/components/auth/auth-page-shell";
 import { SsoButtons } from "@/components/auth/sso-buttons";
 import { LoginForm } from "./login-form";
+import { DemoExperienceLogin } from "@/components/demo/demo-experience-login";
 import { getSession } from "@/lib/auth";
 import { getEnabledSsoProviders } from "@/lib/security/sso";
 import { AUTH_LOGIN_PERKS, AUTH_PAGE_IMAGES } from "@/lib/auth-images";
@@ -62,6 +63,7 @@ export default async function LoginPage({
       }
     >
       <LoginForm />
+      <DemoExperienceLogin />
     </AuthPageShell>
   );
 }

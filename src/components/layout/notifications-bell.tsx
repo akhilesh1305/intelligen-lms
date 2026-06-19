@@ -37,7 +37,7 @@ export function NotificationsBell() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative" data-screenshot-clutter>
       <button
         onClick={() => {
           setOpen(!open);

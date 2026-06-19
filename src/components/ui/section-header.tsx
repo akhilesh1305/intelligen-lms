@@ -45,7 +45,7 @@ export function SectionHeader({
         )}
       </div>
       {action ? (
-        <div className="-mx-1 flex w-full shrink-0 flex-wrap gap-2 overflow-x-auto px-1 pb-1 sm:w-auto sm:overflow-visible">
+        <div className="-mx-1 flex w-full min-w-0 shrink-0 flex-wrap gap-2 overflow-x-auto px-1 pb-1 scrollbar-hide sm:w-auto sm:overflow-visible">
           {action}
         </div>
       ) : null}

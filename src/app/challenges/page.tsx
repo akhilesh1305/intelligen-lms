@@ -37,6 +37,7 @@ import {
   QUIZ_QUESTION_SECONDS_MAX,
   QUIZ_QUESTION_SECONDS_MIN,
 } from "@/lib/challenge-quiz-constants";
+import { shouldUseDemoData, getDemoWeeklyLeaderboard } from "@/lib/demo";
 
 export default async function ChallengesPage({
   searchParams,
@@ -62,7 +63,14 @@ export default async function ChallengesPage({
       : quizzes.find((q) => q.id === selectedQuizId) ?? defaultDailyQuiz ?? null;
 
   const [weeklyLeaders, weeklyEntry, attempts] = await Promise.all([
-    getWeeklyLeaderboard(10),
+    shouldUseDemoData(session?.email)
+      ? Promise.resolve(
+          getDemoWeeklyLeaderboard(
+            10,
+            session ? { id: session.id, name: session.name } : undefined
+          )
+        )
+      : getWeeklyLeaderboard(10),
     session ? getUserWeeklyEntry(session.id) : null,
     session
       ? db.challengeAttempt.findMany({

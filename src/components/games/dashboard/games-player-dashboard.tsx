@@ -6,10 +6,11 @@ import { RecentAchievementsSection } from "@/components/games/dashboard/recent-a
 import { RewardProgressTrack } from "@/components/games/dashboard/reward-progress-track";
 import { BattleModeShowcase } from "@/components/games/dashboard/battle-mode-showcase";
 import type { GamesPlayerProfile } from "@/lib/games-player-profile";
-
+import { STICKY_ANCHOR_MT } from "@/components/home/home-polish";
+import { cn } from "@/lib/utils";
 export function GamesPlayerDashboard({ profile }: { profile: GamesPlayerProfile }) {
   return (
-    <section id="player-dashboard" className="space-y-8 sm:space-y-10">
+    <section id="player-dashboard" className={cn("space-y-8 sm:space-y-10", STICKY_ANCHOR_MT)}>
       <GamesAnimatedSection>
         <PlayerProfileCard profile={profile} />
       </GamesAnimatedSection>

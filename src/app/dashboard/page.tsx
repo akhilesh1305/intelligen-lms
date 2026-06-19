@@ -56,6 +56,22 @@ import {
 import { DashboardStatGrid } from "@/components/dashboard/dashboard-stat-card";
 import { StudentDashboardOverview } from "@/components/dashboard/student-dashboard-overview";
 import { DashboardCertificateWidget } from "@/components/certificates/dashboard-certificate-widget";
+import { shouldUseDemoData } from "@/lib/demo/config";
+import {
+  getDemoCertificateCount,
+  getDemoCertificateHubData,
+  getDemoInstructorAnalytics,
+  getDemoInstructorCourses,
+  getDemoLeaderboardAnalytics,
+  getDemoLearningHistory,
+  getDemoPendingCourses,
+  getDemoPendingInstructorCount,
+  getDemoPlatformAnalytics,
+  getDemoRecommendations,
+  getDemoStudentEnrollments,
+  getDemoUserBadges,
+} from "@/lib/demo";
+import { DemoLearningHistory } from "@/components/demo/demo-learning-history";
 
 export default async function DashboardPage({
   searchParams,
@@ -66,18 +82,19 @@ export default async function DashboardPage({
   const { instructor: instructorParam } = await searchParams;
 
   if (session.role === "ADMIN") {
+    const demo = shouldUseDemoData(session.email);
     const [analytics, leaderboard, pending, pendingInstructors, certificateCount] =
       await Promise.all([
-        getPlatformAnalytics(),
-        getLeaderboardAnalytics(),
-        getPendingCourses(),
-        countPendingInstructors(),
-        db.certificate.count(),
+        demo ? Promise.resolve(getDemoPlatformAnalytics()) : getPlatformAnalytics(),
+        demo ? Promise.resolve(getDemoLeaderboardAnalytics()) : getLeaderboardAnalytics(),
+        demo ? Promise.resolve(getDemoPendingCourses()) : getPendingCourses(),
+        demo ? Promise.resolve(getDemoPendingInstructorCount()) : countPendingInstructors(),
+        demo ? Promise.resolve(getDemoCertificateCount()) : db.certificate.count(),
       ]);
 
     return (
       <DashboardShell>
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto min-w-0 max-w-7xl px-4 py-10 sm:px-6 lg:px-8" data-recording-expand>
         <DashboardFade>
         <SectionHeader
           title="Analytics dashboard"
@@ -331,15 +348,21 @@ export default async function DashboardPage({
   }
 
   if (session.role === "INSTRUCTOR") {
-    const approval = await getInstructorApprovalState(session.id);
-    const approved = isInstructorApproved(
-      session.role,
-      approval?.instructorStatus
-    );
+    const demoInstructor = shouldUseDemoData(session.email);
+    const approval = demoInstructor
+      ? { instructorStatus: "APPROVED" as const, instructorRejectionReason: null }
+      : await getInstructorApprovalState(session.id);
+    const approved =
+      demoInstructor ||
+      isInstructorApproved(session.role, approval?.instructorStatus);
 
     const [courses, analytics] = await Promise.all([
-      getInstructorCourses(session.id),
-      getInstructorAnalytics(session.id),
+      shouldUseDemoData(session.email)
+        ? Promise.resolve(getDemoInstructorCourses(session.name))
+        : getInstructorCourses(session.id),
+      shouldUseDemoData(session.email)
+        ? Promise.resolve(getDemoInstructorAnalytics())
+        : getInstructorAnalytics(session.id),
     ]);
 
     return (
@@ -417,7 +440,7 @@ export default async function DashboardPage({
             </DashboardFade>
           )}
 
-          {courses.length === 0 ? (
+          {courses.length === 0 && !demoInstructor ? (
             <DashboardFade delay={180}>
             <EmptyState
               icon={BookOpen}
@@ -459,17 +482,34 @@ export default async function DashboardPage({
     );
   }
 
+  const demo = shouldUseDemoData(session.email);
+  const showLearnerHistory = demo;
   const [enrollments, recommendations, certificates, orgMemberships, accessibleCourses, certificateHub] =
     await Promise.all([
-    getStudentEnrollments(session.id),
-    getRecommendedCourses(session.id, session.role),
-    db.certificate.findMany({
-      where: { userId: session.id },
-      include: { course: { select: { title: true } } },
-    }),
+    demo
+      ? Promise.resolve(getDemoStudentEnrollments(session.name))
+      : getStudentEnrollments(session.id),
+    demo
+      ? Promise.resolve(getDemoRecommendations())
+      : getRecommendedCourses(session.id, session.role),
+    demo
+      ? Promise.resolve(
+          getDemoCertificateHubData().earned.map((e) => ({
+            id: e.id,
+            certificateNo: e.certificateNo,
+            issuedAt: e.issuedAt,
+            course: { title: e.courseTitle },
+          }))
+        )
+      : db.certificate.findMany({
+          where: { userId: session.id },
+          include: { course: { select: { title: true } } },
+        }),
     getUserOrganizationMemberships(session.id),
     getPublishedCoursesForUser(session.id, session.role),
-    getCertificateHubData(session.id),
+    demo
+      ? Promise.resolve(getDemoCertificateHubData())
+      : getCertificateHubData(session.id),
   ]);
 
   const enrolledIds = new Set(enrollments.map((e) => e.courseId));
@@ -477,10 +517,16 @@ export default async function DashboardPage({
     (c) => c.visibility === "ORGANIZATION" && !enrolledIds.has(c.id)
   );
 
-  const user = await db.user.findUnique({
-    where: { id: session.id },
-    include: { userBadges: { include: { badge: true } } },
-  });
+  const user = demo
+    ? {
+        name: session.name,
+        points: 1840,
+        userBadges: getDemoUserBadges(),
+      }
+    : await db.user.findUnique({
+        where: { id: session.id },
+        include: { userBadges: { include: { badge: true } } },
+      });
 
   const avgProgress =
     enrollments.length > 0
@@ -639,6 +685,12 @@ export default async function DashboardPage({
         <DashboardFade delay={320}>
         <Recommendations courses={recommendations} />
         </DashboardFade>
+
+        {showLearnerHistory ? (
+          <div className="mt-10">
+            <DemoLearningHistory entries={getDemoLearningHistory()} />
+          </div>
+        ) : null}
       </div>
     </DashboardShell>
   );

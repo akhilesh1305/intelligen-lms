@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { useRecordingMode } from "@/components/recording/recording-mode-provider";
 
 const REVEAL_SELECTOR = [
   "main section",
@@ -36,8 +37,11 @@ function isCustomAnimatedPath(pathname: string) {
 
 export function ScrollRevealEnhancer() {
   const pathname = usePathname();
+  const recording = useRecordingMode();
 
   useEffect(() => {
+    if (recording.enabled) return;
+
     if (isCustomAnimatedPath(pathname)) return;
 
     const root = document.querySelector("main") ?? document.querySelector(".page-transition-root");
@@ -83,7 +87,7 @@ export function ScrollRevealEnhancer() {
         el.style.removeProperty("--reveal-index");
       }
     };
-  }, [pathname]);
+  }, [pathname, recording.enabled]);
 
   return null;
 }

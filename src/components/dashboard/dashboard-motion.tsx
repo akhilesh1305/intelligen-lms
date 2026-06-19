@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
+import { useRecordingMode } from "@/components/recording/recording-mode-provider";
+import { readRecordingModeEnabled } from "@/lib/recording-mode/storage";
 import { AnimateOnScroll } from "@/components/motion/animate-on-scroll";
 import { cn } from "@/lib/utils";
 
@@ -47,12 +49,19 @@ export function DashboardHero({
   progress?: number;
   children?: ReactNode;
 }) {
-  const [mounted, setMounted] = useState(false);
+  const recording = useRecordingMode();
+  const [mounted, setMounted] = useState(() =>
+    typeof window !== "undefined" ? readRecordingModeEnabled() : false
+  );
 
   useEffect(() => {
+    if (recording.enabled) {
+      setMounted(true);
+      return;
+    }
     const frame = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [recording.enabled]);
 
   return (
     <section
@@ -122,12 +131,19 @@ export function DashboardPageHeader({
   subtitle: string;
   action?: ReactNode;
 }) {
-  const [mounted, setMounted] = useState(false);
+  const recording = useRecordingMode();
+  const [mounted, setMounted] = useState(() =>
+    typeof window !== "undefined" ? readRecordingModeEnabled() : false
+  );
 
   useEffect(() => {
+    if (recording.enabled) {
+      setMounted(true);
+      return;
+    }
     const frame = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [recording.enabled]);
 
   return (
     <section className="border-b border-border bg-panel" data-no-reveal>

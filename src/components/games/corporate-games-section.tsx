@@ -21,6 +21,7 @@ import {
   GAMES_PAGE_IMAGES,
   HOME_CORPORATE_GAME_IMAGES,
 } from "@/lib/game-images";
+import { STICKY_ANCHOR_MT } from "@/components/home/home-polish";
 import { cn } from "@/lib/utils";
 
 type SessionLike = { id: string } | null;
@@ -35,7 +36,7 @@ export async function CorporateGamesSection({ session }: { session: SessionLike 
   const completedCount = attempts.length;
 
   return (
-    <section id="corporate-games" className="scroll-mt-28">
+    <section id="corporate-games" className={cn(STICKY_ANCHOR_MT)}>
       <GamesAnimatedSection>
         <GamesSectionBanner
           src={GAMES_PAGE_IMAGES.corporateSection}

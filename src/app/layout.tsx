@@ -3,6 +3,8 @@ import { Inter, Playfair_Display } from "next/font/google";
 import { AppChrome } from "@/components/layout/app-chrome";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ThemeScript } from "@/components/theme/theme-script";
+import { ScreenshotModeProvider } from "@/components/screenshot/screenshot-mode-provider";
+import { RecordingModeProvider } from "@/components/recording/recording-mode-provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -75,7 +77,11 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
         <ThemeProvider>
-          <AppChrome>{children}</AppChrome>
+          <ScreenshotModeProvider>
+            <RecordingModeProvider>
+              <AppChrome>{children}</AppChrome>
+            </RecordingModeProvider>
+          </ScreenshotModeProvider>
         </ThemeProvider>
       </body>
     </html>

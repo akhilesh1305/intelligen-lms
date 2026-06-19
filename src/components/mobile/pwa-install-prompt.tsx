@@ -48,7 +48,7 @@ export function PwaInstallPrompt() {
   if (isStandalone || dismissed || !deferred) return null;
 
   return (
-    <div className="safe-bottom fixed bottom-[7.5rem] left-4 right-4 z-40 mx-auto max-w-lg rounded-sm border border-brand-200 bg-white p-4 shadow-elevated dark:border-brand-800 dark:bg-slate-900 sm:bottom-4 sm:left-4 sm:right-auto">
+    <div className="safe-bottom fixed bottom-[7.5rem] left-4 right-4 z-40 mx-auto max-w-lg rounded-sm border border-brand-200 bg-white p-4 shadow-elevated dark:border-brand-800 dark:bg-slate-900 sm:bottom-4 sm:left-4 sm:right-auto" data-screenshot-clutter>
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-brand-100 text-brand-600">
           <Download className="h-5 w-5" />

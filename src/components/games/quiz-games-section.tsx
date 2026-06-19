@@ -10,6 +10,9 @@ import { GameCardImage } from "@/components/games/game-card-image";
 import { GamesAnimatedSection } from "@/components/games/games-animated-section";
 import { GamesSectionBanner } from "@/components/games/games-section-banner";
 import { GAMES_PAGE_IMAGES, HOME_MIND_GAME_IMAGES } from "@/lib/game-images";
+import { shouldUseDemoData, getDemoWeeklyLeaderboard } from "@/lib/demo";
+import { STICKY_ANCHOR_MT } from "@/components/home/home-polish";
+import { cn } from "@/lib/utils";
 
 export async function QuizGamesSection() {
   const session = await getSession();
@@ -18,7 +21,14 @@ export async function QuizGamesSection() {
   const allQuizIds = [...daily, ...weekly].map((q) => q.id);
 
   const [weeklyLeaders, attempts] = await Promise.all([
-    getWeeklyLeaderboard(8),
+    shouldUseDemoData(session?.email)
+      ? Promise.resolve(
+          getDemoWeeklyLeaderboard(
+            8,
+            session ? { id: session.id, name: session.name } : undefined
+          )
+        )
+      : getWeeklyLeaderboard(8),
     session
       ? db.challengeAttempt.findMany({
           where: {
@@ -33,7 +43,7 @@ export async function QuizGamesSection() {
   const dailyCompleted = daily.filter((q) => attemptMap.has(q.id)).length;
 
   return (
-    <section id="quiz-games" className="scroll-mt-28">
+    <section id="quiz-games" className={cn(STICKY_ANCHOR_MT)}>
       <GamesAnimatedSection>
         <GamesSectionBanner
           src={GAMES_PAGE_IMAGES.quizSection}

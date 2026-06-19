@@ -12,6 +12,12 @@ import { getCourseCategory } from "@/lib/course-visuals";
 import { getReviewStatsForCourses } from "@/lib/reviews";
 import { LogoWatermark } from "@/components/brand/logo-watermark";
 import { cn } from "@/lib/utils";
+import { shouldUseDemoData } from "@/lib/demo/config";
+import {
+  getDemoCoursesForCatalog,
+  getDemoReviewStats,
+  getDemoStudentEnrollments,
+} from "@/lib/demo";
 
 const filterCategories = [
   "All",
@@ -62,25 +68,39 @@ export default async function CoursesPage({
 }) {
   const session = await getSession();
   const { q, category, sort: sortParam, level: levelParam } = await searchParams;
-  const courses = await getPublishedCourses(
-    session ? { id: session.id, role: session.role } : null
-  );
+  const demo = shouldUseDemoData(session?.email);
+  const published = demo
+    ? []
+    : await getPublishedCourses(
+        session ? { id: session.id, role: session.role } : null
+      );
+  const courses = demo
+    ? getDemoCoursesForCatalog()
+    : published;
 
   let enrolledIds = new Set<string>();
   const progressMap = new Map<string, number>();
 
   if (session) {
-    const enrollments = await db.enrollment.findMany({
-      where: { userId: session.id },
-      include: {
-        course: { include: { modules: { include: { lessons: true } } } },
-      },
-    });
+    const enrollments = demo
+      ? getDemoStudentEnrollments(session.name).map((e) => ({
+          courseId: e.course.id,
+          progressPercent: e.progress,
+          course: { modules: [{ lessons: Array(e.lessonCount).fill({}) }] },
+        }))
+      : await db.enrollment.findMany({
+          where: { userId: session.id },
+          include: {
+            course: { include: { modules: { include: { lessons: true } } } },
+          },
+        });
     enrolledIds = new Set(enrollments.map((e) => e.courseId));
 
     for (const e of enrollments) {
       progressMap.set(e.courseId, e.progressPercent);
     }
+  } else if (demo) {
+    enrolledIds = new Set();
   }
 
   const query = q?.toLowerCase() ?? "";
@@ -105,7 +125,17 @@ export default async function CoursesPage({
     return matchesQuery && matchesCategory && matchesLevel;
   });
 
-  const reviewStats = await getReviewStatsForCourses(filtered.map((c) => c.id));
+  const reviewStats = demo
+    ? (() => {
+        const stats = getDemoReviewStats();
+        for (const c of filtered) {
+          if (!stats.has(c.id)) {
+            stats.set(c.id, { rating: 4.5, count: 12 });
+          }
+        }
+        return stats;
+      })()
+    : await getReviewStatsForCourses(filtered.map((c) => c.id));
   const sorted = sortCourses(filtered, sort, reviewStats);
 
   return (

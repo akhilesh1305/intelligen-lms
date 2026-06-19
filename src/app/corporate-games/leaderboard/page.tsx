@@ -22,6 +22,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { TableScroll } from "@/components/ui/table-scroll";
 import { cn } from "@/lib/utils";
+import { shouldUseDemoData } from "@/lib/demo/config";
+import {
+  getDemoCorporateBadgeRank,
+  getDemoCorporateLeaderboard,
+} from "@/lib/demo";
 
 const rankIcons = [Trophy, Medal, Award];
 
@@ -34,14 +39,25 @@ export default async function CorporateGamesLeaderboardPage({
   const period = periodParam === "weekly" ? "weekly" : "daily";
 
   const session = await getSession();
+  const demo = shouldUseDemoData(session?.email);
+  const currentUser = session ? { id: session.id, name: session.name } : undefined;
+
   const [dailyLeaders, weeklyLeaders, dailyEntry, weeklyEntry, badgeRank] =
-    await Promise.all([
-      getCorporateGamesDailyLeaderboard(20),
-      getCorporateGamesLeaderboard(20),
-      session ? getUserCorporateGamesDailyEntry(session.id) : null,
-      session ? getUserCorporateGamesLeaderboardEntry(session.id) : null,
-      session ? getUserCorporateBadgeRank(session.id) : null,
-    ]);
+    demo
+      ? [
+          getDemoCorporateLeaderboard(20, currentUser),
+          getDemoCorporateLeaderboard(20, currentUser),
+          session ? { points: 180, gamesCompleted: 2 } : null,
+          session ? { points: 680, gamesCompleted: 8 } : null,
+          session ? getDemoCorporateBadgeRank() : null,
+        ]
+      : await Promise.all([
+          getCorporateGamesDailyLeaderboard(20),
+          getCorporateGamesLeaderboard(20),
+          session ? getUserCorporateGamesDailyEntry(session.id) : null,
+          session ? getUserCorporateGamesLeaderboardEntry(session.id) : null,
+          session ? getUserCorporateBadgeRank(session.id) : null,
+        ]);
 
   const leaders = period === "daily" ? dailyLeaders : weeklyLeaders;
   const userEntry = period === "daily" ? dailyEntry : weeklyEntry;

@@ -7,6 +7,7 @@ import {
   BookOpen,
   Briefcase,
   Building2,
+  Camera,
   CreditCard,
   Gamepad2,
   LayoutDashboard,
@@ -14,6 +15,7 @@ import {
   Map,
   Menu,
   MessageSquare,
+  MonitorPlay,
   Rss,
   Sparkles,
   Target,
@@ -22,13 +24,13 @@ import {
   X,
   ClipboardList,
   Shield,
-  Zap,
 } from "lucide-react";
 import { Role } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { LeaderboardNavSwitch } from "@/components/layout/leaderboard-nav-switch";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { DemoEnvironmentBadge } from "@/components/demo/demo-environment-badge";
 
 type MobileNavSession = {
   name: string;
@@ -40,10 +42,12 @@ export function MobileNav({
   session,
   avatarUrl,
   orgAdminHref,
+  showDemoBadge = false,
 }: {
   session: MobileNavSession | null;
   avatarUrl?: string | null;
   orgAdminHref?: string | null;
+  showDemoBadge?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -90,7 +94,14 @@ export function MobileNav({
             aria-label="Mobile navigation"
           >
             <div className="flex items-center justify-between border-b border-border px-4 py-4">
-              <span className="text-lg font-bold text-ink">Menu</span>
+              <div className="flex min-w-0 flex-col gap-2">
+                <span className="text-lg font-bold text-ink">Menu</span>
+                {showDemoBadge ? (
+                  <div data-screenshot-clutter>
+                    <DemoEnvironmentBadge size="sm" className="w-fit" />
+                  </div>
+                ) : null}
+              </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
@@ -208,6 +219,22 @@ export function MobileNav({
                       >
                         <ClipboardList className="h-5 w-5 text-brand-600" />
                         Audit logs
+                      </Link>
+                      <Link
+                        href="/admin/screenshots-guide"
+                        onClick={() => setOpen(false)}
+                        className="mb-1 flex items-center gap-3 rounded-xl bg-surface px-3 py-3 text-base font-semibold text-ink active:bg-brand-50 dark:active:bg-brand-950/30"
+                      >
+                        <Camera className="h-5 w-5 text-brand-600" />
+                        Screenshot guide
+                      </Link>
+                      <Link
+                        href="/admin/recording-mode"
+                        onClick={() => setOpen(false)}
+                        className="mb-1 flex items-center gap-3 rounded-xl bg-surface px-3 py-3 text-base font-semibold text-ink active:bg-brand-50 dark:active:bg-brand-950/30"
+                      >
+                        <MonitorPlay className="h-5 w-5 text-brand-600" />
+                        Recording mode
                       </Link>
                     </>
                   )}

@@ -3,6 +3,8 @@ import { Logo } from "@/components/brand/logo";
 
 const footerLinks = {
   Product: [
+    { label: "Product tour", href: "/product-tour" },
+    { label: "Showcase", href: "/showcase" },
     { label: "Courses", href: "/courses" },
     { label: "AI tools", href: "/ai" },
     { label: "Learning paths", href: "/paths" },
@@ -31,7 +33,7 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-border bg-panel dark:bg-slate-950">
+    <footer className="relative border-t border-border bg-panel dark:bg-slate-950" data-screenshot-clutter>
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-500/20 to-transparent" />
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">

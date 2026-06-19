@@ -4,6 +4,7 @@ import { ConditionalFooter } from "./conditional-footer";
 import { AssistantShell } from "@/components/assistant/assistant-shell";
 import { MobileShell } from "@/components/mobile/mobile-shell";
 import { PageTransition } from "@/components/motion/page-transition";
+import { DemoModeBanner } from "@/components/demo/demo-mode-banner";
 
 function isAuthPage(pathname: string) {
   return pathname.startsWith("/login") || pathname === "/register";
@@ -16,6 +17,7 @@ export async function AppChrome({ children }: { children: React.ReactNode }) {
   return (
     <>
       {!authPage ? <Navbar /> : null}
+      {!authPage ? <DemoModeBanner /> : null}
       <PageTransition authPage={authPage}>
         {authPage ? (
           children

@@ -45,7 +45,7 @@ export function GamesHero({
       />
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 animate-pulse-glow rounded-full bg-cyan-500/10 blur-3xl" />
 
-      <div className="relative mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+      <div className="relative mx-auto min-w-0 max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div
           className={cn(
             "relative overflow-hidden rounded-2xl border border-border shadow-elevated transition-all duration-1000",
@@ -70,7 +70,7 @@ export function GamesHero({
                   <Sparkles className="h-4 w-4 animate-pulse" />
                   Play · Learn · Compete
                 </p>
-                <h1 className="mt-3 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+                <h1 className="mt-3 text-balance text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
                   Games hub
                 </h1>
                 <p className="mt-3 max-w-xl text-sm text-blue-100/90 sm:text-base">
@@ -111,6 +111,7 @@ export function GamesHero({
         </div>
 
         <nav
+          aria-label="Games hub sections"
           className={cn(
             "mt-6 flex flex-wrap gap-2 transition-all duration-1000 delay-200",
             mounted ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
@@ -120,7 +121,7 @@ export function GamesHero({
             <a
               key={item.href}
               href={item.href}
-              className="group inline-flex items-center gap-2 rounded-full border border-border bg-panel/80 px-4 py-2 text-sm font-semibold text-ink shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-400/50 hover:shadow-md"
+              className="group inline-flex items-center gap-2 rounded-full border border-border bg-panel/80 px-4 py-2 text-sm font-semibold text-ink shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-400/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2"
             >
               <item.icon className="h-4 w-4 text-brand-600 transition-transform duration-300 group-hover:scale-110 dark:text-brand-400" />
               {item.label}

@@ -15,6 +15,7 @@ import { getSession } from "@/lib/auth";
 import { countLessons, getPublishedCourses } from "@/lib/courses";
 import { homeCourseThumbnails } from "@/lib/home-images";
 import { getFeaturedReviews, getReviewStatsForCourses } from "@/lib/reviews";
+import { HOME_PAGE } from "@/components/home/home-polish";
 
 export default async function HomePage() {
   const session = await getSession();
@@ -60,7 +61,7 @@ export default async function HomePage() {
   });
 
   return (
-    <div className="overflow-x-clip">
+    <div className={HOME_PAGE}>
       <HomeHero isLoggedIn={!!session} />
       <HomeTrust />
       <HomeHowItWorks />

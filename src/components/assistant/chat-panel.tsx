@@ -92,6 +92,7 @@ export function ChatPanel({
 
   return (
     <div
+      data-screenshot-clutter={fullPage ? undefined : ""}
       className={cn(
         "flex flex-col bg-panel",
         fullPage

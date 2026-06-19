@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRecordingMode } from "@/components/recording/recording-mode-provider";
+import { readRecordingModeEnabled } from "@/lib/recording-mode/storage";
 import { cn } from "@/lib/utils";
 
 type Animation = "fade-up" | "fade-in" | "slide-left" | "slide-right" | "scale-in";
@@ -25,9 +27,19 @@ export function AnimateOnScroll({
   animation?: Animation;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const recording = useRecordingMode();
+  const [visible, setVisible] = useState(() =>
+    typeof window !== "undefined" ? readRecordingModeEnabled() : false
+  );
 
   useEffect(() => {
+    if (recording.enabled) {
+      setVisible(true);
+    }
+  }, [recording.enabled]);
+
+  useEffect(() => {
+    if (recording.enabled) return;
     const el = ref.current;
     if (!el) return;
 
@@ -43,7 +55,7 @@ export function AnimateOnScroll({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [recording.enabled]);
 
   return (
     <div

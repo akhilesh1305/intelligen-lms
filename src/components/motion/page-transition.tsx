@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
+import { useRecordingMode } from "@/components/recording/recording-mode-provider";
 import { cn } from "@/lib/utils";
 import { ScrollRevealEnhancer } from "./scroll-reveal-enhancer";
 
@@ -15,15 +16,21 @@ export function PageTransition({
   authPage?: boolean;
 }) {
   const pathname = usePathname();
+  const recording = useRecordingMode();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (recording.enabled) {
+      setVisible(true);
+      return;
+    }
+
     setVisible(false);
     const frame = requestAnimationFrame(() => {
       requestAnimationFrame(() => setVisible(true));
     });
     return () => cancelAnimationFrame(frame);
-  }, [pathname]);
+  }, [pathname, recording.enabled]);
 
   return (
     <div

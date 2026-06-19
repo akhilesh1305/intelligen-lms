@@ -90,17 +90,22 @@ export function CertificateCollection({ hub }: { hub: SerializedHub }) {
             />
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div
+            className="flex flex-wrap gap-2"
+            role="group"
+            aria-label="Filter by certificate status"
+          >
             {(["all", "earned", "locked"] as const).map((id) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => setTab(id)}
+                aria-pressed={tab === id}
                 className={cn(
                   "rounded-full px-3.5 py-1.5 text-xs font-semibold capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2",
                   tab === id
                     ? "bg-brand-600 text-white"
-                    : "border border-border bg-panel text-muted hover:text-ink"
+                    : "border border-border bg-panel text-muted hover:text-ink dark:hover:bg-slate-900"
                 )}
               >
                 {id}
@@ -112,17 +117,18 @@ export function CertificateCollection({ hub }: { hub: SerializedHub }) {
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Filter by template">
           {TEMPLATE_FILTERS.map((f) => (
             <button
               key={f.id}
               type="button"
               onClick={() => setTemplateFilter(f.id)}
+              aria-pressed={templateFilter === f.id}
               className={cn(
-                "rounded-[10px] px-3 py-1 text-[11px] font-semibold transition-colors",
+                "rounded-[10px] px-3 py-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2 sm:text-xs",
                 templateFilter === f.id
                   ? "bg-violet-600 text-white"
-                  : "border border-border/80 text-muted hover:text-ink"
+                  : "border border-border/80 text-muted hover:text-ink dark:hover:bg-slate-900"
               )}
             >
               {f.label}

@@ -19,6 +19,8 @@ import { NotificationsBell } from "./notifications-bell";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { NavbarShell } from "./navbar-shell";
 import { PromoBanner } from "./promo-banner";
+import { isDemoExperienceActive } from "@/lib/demo/config";
+import { DemoEnvironmentBadge } from "@/components/demo/demo-environment-badge";
 
 export async function Navbar() {
   const session = await getSession();
@@ -43,6 +45,8 @@ export async function Navbar() {
         ? `/org/${orgAdminMemberships[0].organization.slug}`
         : null;
 
+  const showDemoBadge = isDemoExperienceActive(session?.email);
+
   return (
     <NavbarShell>
       <PromoBanner />
@@ -52,6 +56,12 @@ export async function Navbar() {
           <div className="logo-hover shrink-0">
             <Logo variant="icon" size="md" className="h-11 w-auto sm:h-12" />
           </div>
+
+          {showDemoBadge ? (
+            <div className="hidden min-w-0 flex-1 justify-center lg:flex" data-screenshot-clutter>
+              <DemoEnvironmentBadge />
+            </div>
+          ) : null}
 
           <nav className="flex min-w-0 shrink items-center justify-end gap-0.5 sm:gap-1">
             <DesktopNavLinks />
@@ -130,6 +140,7 @@ export async function Navbar() {
               session={session}
               avatarUrl={avatarUrl}
               orgAdminHref={orgAdminHref}
+              showDemoBadge={showDemoBadge}
             />
           </nav>
         </div>
