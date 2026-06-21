@@ -35,7 +35,7 @@ const ENTERPRISE_SIGNALS = [
 const TRUST_ORGS = [
   "Northwind Logistics",
   "Globex Industries",
-  "Acme Corp",
+  "Acme Corporation",
 ] as const;
 
 const OUTCOME_METRICS = [
@@ -43,7 +43,7 @@ const OUTCOME_METRICS = [
     value: "95",
     suffix: "%",
     label: "Completion increase",
-    detail: "Gamification and AI nudges keep learners on track",
+    detail: "Points, badges, and AI nudges keep learners on track",
     icon: TrendingUp,
     color: "text-emerald-500",
     iconBg: "bg-emerald-50 dark:bg-emerald-950/40",
@@ -70,7 +70,7 @@ const OUTCOME_METRICS = [
     value: "10000",
     suffix: "+",
     label: "Learning sessions",
-    detail: "Active practice across courses and AI tools",
+    detail: "Active practice across courses and coaching flows",
     icon: BarChart3,
     color: "text-accent-cyan",
     iconBg: "bg-cyan-50 dark:bg-cyan-950/40",
@@ -81,7 +81,7 @@ const OUTCOME_METRICS = [
 const PLATFORM_STATS = [
   { value: "7+", label: "Expert-led courses", color: "text-brand-500" },
   { value: "50+", label: "Lessons available", color: "text-accent-violet" },
-  { value: "5+", label: "AI learning tools", color: "text-accent-emerald" },
+  { value: "AI", label: "Built into every workflow", color: "text-accent-emerald" },
   { value: "Free & paid", label: "Courses for every budget", color: "text-accent-amber" },
 ] as const;
 

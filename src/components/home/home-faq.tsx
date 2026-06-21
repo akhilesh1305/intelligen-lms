@@ -29,7 +29,7 @@ const PRIMARY_FAQS = [
   {
     id: "free-trial",
     q: "What does the free trial include?",
-    a: "Create an account at no cost, explore free courses, AI tools, and gamification. Paid courses and All Access plans unlock with subscription or per-course purchase.",
+    a: "Create an account at no cost, explore free courses, AI-assisted learning, and engagement rewards. Paid courses and All Access plans unlock with subscription or per-course purchase.",
   },
   {
     id: "security",

@@ -1,3 +1,6 @@
+import { createRequire } from "node:module";
+import type PdfParse from "pdf-parse";
+
 export const PDF_MAX_SIZE = 10 * 1024 * 1024;
 export const PDF_MAX_FILES = 5;
 export const VIDEO_MAX_SIZE = 50 * 1024 * 1024;
@@ -28,9 +31,12 @@ export function isVideoFile(file: File): boolean {
   );
 }
 
+const require = createRequire(import.meta.url);
+/** Lib entry avoids pdf-parse/index.js debug code that breaks when bundled. */
+const pdfParse = require("pdf-parse/lib/pdf-parse.js") as typeof PdfParse;
+
 async function parsePdfBuffer(buffer: Buffer): Promise<string> {
-  const { default: pdf } = await import("pdf-parse");
-  const parsed = await pdf(buffer);
+  const parsed = await pdfParse(buffer);
   return parsed.text?.replace(/\s+/g, " ").trim() ?? "";
 }
 

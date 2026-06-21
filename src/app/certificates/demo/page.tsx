@@ -9,23 +9,23 @@ export const metadata = {
 };
 
 const PLATFORM_DEMO = {
-  studentName: "Priya Sharma",
-  courseTitle: "Advanced React Patterns",
-  instructorName: "Dr. Sarah Chen",
-  certificateNo: "IGLMS-DEMO-2026-0042",
-  issuedAt: new Date("2026-03-15"),
+  studentName: "Sarah Johnson",
+  courseTitle: "AI Fundamentals",
+  instructorName: "Dr. Ananya Rao",
+  certificateNo: "ACME-IGLMS-AI-2026-0042",
+  issuedAt: new Date("2026-05-18"),
 };
 
 const ORG_DEMO = {
-  studentName: "Sample Learner",
-  courseTitle: "Workplace Safety Essentials",
-  instructorName: "Org Instructor",
-  certificateNo: "IG-DEMO-ORG-2026",
-  issuedAt: new Date(),
+  studentName: "Sarah Johnson",
+  courseTitle: "Leadership Excellence",
+  instructorName: "Marcus Chen",
+  certificateNo: "ACME-IGLMS-LEAD-2026-0018",
+  issuedAt: new Date("2026-04-02"),
   organization: {
     name: "Acme Corporation",
     logoUrl: null as string | null,
-    signatoryName: "Jane Smith",
+    signatoryName: "Michael Torres",
     signatureUrl: null as string | null,
   },
 };
@@ -95,8 +95,8 @@ export default function DemoCertificatePage() {
             </h2>
             <CertificateDocument
               {...PLATFORM_DEMO}
-              courseTitle="Getting Started with AI Tools"
-              certificateNo="IGLMS-DEMO-AI-2026"
+              courseTitle="AI Fundamentals"
+              certificateNo="ACME-IGLMS-AI-2026-0042"
               template="ai-professional"
             />
           </section>
@@ -107,8 +107,9 @@ export default function DemoCertificatePage() {
             </h2>
             <CertificateDocument
               {...PLATFORM_DEMO}
-              courseTitle="Cybersecurity Essentials for Teams"
-              certificateNo="IGLMS-DEMO-TECH-2026"
+              studentName="Sarah Johnson"
+              courseTitle="Leadership Excellence"
+              certificateNo="ACME-IGLMS-LEAD-2026-0018"
               template="technical-expert"
             />
           </section>

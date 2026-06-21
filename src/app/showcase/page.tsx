@@ -5,7 +5,7 @@ import { ShowcaseContent } from "@/components/showcase/showcase-content";
 export const metadata: Metadata = {
   title: "Platform Showcase | IntelliGen LMS",
   description:
-    "Visual tour of IntelliGen LMS — homepage, dashboard, AI features, certificates, analytics, and game hub. Built for recruiters and client presentations.",
+    "Visual tour of IntelliGen LMS — homepage, dashboard, AI learning, certificates, analytics, and game hub. Built for recruiters and client presentations.",
   openGraph: {
     title: "Platform Showcase | IntelliGen LMS",
     description:

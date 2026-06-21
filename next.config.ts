@@ -10,9 +10,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  serverExternalPackages: ["tailwind-merge", "clsx", "web-push"],
+  serverExternalPackages: ["tailwind-merge", "clsx", "web-push", "pdf-parse"],
   experimental: {
     optimizePackageImports: ["lucide-react", "recharts"],
+    serverActions: {
+      bodySizeLimit: "12mb",
+    },
+    middlewareClientMaxBodySize: "12mb",
   },
   headers: async () => [
     {

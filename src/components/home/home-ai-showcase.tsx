@@ -109,7 +109,7 @@ export function HomeAiShowcase() {
           <Link href="/ai">
             <Button size="lg" className="motion-safe:hover:scale-[1.02]">
               <Sparkles className="h-4 w-4" />
-              Explore AI tools
+              Explore AI in action
             </Button>
           </Link>
         </AnimateOnScroll>

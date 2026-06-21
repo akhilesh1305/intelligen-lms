@@ -57,6 +57,7 @@ export function CourseCard({
   return (
     <Link href={href} className="group block h-full">
       <article
+        data-cursor-hover
         className={cn(
           "group flex h-full flex-col overflow-hidden rounded-[20px] border border-border bg-panel/90 shadow-card backdrop-blur-sm transition-all duration-300 motion-safe:hover:-translate-y-2 motion-safe:hover:border-brand-400/40 motion-safe:hover:shadow-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:bg-panel/80",
           variant === "compact" && "flex-row"

@@ -1,5 +1,6 @@
 import type { AchievementLevel } from "@prisma/client";
 import type { getPublishedCourses } from "@/lib/courses";
+import { DEMO_ORGANIZATION } from "./brand";
 
 export type PublishedCourse = Awaited<ReturnType<typeof getPublishedCourses>>[number];
 
@@ -61,12 +62,12 @@ export const DEMO_COURSES: DemoCourse[] = [
     lessonCount: 22,
     skillLevel: "INTERMEDIATE",
     pricePaise: 0,
-    category: "Development",
+    category: "Security",
     rating: 4.7,
     reviewCount: 87,
     enrollmentCount: 312,
     avgProgress: 61,
-    certificateLabel: "Learning Excellence",
+    certificateLabel: "Security Essentials",
   },
   {
     id: "demo-data-analytics-mastery",
@@ -130,9 +131,14 @@ export const DEMO_CERTIFICATE_TYPES = [
     courseIds: ["demo-leadership-excellence"],
   },
   {
+    slug: "security-essentials",
+    label: "Security Essentials",
+    courseIds: ["demo-cybersecurity-essentials"],
+  },
+  {
     slug: "learning-excellence",
     label: "Learning Excellence",
-    courseIds: ["demo-cybersecurity-essentials", "demo-product-management-basics"],
+    courseIds: ["demo-product-management-basics"],
   },
   {
     slug: "data-analytics-specialist",
@@ -215,10 +221,10 @@ export type DemoEnrollment = {
 
 export function getDemoStudentEnrollments(_userName: string): DemoEnrollment[] {
   const enrolled = [
-  { courseId: "demo-ai-fundamentals", progress: 100 },
-  { courseId: "demo-leadership-excellence", progress: 68 },
-  { courseId: "demo-data-analytics-mastery", progress: 42 },
-  { courseId: "demo-generative-ai-business", progress: 85 },
+    { courseId: "demo-ai-fundamentals", progress: 100 },
+    { courseId: "demo-leadership-excellence", progress: 100 },
+    { courseId: "demo-cybersecurity-essentials", progress: 18 },
+    { courseId: "demo-generative-ai-business", progress: 45 },
   ];
 
   return enrolled.map((e, i) => {
@@ -244,7 +250,7 @@ export function getDemoStudentEnrollments(_userName: string): DemoEnrollment[] {
 
 export function getDemoRecommendations() {
   return DEMO_COURSES.filter((c) =>
-    ["demo-cybersecurity-essentials", "demo-product-management-basics"].includes(c.id)
+    ["demo-data-analytics-mastery", "demo-product-management-basics"].includes(c.id)
   ).map((c) => ({
     id: c.id,
     title: c.title,
@@ -254,17 +260,17 @@ export function getDemoRecommendations() {
     pricePaise: c.pricePaise,
     thumbnail: null,
     skillLevel: c.skillLevel,
-    matchReason: `Based on your progress in ${c.category}`,
-    confidence: 88,
+    matchReason: `Recommended for ${DEMO_ORGANIZATION.department} at ${DEMO_ORGANIZATION.name}`,
+    confidence: 91,
   }));
 }
 
 export function getDemoUserBadges() {
   return [
-    { id: "demo-badge-1", badge: { id: "b1", name: "First Steps", icon: "🎯" } },
-    { id: "demo-badge-2", badge: { id: "b2", name: "Quiz Champion", icon: "🏆" } },
-    { id: "demo-badge-3", badge: { id: "b3", name: "AI Explorer", icon: "🧠" } },
-    { id: "demo-badge-4", badge: { id: "b4", name: "Streak Master", icon: "🔥" } },
+    { id: "demo-badge-1", badge: { id: "b1", name: "AI Professional", icon: "🧠" } },
+    { id: "demo-badge-2", badge: { id: "b2", name: "Leadership Expert", icon: "🏆" } },
+    { id: "demo-badge-3", badge: { id: "b3", name: "Quiz Champion", icon: "🎯" } },
+    { id: "demo-badge-4", badge: { id: "b4", name: "7-Day Streak", icon: "🔥" } },
   ];
 }
 
@@ -286,7 +292,7 @@ export function getDemoInstructorCourses(_instructorName: string) {
 export function getDemoInstructorAnalytics() {
   return {
     courseCount: 4,
-    totalStudents: 847,
+    totalStudents: 186,
     avgProgress: 71,
     courses: DEMO_COURSES.slice(0, 4).map((c) => ({
       id: c.id,

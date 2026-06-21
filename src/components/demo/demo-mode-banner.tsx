@@ -1,5 +1,6 @@
 import { getSession } from "@/lib/auth";
 import { isDemoExperienceActive } from "@/lib/demo/config";
+import { DEMO_ORGANIZATION } from "@/lib/demo/brand";
 import { DemoEnvironmentBadge } from "./demo-environment-badge";
 
 export async function DemoModeBanner() {
@@ -15,7 +16,7 @@ export async function DemoModeBanner() {
       <p className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-2 font-medium text-amber-900 dark:text-amber-200">
         <DemoEnvironmentBadge size="sm" />
         <span>
-          Sample data for presentations — production data is unchanged.
+          {DEMO_ORGANIZATION.name} sample tenant — presentation data only, production unchanged.
         </span>
       </p>
     </div>

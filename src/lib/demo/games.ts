@@ -1,6 +1,7 @@
 import { getWeekLabel } from "@/lib/weekly-leaderboard";
 import type { GamesPlayerProfile } from "@/lib/games-player-profile";
 import { ACHIEVEMENT_LEVELS } from "@/lib/achievement-levels";
+import { DEMO_ORGANIZATION } from "./brand";
 
 export function getDemoGamesPlayerProfile(
   displayName: string,
@@ -72,7 +73,7 @@ export function getDemoGamesPlayerProfile(
       {
         slug: "cyber-defender",
         name: "Cyber Defender",
-        description: "Completed cybersecurity escape scenario",
+        description: "Completed cybersecurity essentials scenario",
         icon: "🛡️",
         points: 150,
         earnedAt: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000),
@@ -116,8 +117,8 @@ export function getDemoGamesPlayerProfile(
       },
       {
         id: "corporate-mastery",
-        label: "Gold",
-        description: "Elite simulation scores across all game types",
+        label: "Sales simulation mastery",
+        description: `${DEMO_ORGANIZATION.department} — elite scores across sims`,
         icon: "🥇",
         current: 680,
         target: 1000,

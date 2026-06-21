@@ -56,7 +56,7 @@ export function ShowcaseContent({ isLoggedIn }: { isLoggedIn: boolean }) {
                   className="w-full bg-white text-brand-700 hover:bg-brand-50 sm:w-auto"
                 >
                   <Images className="h-4 w-4" aria-hidden />
-                  View capabilities
+                  View the platform
                 </Button>
               </a>
               <Link href="/product-tour">
@@ -101,7 +101,7 @@ export function ShowcaseContent({ isLoggedIn }: { isLoggedIn: boolean }) {
               How to use this page
             </h2>
             <p className="mt-2 text-pretty text-sm leading-relaxed text-muted sm:text-base">
-              Scroll through each capability for a{" "}
+              Scroll through each section for a{" "}
               <strong className="font-semibold text-ink">title</strong>,{" "}
               <strong className="font-semibold text-ink">description</strong>, and{" "}
               <strong className="font-semibold text-ink">business value</strong> you

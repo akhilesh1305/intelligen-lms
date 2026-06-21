@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 const FAQS = [
   {
     q: "What's included in All Access?",
-    a: "Every paid course on IntelliGen LMS while your subscription is active, plus certificates on completion and access to new courses as they're published.",
+    a: "Every paid course on IntelliGen LMS while your subscription is active, verifiable certificates on completion, and access to new courses as they're published.",
   },
   {
     q: "Can I buy a single course instead?",

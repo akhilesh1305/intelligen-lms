@@ -36,7 +36,7 @@ const PLACEHOLDER_REVIEWS = [
   {
     id: "p2",
     comment:
-      "Certificates, gamification, and the AI tutor keep our distributed team engaged. It feels like a modern SaaS product, not legacy LMS software.",
+      "Certificates, engagement rewards, and the AI tutor keep our distributed team engaged. It feels like a modern SaaS product, not legacy LMS software.",
     rating: 5,
     userName: "Marcus Okonkwo",
     role: "Training Manager",
@@ -51,9 +51,9 @@ const PLACEHOLDER_REVIEWS = [
     rating: 5,
     userName: "Elena Vasquez",
     role: "HR Director",
-    organization: "Acme Corp",
+    organization: "Acme Corporation",
     userAvatarUrl: null,
-    subtitle: "HR Director · Acme Corp",
+    subtitle: "HR Director · Acme Corporation",
   },
 ] as const;
 

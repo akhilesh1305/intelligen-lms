@@ -19,20 +19,20 @@ import { cn } from "@/lib/utils";
 const PILLARS = [
   {
     icon: Star,
-    title: "XP system",
-    description: "Earn points for lessons, quizzes, and streaks.",
+    title: "Earn recognition",
+    description: "Reward consistent learning with points for lessons, quizzes, and streaks.",
     color: "from-amber-400 to-orange-500",
   },
   {
     icon: Medal,
-    title: "Badges",
-    description: "Unlock achievements as learners hit milestones.",
+    title: "Celebrate milestones",
+    description: "Unlock achievements as learners hit goals and complete programs.",
     color: "from-violet-500 to-brand-500",
   },
   {
     icon: Trophy,
-    title: "Leaderboards",
-    description: "Friendly competition across teams and orgs.",
+    title: "Drive friendly competition",
+    description: "Leaderboards motivate teams across departments and organizations.",
     color: "from-cyan-500 to-brand-500",
   },
 ] as const;
@@ -44,11 +44,11 @@ export function HomeGamification() {
         <div className="overflow-hidden rounded-[20px] border border-border bg-gradient-to-br from-brand-50/70 via-panel to-accent-cyan-light/30 p-5 shadow-card dark:from-brand-950/25 dark:via-panel dark:to-cyan-950/15 sm:p-6">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-8">
             <AnimateOnScroll className="min-w-0 max-w-md text-center lg:text-left">
-              <p className={HOME_EYEBROW}>Gamification</p>
+              <p className={HOME_EYEBROW}>Engagement</p>
               <h2 className={cn("mt-2", HOME_TITLE)}>Keep learners coming back</h2>
               <p className={HOME_DESCRIPTION}>
-                Progress feels rewarding with XP, badges, and leaderboards built into
-                every course.
+                Increase learner engagement through points, badges, and challenges
+                built into every course.
               </p>
               <Link href="/games" className="mt-4 inline-block">
                 <Button size="md" className="motion-safe:hover:scale-[1.02]">

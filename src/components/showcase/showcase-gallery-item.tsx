@@ -11,7 +11,7 @@ import {
   HOME_ICON_TILE,
   STICKY_ANCHOR_MT,
 } from "@/components/home/home-polish";
-import { ShowcaseBrowserFrame } from "@/components/showcase/showcase-browser-frame";
+import { ScreenshotPresentation } from "@/components/showcase/screenshot-presentation";
 import type { ShowcaseScreen } from "@/lib/showcase-screens";
 import { cn } from "@/lib/utils";
 
@@ -102,8 +102,11 @@ export function ShowcaseGalleryItem({
         {/* Screenshot column */}
         <div className="lg:col-span-7">
           <AnimateOnScroll animation={reversed ? "slide-left" : "slide-right"}>
-            <ShowcaseBrowserFrame
+            <ScreenshotPresentation
               url={`intelligenlms.com${screen.href === "/" ? "" : screen.href}`}
+              sceneLabel={screen.presentation.sceneLabel}
+              valueHeadline={screen.presentation.valueHeadline}
+              callouts={screen.presentation.callouts}
               className="motion-safe:lg:scale-[1.01] motion-safe:lg:transition-transform motion-safe:lg:duration-500"
             >
               {screen.variant === "dashboard-mock" ? (
@@ -120,10 +123,9 @@ export function ShowcaseGalleryItem({
                     sizes="(max-width: 1024px) 100vw, 58vw"
                     priority={index < 2}
                   />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/50 via-slate-950/5 to-transparent" />
                 </div>
               )}
-            </ShowcaseBrowserFrame>
+            </ScreenshotPresentation>
           </AnimateOnScroll>
         </div>
 
@@ -132,7 +134,7 @@ export function ShowcaseGalleryItem({
           <AnimateOnScroll delay={80} animation="fade-up">
             <div className="lg:sticky lg:top-36 lg:pt-2 xl:top-40">
               <span className="hidden items-center rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-700 dark:border-brand-800 dark:bg-brand-950/40 dark:text-brand-300 lg:inline-flex">
-                Capability {index + 1} of {total}
+                Surface {index + 1} of {total}
               </span>
 
               <h2 className="mt-0 text-2xl font-bold tracking-tight text-ink sm:text-3xl lg:mt-4">
@@ -149,7 +151,7 @@ export function ShowcaseGalleryItem({
 
               <div className="mt-6">
                 <p className="text-xs font-bold uppercase tracking-wider text-muted">
-                  Key capabilities
+                  Key outcomes
                 </p>
                 <ul className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                   {screen.highlights.map((highlight) => (
@@ -186,10 +188,10 @@ export function ShowcaseGalleryItem({
         <AnimateOnScroll delay={120} animation="fade-up">
           <div className="mt-10 border-t border-border pt-10 lg:mt-12 lg:pt-12">
             <h3 className="text-lg font-bold text-ink sm:text-xl">
-              AI capabilities in detail
+              How AI delivers results
             </h3>
             <p className="mt-2 max-w-2xl text-sm text-muted sm:text-base">
-              Each tool is production-ready — ideal talking points for technical and
+              Each workflow is production-ready — ideal talking points for technical and
               business stakeholders.
             </p>
             <CapabilityCards capabilities={screen.capabilities} />

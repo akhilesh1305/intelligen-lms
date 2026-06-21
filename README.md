@@ -13,7 +13,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-20+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/License-Proprietary-red)]()
 
-Modern, full-stack LMS for enterprises, training teams, and ed-tech — with AI-native course creation, gamified learning, verifiable certificates, and role-based analytics.
+Modern, full-stack LMS for enterprises, training teams, and ed-tech — launch training faster, keep learners engaged, and prove outcomes with AI-native authoring, verifiable credentials, and role-based analytics.
 
 [Live Demo](https://intelligen-lms.vercel.app) · [Features](./FEATURES.md) · [Deploy Guide](./DEPLOY.md) · [Product Tour](https://intelligen-lms.vercel.app/product-tour) · [Showcase](https://intelligen-lms.vercel.app/showcase)
 
@@ -23,52 +23,52 @@ Modern, full-stack LMS for enterprises, training teams, and ed-tech — with AI-
 
 ## Overview
 
-**IntelliGen LMS** is a production-ready learning platform that combines traditional LMS capabilities with an integrated AI suite, corporate training games, and multi-tenant organization workspaces. Built on the Next.js App Router, it delivers server-rendered dashboards, secure session authentication, and a polished dark-mode UI suitable for demos, pilots, and production deployments.
+**IntelliGen LMS** is a production-ready learning platform that unifies course delivery, AI-assisted authoring, learner engagement, and executive reporting in one place. Built on the Next.js App Router, it delivers server-rendered dashboards, secure session authentication, and a polished dark-mode UI suitable for demos, pilots, and production deployments.
 
-Whether you are onboarding employees, selling online courses, or running compliance training, IntelliGen LMS provides the tools to **create**, **deliver**, **measure**, and **motivate** learning at scale.
+Whether you are onboarding employees, selling online courses, or running compliance training, IntelliGen LMS helps you **create**, **deliver**, **measure**, and **motivate** learning at scale.
 
 | | |
 |---|---|
-| **87+ tracked features** | Courses, AI, games, orgs, commerce, security — see [FEATURES.md](./FEATURES.md) |
+| **One unified platform** | AI-powered learning, engagement, and analytics — without stitching point solutions together |
 | **Demo-ready** | One-click demo accounts and optional `NEXT_PUBLIC_DEMO_MODE` for presentations |
 | **Deploy anywhere** | Vercel + PostgreSQL (Railway, Neon, Supabase) — see [DEPLOY.md](./DEPLOY.md) |
 
 ---
 
-## Key Features
+## What You Can Accomplish
 
-### AI Course Generation
-Generate full course outlines, modules, and lessons from a topic, PDF uploads, or video sources. Instructors refine AI output in the course builder before publishing.
+### Launch training programs faster
+Generate full course outlines, modules, and lessons from a topic, PDF uploads, or video sources. Instructors refine AI output in the course builder before publishing — so programs go live in days, not quarters.
 
-### AI Quiz Builder
-Auto-generate multiple-choice quizzes from lesson content. Cron-backed batch generation keeps assessments fresh without manual effort.
+### Keep assessments current without manual rework
+Auto-generate multiple-choice quizzes from lesson content. Cron-backed batch generation keeps compliance and product training up to date.
 
-### AI Learning Assistant
-Context-aware chat assistant helps learners summarize lessons, answer questions, and stay on track — powered by OpenAI when configured.
+### Scale learner support with AI coaching
+A context-aware assistant helps learners summarize lessons, answer questions, and stay on track — reducing drop-off between live sessions.
 
-### Certificates
+### Prove completion with trusted credentials
 Automatically issue printable, verifiable certificates on course completion. Public verification links and org-branded templates for enterprise deployments.
 
-### Gamification
-Points, badges, and achievements reward consistent learning. Learners earn recognition for quizzes, assignments, streaks, and game participation.
+### Increase learner engagement
+Points, badges, and challenges reward consistent learning. Learners earn recognition for quizzes, assignments, streaks, and practice games.
 
-### Analytics
+### Show training ROI to stakeholders
 Role-based dashboards surface enrollment trends, completion rates, and learner activity. Instructors and admins get actionable insights at a glance.
 
-### Leaderboards
-Global and weekly rankings drive friendly competition. Corporate game leaderboards add daily and mastery-tier badges for workplace training.
+### Motivate teams through friendly competition
+Global and weekly rankings drive voluntary practice. Corporate game leaderboards add daily and mastery-tier recognition for workplace training.
 
-### Dashboard
-Unified home for students, instructors, and admins — personalized recommendations, progress widgets, and quick links to active courses.
+### Give every role a clear home base
+Unified dashboards for students, instructors, and admins — personalized recommendations, progress widgets, and quick links to active courses.
 
-### Authentication
+### Meet enterprise security expectations
 Email/password registration, TOTP two-factor authentication, backup codes, OAuth SSO (Google, Microsoft, Okta), device management, and GDPR export/deletion tools.
 
-### Dark Mode
+### Deliver a polished experience everywhere
 System-aware light/dark themes across marketing pages, dashboards, and the learning player — consistent, accessible, and modern.
 
 <details>
-<summary><strong>More capabilities</strong></summary>
+<summary><strong>Also included</strong></summary>
 
 - **Learning paths & competency mapping** — Multi-course curricula and skill assessments
 - **Corporate training games** — Cybersecurity, compliance, sales, leadership simulators
@@ -84,38 +84,56 @@ System-aware light/dark themes across marketing pages, dashboards, and the learn
 
 ## Screenshots
 
-> Add screenshots to `docs/screenshots/` and replace the paths below.
+Demo video captures (1440×900, 2× retina) live in [`docs/screenshots/`](./docs/screenshots/):
+
+| File | Page |
+|------|------|
+| `homepage.png` | Marketing homepage (hero) |
+| `dashboard.png` | Learner dashboard |
+| `ai-features.png` | AI learning suite (`/ai`) |
+| `certificates.png` | Certificate collection |
+| `game-hub.png` | Games hub |
+| `analytics.png` | Admin analytics charts |
+
+Re-capture anytime:
+
+```bash
+npm run screenshots:capture
+# Local app with demo data:
+APP_URL=http://localhost:3001 npm run screenshots:capture
+```
+
+> **Tip:** Run `npm run db:seed` locally first so `demo-learner@intelligen.lms` (Sarah Johnson) populates richer certificate and dashboard data than the production seed accounts.
 
 <table>
   <tr>
     <td align="center" width="50%">
       <strong>Homepage</strong><br/><br/>
       <img src="docs/screenshots/homepage.png" alt="IntelliGen LMS Homepage" width="100%" />
-      <br/><sub>Marketing landing with product tour and demo video</sub>
     </td>
     <td align="center" width="50%">
       <strong>Dashboard</strong><br/><br/>
       <img src="docs/screenshots/dashboard.png" alt="Learner Dashboard" width="100%" />
-      <br/><sub>Personalized progress, courses, and recommendations</sub>
     </td>
   </tr>
   <tr>
     <td align="center" width="50%">
-      <strong>AI Features</strong><br/><br/>
+      <strong>AI Learning</strong><br/><br/>
       <img src="docs/screenshots/ai-features.png" alt="AI Tools Hub" width="100%" />
-      <br/><sub>Assistant, coach, course generator, and career tools</sub>
     </td>
     <td align="center" width="50%">
       <strong>Certificates</strong><br/><br/>
       <img src="docs/screenshots/certificates.png" alt="Certificates" width="100%" />
-      <br/><sub>Issued credentials with print and public verification</sub>
     </td>
   </tr>
   <tr>
-    <td align="center" colspan="2">
+    <td align="center" width="50%">
       <strong>Game Hub</strong><br/><br/>
-      <img src="docs/screenshots/game-hub.png" alt="Games Hub" width="60%" />
-      <br/><sub>Corporate simulators, quiz challenges, and knowledge games</sub>
+      <img src="docs/screenshots/game-hub.png" alt="Games Hub" width="100%" />
+    </td>
+    <td align="center" width="50%">
+      <strong>Analytics</strong><br/><br/>
+      <img src="docs/screenshots/analytics.png" alt="Analytics" width="100%" />
     </td>
   </tr>
 </table>
@@ -272,7 +290,7 @@ Copy `.env.example` to `.env` and configure as needed.
 | `ENCRYPTION_KEY` | Encrypts 2FA secrets at rest |
 | `NEXT_PUBLIC_DEMO_MODE` | `true` to overlay mock data on dashboards |
 
-Without SMTP, emails are logged to the console in development. Without OpenAI, AI features show graceful fallbacks or remain disabled.
+Without SMTP, emails are logged to the console in development. Without OpenAI, AI-assisted workflows show graceful fallbacks or remain disabled.
 
 ---
 
@@ -284,10 +302,12 @@ Use these accounts after running `npm run db:setup` (or `npm run db:seed`).
 
 Purpose-built for recruiter and client demos — rich mock data on dashboards without enabling env flags.
 
-| Role | Email | Password |
-|------|-------|----------|
-| **Demo Admin** | `demo-admin@intelligen.lms` | `password123` |
-| **Demo Learner** | `demo-learner@intelligen.lms` | `password123` |
+| Role | Name | Email | Password |
+|------|------|-------|----------|
+| **L&D Admin** | Michael Torres | `demo-admin@intelligen.lms` | `password123` |
+| **Learner** | Sarah Johnson · Sales Enablement | `demo-learner@intelligen.lms` | `password123` |
+
+Demo narrative uses **Acme Corporation** with courses including AI Fundamentals, Leadership Excellence, and Cybersecurity Essentials.
 
 Sign in at `/login` or use the **Try Demo** buttons on the login page.
 
@@ -312,7 +332,7 @@ Sign in at `/login` or use the **Try Demo** buttons on the login page.
 | **2027** | Mobile companion app, xAPI/LRS support, marketplace for third-party courses |
 | **Ongoing** | Expanded AI coaching, more corporate game scenarios, accessibility (WCAG 2.2) |
 
-Contributions and feature requests are welcome — see [FEATURES.md](./FEATURES.md) for the current capability inventory.
+Contributions and product feedback are welcome — see [FEATURES.md](./FEATURES.md) for a detailed technical inventory.
 
 ---
 

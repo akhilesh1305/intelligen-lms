@@ -27,8 +27,8 @@ export default async function PricingPage() {
             <span className="gradient-text">All Access</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-muted">
-            Subscribe once for unlimited paid courses, AI tools, certificates, and
-            new content — or buy individual courses anytime.
+            Subscribe once for unlimited paid courses, AI-assisted learning, verifiable
+            certificates, and new content — or buy individual courses anytime.
           </p>
         </div>
       </section>
@@ -59,7 +59,7 @@ export default async function PricingPage() {
             Secure Razorpay checkout
           </span>
           <span>Cancel anytime</span>
-          <span>Certificates included</span>
+          <span>Verifiable certificates included</span>
         </div>
 
         <section className="mt-20">

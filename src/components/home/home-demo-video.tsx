@@ -32,32 +32,32 @@ const VIDEO_HREF = "/promo";
 const HIGHLIGHTS = [
   {
     icon: Sparkles,
-    label: "AI Course Generation",
-    description: "Build full courses from outlines or documents in minutes.",
+    label: "Launch courses faster",
+    description: "Turn outlines and documents into publish-ready training in minutes.",
     gradient: "from-brand-500 to-violet-600",
   },
   {
     icon: ClipboardCheck,
-    label: "AI Quiz Builder",
-    description: "Auto-generate assessments aligned to your lesson content.",
+    label: "Keep assessments current",
+    description: "Generate quizzes aligned to lesson content without manual rework.",
     gradient: "from-violet-500 to-fuchsia-500",
   },
   {
     icon: Award,
-    label: "Certificates",
-    description: "Issue verifiable credentials learners can share instantly.",
+    label: "Prove completion",
+    description: "Issue verifiable credentials learners can share with managers and recruiters.",
     gradient: "from-amber-500 to-orange-500",
   },
   {
     icon: Trophy,
-    label: "Gamification",
-    description: "XP, badges, and leaderboards that keep teams engaged.",
+    label: "Boost engagement",
+    description: "Points, badges, and leaderboards that keep teams practicing between sessions.",
     gradient: "from-cyan-500 to-brand-500",
   },
   {
     icon: BarChart3,
-    label: "Analytics Dashboard",
-    description: "Track completion, engagement, and training ROI in real time.",
+    label: "Show training ROI",
+    description: "Track completion, engagement, and outcomes in one executive-ready view.",
     gradient: "from-emerald-500 to-teal-500",
   },
 ] as const;

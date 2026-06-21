@@ -299,12 +299,30 @@ export function AiCourseGenerator({
       formData.set("outline", JSON.stringify({ modules: preview.modules }));
     }
 
-    const res = await fetch("/api/ai/course/generate-from-sources", {
-      method: "POST",
-      body: formData,
-    });
+    let res: Response;
+    try {
+      res = await fetch("/api/ai/course/generate-from-sources", {
+        method: "POST",
+        body: formData,
+      });
+    } catch {
+      setLoading(false);
+      setError("Upload failed. Check your connection and try a smaller PDF.");
+      return;
+    }
 
-    const data = await res.json();
+    let data: { error?: string; modules?: PreviewModule[]; source?: string; title?: string; description?: string; extractedSources?: PreviewState["extractedSources"] };
+    try {
+      data = await res.json();
+    } catch {
+      setLoading(false);
+      setError(
+        res.status === 413
+          ? "Upload too large. Each PDF must be under 10MB."
+          : "Server error while processing your files. Try again."
+      );
+      return;
+    }
     setLoading(false);
 
     if (!res.ok) {
@@ -315,6 +333,11 @@ export function AiCourseGenerator({
     if (apply) {
       setPreview(null);
       router.refresh();
+      return;
+    }
+
+    if (!data.modules || !data.source) {
+      setError("Invalid response from server.");
       return;
     }
 

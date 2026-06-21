@@ -560,10 +560,10 @@ async function main() {
 
   await db.user.upsert({
     where: { email: "demo-admin@intelligen.lms" },
-    update: { role: "ADMIN", name: "Demo Admin" },
+    update: { role: "ADMIN", name: "Michael Torres" },
     create: {
       email: "demo-admin@intelligen.lms",
-      name: "Demo Admin",
+      name: "Michael Torres",
       passwordHash,
       role: "ADMIN",
     },
@@ -572,7 +572,7 @@ async function main() {
   await db.user.upsert({
     where: { email: "demo-learner@intelligen.lms" },
     update: {
-      name: "Jordan Lee",
+      name: "Sarah Johnson",
       points: 1840,
       challengePoints: 312,
       challengesPassed: 22,
@@ -580,7 +580,7 @@ async function main() {
     },
     create: {
       email: "demo-learner@intelligen.lms",
-      name: "Jordan Lee",
+      name: "Sarah Johnson",
       passwordHash,
       role: "STUDENT",
       points: 1840,
@@ -1252,8 +1252,8 @@ async function main() {
 
   console.log("\nSeed completed:");
   console.log(`  Admin:      admin@intelligen.lms / password123`);
-  console.log(`  Demo Admin: demo-admin@intelligen.lms / password123`);
-  console.log(`  Demo Learner: demo-learner@intelligen.lms / password123`);
+  console.log(`  Demo Admin (Michael Torres): demo-admin@intelligen.lms / password123`);
+  console.log(`  Demo Learner (Sarah Johnson): demo-learner@intelligen.lms / password123`);
   console.log(`  Instructor: instructor@intelligen.lms / password123`);
   console.log(`  Instructor: marcus@intelligen.lms / password123`);
   console.log(`  Instructor: emma@intelligen.lms / password123`);

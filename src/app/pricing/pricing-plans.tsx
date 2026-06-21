@@ -27,9 +27,9 @@ type PricingPlansProps = {
 };
 
 const perks = [
-  "Access every paid course on IntelliGen LMS",
-  "New courses included while subscribed",
-  "Certificates on course completion",
+  "Unlimited access to every paid course on IntelliGen LMS",
+  "New courses included while your subscription is active",
+  "Verifiable certificates when you complete courses",
   "Cancel anytime from your Razorpay account",
 ];
 

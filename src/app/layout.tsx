@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { CustomCursor } from "@/components/cursor/custom-cursor";
 import { AppChrome } from "@/components/layout/app-chrome";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { ThemeScript } from "@/components/theme/theme-script";
@@ -77,6 +78,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${playfair.variable} font-sans`}>
         <ThemeProvider>
+          <CustomCursor />
           <ScreenshotModeProvider>
             <RecordingModeProvider>
               <AppChrome>{children}</AppChrome>

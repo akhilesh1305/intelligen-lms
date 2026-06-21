@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { SCREENSHOT_GUIDES, type ScreenshotGuide } from "@/lib/screenshot-mode/guides";
 import { useScreenshotMode } from "./screenshot-mode-provider";
+import { ScreenshotCaptureWireframe } from "@/components/showcase/screenshot-presentation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,20 @@ function GuideCard({ guide }: { guide: ScreenshotGuide }) {
         </div>
 
         <div className="grid gap-6 p-6 lg:grid-cols-2">
+          <div>
+            <p className="text-sm font-semibold text-ink">Capture framing preview</p>
+            <p className="mt-1 text-xs text-muted">
+              Highlight overlays show what to include — value headline reads in ~3 seconds.
+            </p>
+            <div className="mt-4">
+              <ScreenshotCaptureWireframe
+                {...guide.presentation}
+                viewportLabel={guide.viewport.label}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-6">
           <dl className="space-y-4 text-sm">
             <div>
               <dt className="flex items-center gap-2 font-semibold text-ink">
@@ -94,6 +109,7 @@ function GuideCard({ guide }: { guide: ScreenshotGuide }) {
                 </li>
               ))}
             </ol>
+          </div>
           </div>
         </div>
 

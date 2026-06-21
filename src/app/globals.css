@@ -1884,3 +1884,124 @@ html[data-recording-mode="true"][data-charts-ready="true"] [data-recording-chart
 html[data-recording-mode="true"] .recording-mode-dot {
   box-shadow: 0 0 0 4px rgb(244 63 94 / 0.35);
 }
+
+/* Premium custom cursor — desktop fine-pointer only */
+:root {
+  --cursor-ring: #4f46e5;
+  --cursor-dot: #06b6d4;
+  --cursor-ring-glow: rgb(79 70 229 / 0.35);
+  --cursor-dot-glow: rgb(6 182 212 / 0.5);
+  --cursor-ring-size: 28px;
+  --cursor-dot-size: 5px;
+}
+
+.dark {
+  --cursor-ring-glow: rgb(79 70 229 / 0.5);
+  --cursor-dot-glow: rgb(6 182 212 / 0.65);
+}
+
+@media (pointer: fine) {
+  html.custom-cursor-active,
+  html.custom-cursor-active * {
+    cursor: none !important;
+  }
+
+  html.custom-cursor-active input,
+  html.custom-cursor-active textarea,
+  html.custom-cursor-active select,
+  html.custom-cursor-active [contenteditable="true"] {
+    cursor: text !important;
+  }
+}
+
+.custom-cursor-root {
+  display: none;
+  pointer-events: none;
+}
+
+@media (pointer: fine) {
+  .custom-cursor-root {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    overflow: hidden;
+  }
+}
+
+.custom-cursor-ring,
+.custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.custom-cursor-ring {
+  width: var(--cursor-ring-size);
+  height: var(--cursor-ring-size);
+  border: 1.5px solid var(--cursor-ring);
+  border-radius: 9999px;
+  background: rgb(79 70 229 / 0.04);
+  box-shadow:
+    0 0 12px var(--cursor-ring-glow),
+    0 0 24px var(--cursor-ring-glow);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.dark .custom-cursor-ring {
+  background: rgb(79 70 229 / 0.08);
+}
+
+.custom-cursor-ring.is-hovering {
+  border-color: rgb(79 70 229 / 0.85);
+  background: rgb(79 70 229 / 0.06);
+  box-shadow:
+    0 0 16px var(--cursor-ring-glow),
+    0 0 32px var(--cursor-ring-glow),
+    0 0 48px rgb(6 182 212 / 0.12);
+}
+
+.custom-cursor-dot {
+  width: var(--cursor-dot-size);
+  height: var(--cursor-dot-size);
+  border-radius: 9999px;
+  background: var(--cursor-dot);
+  box-shadow:
+    0 0 6px var(--cursor-dot-glow),
+    0 0 14px var(--cursor-dot-glow);
+  transition: box-shadow 0.25s ease, width 0.25s ease, height 0.25s ease;
+}
+
+.custom-cursor-dot.is-hovering {
+  width: 7px;
+  height: 7px;
+  box-shadow:
+    0 0 8px var(--cursor-dot-glow),
+    0 0 18px var(--cursor-dot-glow),
+    0 0 28px rgb(6 182 212 / 0.25);
+}
+
+@media (pointer: coarse), (hover: none) {
+  .custom-cursor-root {
+    display: none !important;
+  }
+
+  html.custom-cursor-active,
+  html.custom-cursor-active * {
+    cursor: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-cursor-root {
+    display: none !important;
+  }
+
+  html.custom-cursor-active,
+  html.custom-cursor-active * {
+    cursor: auto !important;
+  }
+}

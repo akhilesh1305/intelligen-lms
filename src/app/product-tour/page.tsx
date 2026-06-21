@@ -5,11 +5,11 @@ import { ProductTourContent } from "@/components/product-tour/product-tour-conte
 export const metadata: Metadata = {
   title: "Product Tour | IntelliGen LMS",
   description:
-    "Sales-ready product tour — from problem to solution, AI features, gamification, certificates, analytics, and enterprise outcomes. Built for demos and recruiter presentations.",
+    "Sales-ready product tour — from challenge to outcome: AI authoring, learner engagement, verifiable credentials, analytics, and enterprise results.",
   openGraph: {
     title: "Product Tour | IntelliGen LMS",
     description:
-      "Follow the IntelliGen LMS narrative: challenge, platform, features, benefits, and live demo — for recruiters and enterprise buyers.",
+      "Follow the IntelliGen LMS narrative: challenge, platform, outcomes, benefits, and live demo — for recruiters and enterprise buyers.",
   },
 };
 

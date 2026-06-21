@@ -7,6 +7,13 @@ export {
   DEMO_ACCOUNT_PASSWORD,
   DEMO_ACCOUNTS,
 } from "./config";
+export {
+  DEMO_ORGANIZATION,
+  DEMO_LEARNER_NAME,
+  DEMO_ADMIN_NAME,
+  DEMO_LEARNER_TITLE,
+  DEMO_ADMIN_TITLE,
+} from "./brand";
 export { DEMO_LEARNERS, getDemoLearnerAvatarUrl } from "./learners";
 export {
   DEMO_COURSES,

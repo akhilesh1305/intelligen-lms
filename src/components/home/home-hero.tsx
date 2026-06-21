@@ -46,8 +46,8 @@ export function HomeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
             </span>
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-200/90 sm:text-lg lg:mx-0">
-            Create courses, generate quizzes, track progress, and accelerate
-            workforce learning with AI.
+            Launch training faster, keep learners engaged, and prove impact — with AI
+            authoring, credentials, and analytics in one platform.
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">

@@ -42,12 +42,19 @@ import { Button } from "@/components/ui/button";
 import { ProductTourNav } from "@/components/product-tour/product-tour-nav";
 import { TourSection } from "@/components/product-tour/tour-section";
 import {
+  ScreenshotPresentation,
+  ScreenshotStoryPanel,
+} from "@/components/showcase/screenshot-presentation";
+import {
   STORY_FLOW,
   TOUR_AI_FEATURES,
   TOUR_ANALYTICS,
+  TOUR_ANALYTICS_PRESENTATION,
   TOUR_BENEFITS,
   TOUR_CERTIFICATES,
+  TOUR_DASHBOARD_PRESENTATION,
   TOUR_GAMIFICATION,
+  TOUR_GAMIFICATION_PRESENTATION,
   TOUR_PROBLEMS,
   TOUR_SOLUTION_POINTS,
 } from "@/lib/product-tour";
@@ -218,7 +225,14 @@ export function ProductTourContent({ isLoggedIn }: { isLoggedIn: boolean }) {
           </AnimateOnScroll>
 
           <AnimateOnScroll delay={120} animation="slide-right">
-            <HeroDashboardPreview />
+            <ScreenshotPresentation
+              url="intelligenlms.com/dashboard"
+              {...TOUR_DASHBOARD_PRESENTATION}
+            >
+              <div className="p-3 sm:p-5 lg:p-6">
+                <HeroDashboardPreview />
+              </div>
+            </ScreenshotPresentation>
           </AnimateOnScroll>
         </div>
       </section>
@@ -283,9 +297,14 @@ export function ProductTourContent({ isLoggedIn }: { isLoggedIn: boolean }) {
             </Link>
           </AnimateOnScroll>
           <AnimateOnScroll delay={100} animation="slide-left">
-            <div className="overflow-hidden rounded-[24px] border border-border shadow-elevated">
-              <HeroDashboardPreview />
-            </div>
+            <ScreenshotPresentation
+              url="intelligenlms.com/dashboard"
+              {...TOUR_DASHBOARD_PRESENTATION}
+            >
+              <div className="p-3 sm:p-5 lg:p-6">
+                <HeroDashboardPreview />
+              </div>
+            </ScreenshotPresentation>
           </AnimateOnScroll>
         </div>
       </TourSection>
@@ -293,10 +312,10 @@ export function ProductTourContent({ isLoggedIn }: { isLoggedIn: boolean }) {
       {/* AI Features */}
       <TourSection
         id="ai"
-        narrativeStep="Step 3 · Features"
+        narrativeStep="Step 3 · AI"
         eyebrow="Artificial intelligence"
         title="AI that ships content and supports learners"
-        description="Three flagship AI capabilities recruiters and buyers ask about first — each production-ready in the live product."
+        description="Launch training faster, scale learner support, and keep programs current — with production-ready AI built into the platform."
         variant="muted"
       >
         <div className={cn(HOME_GRID, "mt-10 lg:grid-cols-3")}>
@@ -326,8 +345,8 @@ export function ProductTourContent({ isLoggedIn }: { isLoggedIn: boolean }) {
       <TourSection
         id="gamification"
         eyebrow="Engagement"
-        title="Gamification that drives real practice"
-        description="XP, leaderboards, and badges turn training from a checkbox into a competitive, rewarding experience."
+        title="Increase learner engagement through points, badges, and challenges"
+        description="Turn mandatory training into habits learners choose — with recognition, competition, and rewards woven into every course."
         variant="panel"
         className="relative overflow-hidden"
       >
@@ -364,49 +383,51 @@ export function ProductTourContent({ isLoggedIn }: { isLoggedIn: boolean }) {
             </div>
 
             <AnimateOnScroll delay={120} animation="slide-left">
-              <div className={cn(HOME_CARD, "p-5 sm:p-6")}>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-bold text-ink">Weekly leaderboard</p>
-                  <Zap className="h-4 w-4 text-amber-500" aria-hidden />
-                </div>
-                <ul className="mt-4 space-y-3">
-                  {[
-                    { rank: 1, name: "Priya Sharma", pts: 485 },
-                    { rank: 2, name: "Marcus Chen", pts: 412 },
-                    { rank: 3, name: "Jordan Lee", pts: 312, you: true },
-                  ].map((row) => (
-                    <li
-                      key={row.rank}
-                      className={cn(
-                        "flex items-center justify-between rounded-xl px-3 py-2 text-sm",
-                        row.you
-                          ? "bg-brand-50 ring-1 ring-brand-200 dark:bg-brand-950/40 dark:ring-brand-800"
-                          : "bg-surface/60 dark:bg-slate-900/50"
-                      )}
-                    >
-                      <span className="flex items-center gap-2 font-medium text-ink">
-                        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-panel text-xs font-bold text-muted">
-                          {row.rank}
+              <ScreenshotStoryPanel {...TOUR_GAMIFICATION_PRESENTATION}>
+                <div className={cn(HOME_CARD, "border-0 p-5 shadow-none sm:p-6")}>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-bold text-ink">Weekly leaderboard</p>
+                    <Zap className="h-4 w-4 text-amber-500" aria-hidden />
+                  </div>
+                  <ul className="mt-4 space-y-3">
+                    {[
+                    { rank: 1, name: "Marcus Rivera", pts: 485 },
+                    { rank: 2, name: "Emily Parker", pts: 412 },
+                    { rank: 3, name: "Sarah Johnson", pts: 312, you: true },
+                    ].map((row) => (
+                      <li
+                        key={row.rank}
+                        className={cn(
+                          "flex items-center justify-between rounded-xl px-3 py-2 text-sm",
+                          row.you
+                            ? "bg-brand-50 ring-1 ring-brand-200 dark:bg-brand-950/40 dark:ring-brand-800"
+                            : "bg-surface/60 dark:bg-slate-900/50"
+                        )}
+                      >
+                        <span className="flex items-center gap-2 font-medium text-ink">
+                          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-panel text-xs font-bold text-muted">
+                            {row.rank}
+                          </span>
+                          {row.name}
+                          {row.you ? (
+                            <span className="text-xs text-brand-600 dark:text-brand-400">(You)</span>
+                          ) : null}
                         </span>
-                        {row.name}
-                        {row.you ? (
-                          <span className="text-xs text-brand-600 dark:text-brand-400">(You)</span>
-                        ) : null}
-                      </span>
-                      <span className="font-bold text-brand-600 dark:text-brand-400">
-                        {row.pts} XP
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/games"
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 dark:text-brand-400"
-                >
-                  Explore Game Hub
-                  <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-                </Link>
-              </div>
+                        <span className="font-bold text-brand-600 dark:text-brand-400">
+                          {row.pts} XP
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/games"
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 dark:text-brand-400"
+                  >
+                    Explore Game Hub
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+                  </Link>
+                </div>
+              </ScreenshotStoryPanel>
             </AnimateOnScroll>
           </div>
         </div>
@@ -482,8 +503,9 @@ export function ProductTourContent({ isLoggedIn }: { isLoggedIn: boolean }) {
           ))}
 
           <AnimateOnScroll delay={homeStaggerDelay(2)} animation="fade-up" className="lg:col-span-2">
-            <div className="grid gap-6 lg:grid-cols-2">
-              <div className={cn(HOME_CARD, "p-5 sm:p-6")}>
+            <ScreenshotStoryPanel {...TOUR_ANALYTICS_PRESENTATION}>
+              <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-2">
+              <div className={cn(HOME_CARD, "border-0 p-0 shadow-none")}>
                 <div className="flex items-start gap-3">
                   <div className={cn(HOME_ICON_TILE, "from-emerald-500 to-teal-500")}>
                     <Target className="h-5 w-5" aria-hidden />
@@ -500,7 +522,7 @@ export function ProductTourContent({ isLoggedIn }: { isLoggedIn: boolean }) {
                 </div>
               </div>
 
-              <div className={cn(HOME_CARD, "p-5 sm:p-6")}>
+              <div className={cn(HOME_CARD, "border-0 p-0 shadow-none")}>
                 <div className="flex items-start gap-3">
                   <div className={cn(HOME_ICON_TILE, "from-brand-500 to-violet-600")}>
                     <LineChart className="h-5 w-5" aria-hidden />
@@ -539,7 +561,8 @@ export function ProductTourContent({ isLoggedIn }: { isLoggedIn: boolean }) {
                   })}
                 </div>
               </div>
-            </div>
+              </div>
+            </ScreenshotStoryPanel>
           </AnimateOnScroll>
         </div>
       </TourSection>
