@@ -123,7 +123,7 @@ export function AICursor() {
 
     const applyOrbTransforms = () => {
       ring.style.transform = `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%) scale(${scale})`;
-      core.style.transform = `translate3d(${corePos.x}px, ${corePos.y}px, 0) translate(-50%, -50%)`;
+      core.style.transform = `translate3d(${corePos.x}px, ${corePos.y}px, 0) translate(-50%, -50%) scale(${scale})`;
     };
 
     const tick = (now: number) => {
