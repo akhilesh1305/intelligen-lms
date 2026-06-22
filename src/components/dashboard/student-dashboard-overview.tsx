@@ -95,7 +95,7 @@ export function StudentDashboardOverview({
 
       <div className="grid gap-6 lg:grid-cols-2">
         <DashboardFade delay={120}>
-          <Card glass data-cursor-hover className="h-full rounded-[20px]">
+          <Card glass data-ai-cursor className="h-full rounded-[20px]">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between gap-2">
                 <h3 className="font-bold text-ink">Completion overview</h3>
@@ -130,7 +130,7 @@ export function StudentDashboardOverview({
         </DashboardFade>
 
         <DashboardFade delay={160}>
-          <Card glass data-cursor-hover className="h-full rounded-[20px]">
+          <Card glass data-ai-cursor className="h-full rounded-[20px]">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between gap-2">
                 <h3 className="font-bold text-ink">Engagement</h3>
@@ -263,7 +263,7 @@ function Widget({
   children: ReactNode;
 }) {
   return (
-    <Card glass data-cursor-hover className={cn("flex h-full min-h-[10rem] flex-col rounded-[20px]")}>
+    <Card glass data-ai-cursor className={cn("flex h-full min-h-[10rem] flex-col rounded-[20px]")}>
       <CardContent className="pt-6">
         <div className="mb-4 flex items-center gap-2">
           <Icon className="h-4 w-4 text-brand-500" />

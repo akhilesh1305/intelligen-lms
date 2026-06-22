@@ -82,6 +82,7 @@ export function HomeAiShowcase() {
               <AnimateOnScroll key={item.title} delay={homeStaggerDelay(i)} animation="fade-up">
                 <Link
                   href={item.href}
+                  data-ai-cursor
                   className={cn(
                     HOME_CARD,
                     HOME_CARD_FOCUS,

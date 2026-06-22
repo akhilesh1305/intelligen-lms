@@ -62,7 +62,7 @@ export function DashboardStatCard({
     <DashboardFade delay={delay} animation="scale-in">
       <Card
         glass
-        data-cursor-hover
+        data-ai-cursor
         className="group h-full min-h-[7.5rem] overflow-hidden rounded-[20px]"
       >
         <CardContent className="relative flex items-start justify-between gap-4 py-5">

@@ -183,7 +183,7 @@ export function AiToolsHub({ isLoggedIn }: { isLoggedIn: boolean }) {
         })}
       </div>
 
-      <Card className="mt-6">
+      <Card className="mt-6" data-ai-cursor>
         <CardContent className="pt-6">
           {active === "interview" && (
             <Input
