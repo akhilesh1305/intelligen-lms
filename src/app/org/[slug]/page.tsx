@@ -38,12 +38,6 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { TableScroll } from "@/components/ui/table-scroll";
 
-const roleLabels = {
-  ORG_ADMIN: "Admin",
-  ORG_INSTRUCTOR: "Instructor",
-  ORG_LEARNER: "Learner",
-} as const;
-
 function StatCard({
   label,
   value,
@@ -74,8 +68,7 @@ export default async function OrgAdminDashboardPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { org, isPlatformAdmin, accessibleOrgs } =
-    await requireOrganizationAdminBySlug(slug);
+  const { org, isPlatformAdmin } = await requireOrganizationAdminBySlug(slug);
 
   const [analytics, userDirectory] = await Promise.all([
     getOrgAnalytics(org.id),

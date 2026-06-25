@@ -2,9 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { reportChallengeQuizViolation } from "@/lib/challenge-quiz-session";
 
-type RouteContext = { params: Promise<{ id: string }> };
-
-export async function POST(request: Request, _context: RouteContext) {
+export async function POST(request: Request) {
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

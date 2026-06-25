@@ -34,11 +34,9 @@ export async function exportUserData(userId: string) {
 
   if (!user) return null;
 
-  const {
-    passwordHash: _passwordHash,
-    twoFactorSecret: _twoFactorSecret,
-    ...safeUser
-  } = user;
+  const { passwordHash, twoFactorSecret, ...safeUser } = user;
+  void passwordHash;
+  void twoFactorSecret;
 
   return {
     exportedAt: new Date().toISOString(),

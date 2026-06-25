@@ -146,7 +146,7 @@ export function ChallengeQuizPlay({
   );
 
   const startTimer = useCallback(
-    (sessionId: string, secondsLeft: number) => {
+    (sessionId: string) => {
       clearTimer();
       timerRef.current = setInterval(() => {
         setState((prev) => {
@@ -163,14 +163,19 @@ export function ChallengeQuizPlay({
     [advance, clearTimer]
   );
 
+  const playingSessionId = state.phase === "playing" ? state.sessionId : undefined;
+  const playingQuestionIndex =
+    state.phase === "playing" ? state.questionIndex : undefined;
+  const playingSubmitting = state.phase === "playing" ? state.submitting : undefined;
+
   useEffect(() => {
-    if (state.phase !== "playing" || state.submitting) return;
-    startTimer(state.sessionId, state.secondsLeft);
+    if (!playingSessionId || playingSubmitting) return;
+    startTimer(playingSessionId);
     return clearTimer;
   }, [
-    state.phase,
-    state.phase === "playing" ? state.questionIndex : null,
-    state.phase === "playing" ? state.submitting : null,
+    playingSessionId,
+    playingQuestionIndex,
+    playingSubmitting,
     startTimer,
     clearTimer,
   ]);

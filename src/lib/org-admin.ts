@@ -287,10 +287,6 @@ export async function getOrgAnalytics(organizationId: string) {
   const learnerUserIds = members
     .filter((m) => m.role === "ORG_LEARNER")
     .map((m) => m.userId);
-  const instructorUserIds = members
-    .filter((m) => m.role === "ORG_INSTRUCTOR")
-    .map((m) => m.userId);
-
   const [
     membersByRole,
     coursesByStatus,

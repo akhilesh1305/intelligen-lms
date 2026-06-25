@@ -219,7 +219,9 @@ export type DemoEnrollment = {
   };
 };
 
-export function getDemoStudentEnrollments(_userName: string): DemoEnrollment[] {
+export function getDemoStudentEnrollments(userName: string): DemoEnrollment[] {
+  void userName;
+
   const enrolled = [
     { courseId: "demo-ai-fundamentals", progress: 100 },
     { courseId: "demo-leadership-excellence", progress: 100 },
@@ -274,7 +276,9 @@ export function getDemoUserBadges() {
   ];
 }
 
-export function getDemoInstructorCourses(_instructorName: string) {
+export function getDemoInstructorCourses(instructorName: string) {
+  void instructorName;
+
   const now = new Date();
   return DEMO_COURSES.slice(0, 4).map((c) => ({
       id: c.id,

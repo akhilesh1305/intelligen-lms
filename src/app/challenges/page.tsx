@@ -6,7 +6,6 @@ import {
   getActiveChallenges,
   getDailyQuizStatus,
   getTodayWeekdaySlot,
-  WEEKDAY_SLOTS,
   DAILY_QUESTIONS_MIN,
   DAILY_QUESTIONS_MAX,
   WEEKLY_QUIZ_MIN,

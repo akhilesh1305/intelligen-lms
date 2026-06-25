@@ -5,11 +5,7 @@
  * Enable globally: NEXT_PUBLIC_DEMO_MODE=true (or DEMO_MODE=true on server)
  * Or sign in as demo-admin@ / demo-learner@intelligen.lms
  */
-import {
-  isDemoAccountEmail,
-  isDemoAdminEmail,
-  isDemoLearnerEmail,
-} from "./accounts";
+import { isDemoAccountEmail } from "./accounts";
 
 export {
   DEMO_ADMIN_EMAIL,

@@ -5,15 +5,12 @@ import {
   timeoutChallengeQuizQuestion,
 } from "@/lib/challenge-quiz-session";
 
-type RouteContext = { params: Promise<{ id: string }> };
-
-export async function POST(request: Request, context: RouteContext) {
+export async function POST(request: Request) {
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id: _challengeId } = await context.params;
   const body = (await request.json()) as {
     sessionId?: string;
     answerIndex?: number;

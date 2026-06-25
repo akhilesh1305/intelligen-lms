@@ -120,7 +120,6 @@ export function ScreenshotPresentation({
   callouts = [],
   children,
   className,
-  compactCallouts,
 }: ScreenshotPresentationMeta & {
   url: string;
   children: ReactNode;

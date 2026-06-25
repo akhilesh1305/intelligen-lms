@@ -1,8 +1,4 @@
-import {
-  combinePhoneNumber,
-  getCountryByCode,
-  splitPhoneNumber,
-} from "@/lib/phone-countries";
+import { getCountryByCode, splitPhoneNumber } from "@/lib/phone-countries";
 
 export {
   PHONE_COUNTRIES,

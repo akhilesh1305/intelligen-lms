@@ -1,4 +1,4 @@
-import type { CorporateGameSlug, GameScenario, ScenarioOption } from "@/lib/corporate-game-types";
+import type { GameScenario, ScenarioOption } from "@/lib/corporate-game-types";
 
 const P = 10;
 const P4 = 4;

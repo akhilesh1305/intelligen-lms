@@ -24,7 +24,6 @@ const LEVEL_LABELS: Record<string, string> = {
 
 export function CoursesCatalogToolbar({
   query,
-  category,
   sort,
   level,
 }: {
